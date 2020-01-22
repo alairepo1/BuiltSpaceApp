@@ -4,21 +4,17 @@ import { View, Text, StyleSheet } from "react-native";
 export class StatusBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      connection_status: "<not implemented>",
-      email: "<fetch email>",
-      organization: "<fetch current organization api>"
-    };
+    this.state = {};
   }
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.status}>
           <View style={styles.connection_color}>
-            <Text>Connection Status: {this.state.connection_status}</Text>
+            <Text>Connection Status: {this.props.connection_status}</Text>
           </View>
-          <Text>Signed in as: {this.state.email}</Text>
-          <Text>Current Organization: {this.state.organization}</Text>
+          <Text>Signed in as: {this.props.email}</Text>
+          <Text>Current Organization: {this.props.organization}</Text>
         </View>
       </View>
     );

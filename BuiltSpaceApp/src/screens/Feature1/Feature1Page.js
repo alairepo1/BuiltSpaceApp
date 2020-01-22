@@ -11,7 +11,11 @@ export class Feature1Page extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar />
+        <StatusBar
+          email={this.props.email}
+          organization={this.props.organization}
+          connection_status="Not implemented"
+        />
         <Text>This is the page for Feature 1</Text>
       </View>
     );

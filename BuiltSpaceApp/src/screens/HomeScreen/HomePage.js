@@ -8,10 +8,10 @@ export class HomePage extends Component {
     super(props);
     this.state = {
       // Store user api key for reuse here?
-      api_key: "",
+      api_key: "GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=",
       email: "<fetch sign in email>",
       connection_status: "Not implemented",
-      organization: "<fetch selected org> "
+      organization: "<fetch selected org>"
     };
   }
 
@@ -30,16 +30,42 @@ export class HomePage extends Component {
     );
   };
 
-  fetchAPI = () => {};
+  fetchAPI = () => {
+    fetch(
+      "https://beta.builtspace.com/_vti_bin/wcf/userdata.svc/MyOrganizations",
+      {
+        method: "get",
+        headers: {
+          Authorization: this.state.api_key
+        }
+      }
+    )
+      .then(response => response.json())
+      .then(result => {
+        // returns an array of organization objects
+        // Implement a chooser that will set state to selected organization
+        this.setState({
+          organization: result[0].name
+        });
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
 
   componentDidMount = () => {
     // initialize the api here
+    this.fetchAPI();
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar />
+        <StatusBar
+          email={this.state.email}
+          organization={this.state.organization}
+          connection_status="Not implemented"
+        />
 
         <View style={styles.button_view}>
           <View style={{ flex: 1 }}>
