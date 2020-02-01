@@ -1,112 +1,102 @@
-import React, { Component } from "react";
-import { Platform } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
-import { createSwitchNavigator, createAppContainer } from "react-navigation";
-import { createBottomTabNavigator } from "react-navigation-tabs";
-import { createStackNavigator } from "react-navigation-stack";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, {Component} from 'react';
+import {Platform} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+// import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {createStackNavigator} from 'react-navigation-stack';
 
-import LoadingScreen from "../screens/LoadingScreen/loadingScreen.js";
-import LoginScreen from "../screens/LoginScreen/LoginScreen.js";
-import HomeScreen from "../screens/HomeScreen/HomePage";
-import Feature1Page from "../screens/Feature1/Feature1Page";
-import Feature2Page from "../screens/Feature2/Feature2Page";
-import Feature3Page from "../screens/Feature3/Feature3Page";
+import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
+import LoginScreen from '../screens/LoginScreen/LoginScreen.js';
+import HomeScreen from '../screens/HomeScreen/HomePage.js';
+import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
+import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
+import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
+import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
+import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
 
 const AuthStack = createStackNavigator(
+  // Login Screen
   {
     LoginScreen: {
-      screen: LoginScreen
-    }
+      screen: LoginScreen,
+    },
   },
-  { initialRouteName: "LoginScreen" }
+  {initialRouteName: 'LoginScreen'},
 );
 
-const HomeStack = createStackNavigator({
-  Home: {
-    screen: HomeScreen
-  }
-});
-
-const Feature1Stack = createStackNavigator({
-  Feature1: {
-    screen: Feature1Page
-  }
-});
-
-const Feature2Stack = createStackNavigator({
-  Feature2: {
-    screen: Feature2Page
-  }
-});
-
-const Feature3Stack = createStackNavigator({
-  Feature3: {
-    screen: Feature3Page
-  }
-});
-
-const AppStack = createBottomTabNavigator(
+// add a new screen here
+const HomeStack = createStackNavigator(
   {
     Home: {
-      screen: HomeStack,
-      navigationOptions: {
-        tabBarIcon: ({ iconColor }) => (
-          <MaterialCommunityIcons name="home" size={35} color={iconColor} />
-        )
-      }
+      screen: HomeScreen,
     },
-    Feature1: {
-      screen: Feature1Stack,
-      navigationOptions: {
-        tabBarIcon: ({ iconColor }) => (
-          <MaterialCommunityIcons
-            name="numeric-1-box-outline"
-            size={35}
-            color={iconColor}
-          />
-        )
-      }
+    // Operation Screens below
+    SelectOrg: {
+      screen: SelectOrgScreen,
     },
-    Feature2: {
-      screen: Feature2Stack,
-      navigationOptions: {
-        tabBarIcon: ({ iconColor }) => (
-          <MaterialCommunityIcons
-            name="numeric-2-box-outline"
-            size={35}
-            color={iconColor}
-          />
-        )
-      }
+    SelectBuilding: {
+      screen: SelectBuildingScreen,
     },
-    Feature3: {
-      screen: Feature3Stack,
-      navigationOptions: {
-        tabBarIcon: ({ iconColor }) => (
-          <MaterialCommunityIcons
-            name="numeric-3-box-outline"
-            size={35}
-            color={iconColor}
-          />
-        )
-      }
-    }
+    SelectLocation: {
+      screen: SelectLocationScreen,
+    },
+    SelectAsset: {
+      screen: SelectAssetScreen,
+    },
+    // Add Operation screens above
+    //
+    // Isolated Checklist Screens below
+    Assets: {
+      screen: AssetScreen,
+    },
+    // Add Isolated Checklist screens above
   },
   {
-    initialRouteName: "Home"
-  }
+    initialRouteName: 'Home',
+  },
 );
+
+// const SelectBuildingStack = createStackNavigator({
+//   SelectBuilding: {
+//     screen: SelectBuilding,
+//   },
+// });
+
+// const Feature3Stack = createStackNavigator({
+//   Feature3: {
+//     screen: Feature3Page,
+//   },
+// });
+
+// const AppStack = createBottomTabNavigator(
+//   {
+//     Home: {
+//       screen: HomeStack,
+//     },
+//     SelectOrgScreen: {
+//       screen: SelectOrgScreenStack,
+//     },
+//     SelectBuilding: {
+//       screen: SelectBuildingStack,
+//     },
+//     Feature3: {
+//       screen: Feature3Stack,
+//     },
+//   },
+//   {
+//     initialRouteName: 'Home',
+//   },
+// );
 
 export default createAppContainer(
   createSwitchNavigator(
     {
-      App: AppStack,
+      HomeStack: HomeStack,
       Auth: AuthStack,
-      LoadingScreen
+      LoadingScreen,
     },
     {
-      initialRouteName: "LoadingScreen"
-    }
-  )
+      initialRouteName: 'LoadingScreen',
+    },
+  ),
 );
