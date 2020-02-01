@@ -1,5 +1,5 @@
 {
-  "name": "realmdbtest",
+  "name": "BuiltSpaceApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -24,8 +24,8 @@
     "realm": "3.6.3"
   },
   "devDependencies": {
-    "@babel/core": "7.8.3",
-    "@babel/runtime": "7.8.3",
+    "@babel/core": "7.8.4",
+    "@babel/runtime": "7.8.4",
     "@react-native-community/eslint-config": "0.0.5",
     "babel-jest": "24.9.0",
     "eslint": "6.8.0",
