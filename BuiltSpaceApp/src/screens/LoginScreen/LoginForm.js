@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, StatusBar, ScrollView } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, Keyboard, StatusBar, ScrollView } from 'react-native';
+import KeyboardAvoidingView from 'react-native'
 
 export default class LoginForm extends Component {
     render() {
