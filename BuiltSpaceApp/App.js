@@ -25,7 +25,7 @@ class App extends Component {
   render() {
     return (
       <SafeAreaProvider>
-        {/* <Text>Hello</Text> */}
+        {<Text>Hello</Text>}
         <Navigator />
         {/* <RealmDb /> */}
       </SafeAreaProvider>
