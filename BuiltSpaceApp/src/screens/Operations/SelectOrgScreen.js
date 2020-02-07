@@ -35,7 +35,7 @@ export class SelectOrgScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#111E6C',
     alignItems: 'center',
     justifyContent: 'center',
   },

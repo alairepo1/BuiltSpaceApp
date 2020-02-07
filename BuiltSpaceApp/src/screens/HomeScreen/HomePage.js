@@ -102,7 +102,7 @@ export class HomePage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    backgroundColor: '#fff',
+    backgroundColor: '#617CA4',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#111E6C',
   },
   button_container: {
     width: 140,
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttons: {
-    backgroundColor: 'white',
-    margin: 5,
+    backgroundColor: '#a9a9a9',
+    margin: 10,
   },
   button_text: {
     textAlign: 'center',

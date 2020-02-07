@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Button} from 'react-native';
+import {View, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 
 export class LoginScreen extends Component {
+
+  navigation(){
+    this.props.navigation.navigate('HomeStack');
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -10,12 +14,14 @@ export class LoginScreen extends Component {
         <Text>
           Authentication Listener goes into ../LoadingScreen/LoadingScreen.js
         </Text>
-        <Button
-          onPress={() => {
-            this.props.navigation.navigate('HomeStack');
-          }}
-          title="Log In"
-        />
+        <View style={styles.button}>
+            <TouchableOpacity onPress={() => {
+                this.navigation()
+              }}
+            >
+                <Text>Log In</Text>
+            </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -27,6 +33,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  button: {
+    backgroundColor: 'blue',
+    borderColor: 'white',
+    borderWidth: 5,
+    borderRadius: 0,
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    padding: 12,
+    textAlign:'center',
   },
 });
 
