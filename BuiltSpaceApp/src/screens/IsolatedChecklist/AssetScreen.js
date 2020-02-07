@@ -20,12 +20,11 @@ export class AssetScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>
+        <Text style={styles.text}>
           When creating new screen, add the screen into
           ../../Navigator/navigator.js HomeStack
         </Text>
-        <Text>Fetch Asset and Checklist API</Text>
-        <Text></Text>
+        <Text style={styles.text}>Fetch Asset and Checklist API</Text>
       </View>
     );
   }
@@ -34,10 +33,14 @@ export class AssetScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111E6C',
+    backgroundColor: '#324679',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  text:{
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 export default AssetScreen;

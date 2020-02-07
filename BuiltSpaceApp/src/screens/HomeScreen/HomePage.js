@@ -77,8 +77,10 @@ export class HomePage extends Component {
                 onPress={() => this.props.navigation.navigate('SelectOrg')}>
                 <Text style={styles.button_text}> Select organization</Text>
               </TouchableOpacity>
+            </View>
+            <View>
               <TouchableOpacity
-                style={styles.buttons}
+                style={styles.buttons_1}
                 onPress={() => this.props.navigation.navigate('Assets')}>
                 <Text style={styles.button_text}> Isolated Checklist </Text>
               </TouchableOpacity>
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#111E6C',
+    backgroundColor: '#324679',
   },
   button_container: {
     width: 140,
@@ -119,12 +121,16 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttons: {
-    backgroundColor: '#a9a9a9',
+    backgroundColor: '#C4C4C4',
     margin: 10,
   },
   button_text: {
     textAlign: 'center',
   },
+  buttons_1: {
+    backgroundColor: '#C4C4C4',
+    margin: 10,
+  }
 });
 
 export default HomePage;

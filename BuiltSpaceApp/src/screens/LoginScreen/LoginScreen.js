@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, Button, TouchableOpacity, Image} from 'react-native';
 import SafeAreaView from 'react-native-safe-area-view';
 
 export class LoginScreen extends Component {
@@ -10,6 +10,10 @@ export class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Image
+            style = {styles.image}
+            source = {require('./BuiltSpace_Logo.jpg')}
+        />
         <Text>This is the login screen</Text>
         <Text>
           Authentication Listener goes into ../LoadingScreen/LoadingScreen.js
@@ -46,6 +50,10 @@ const styles = StyleSheet.create({
     padding: 12,
     textAlign:'center',
   },
+  image: {
+    width: 200,
+    height: 200
+  }
 });
 
 export default LoginScreen;
