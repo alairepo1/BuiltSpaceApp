@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, StatusBar } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, StatusBar, ScrollView } from 'react-native';
 
 export default class LoginForm extends Component {
     render() {
-        return ( 
+        return (
+          <ScrollView>
             <KeyboardAvoidingView behavior = "padding" style = {styles.container} >
             <StatusBar 
                 barStyle = "light-content" 
@@ -23,12 +24,13 @@ export default class LoginForm extends Component {
                 placeholderTextColor = "rgba(255, 255, 255, 0.7)"
                 returnKeyType = "go"
                 secureTextEntry style = {styles.input}
-            ref = {(input) => this.passwordInput = input}
+                ref = {(input) => this.passwordInput = input}
             />
             <TouchableOpacity style = {styles.buttonContainer}>
-                <Text style = {styles.buttonText} > Login < /Text>
+                <Text style = {styles.buttonText} > Login </Text>
             </TouchableOpacity>
             </KeyboardAvoidingView>
+          </ScrollView>
         );
     }
 }
@@ -38,15 +40,16 @@ const styles = StyleSheet.create({
         padding: 20
     },
     input: {
-        height: 40,
+        height: 50,
         backgroundColor: 'rgba(255,255,255,0.2)',
         marginBottom: 10,
         color: 'white',
         paddingHorizontal: 10
     },
     buttonContainer: {
-        backgroundColor: '#C4C4C4',
-        paddingVertical: 10
+        backgroundColor: '#4CBB17',
+        paddingVertical: 10,
+        marginBottom: 10
     },
     buttonText: {
         textAlign: 'center',

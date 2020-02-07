@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     logo: {
-        width: 1000,
-        height: 240
+        width: 235,
+        height: 250
     }
 });
