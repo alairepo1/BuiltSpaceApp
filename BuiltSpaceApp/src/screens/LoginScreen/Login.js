@@ -4,16 +4,17 @@ import LoginForm from './LoginForm';
 
 export default class Login extends Component {
     render() {
-        return (
-            <View style={styles.container}>
-                    <View style={styles.logoContainer}>
-                        <Image
+        const {navigate} = this.props.navigation;
+        return ( 
+            <View style = {styles.container}>
+                <View style = {styles.logoContainer}>
+                    <Image
                         style={styles.logo}
-                        source={require('../../images/logo.png')} />
-                    </View>
-                    <View style={styles.formContainer}>
-                    <LoginForm />>
-                    </View>
+                        source = {require('../../images/logo.png')}/> 
+                </View>
+                <View style = {styles.formContainer}>
+                <LoginForm navigation={navigate} / >
+                </View>
             </View>
         );
     }
@@ -21,7 +22,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#324679'
+        backgroundColor: '#FFFFFF'
     },
     logoContainer: {
         alignItems: 'center',
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     logo: {
-        width: 1000,
-        height: 240
+        width: 235,
+        height: 250
     }
 });

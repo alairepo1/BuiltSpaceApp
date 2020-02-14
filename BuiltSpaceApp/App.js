@@ -34,11 +34,13 @@ class App extends Component {
 }
 export default App;
 console.disableYellowBox = true;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#324679',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  
 });
