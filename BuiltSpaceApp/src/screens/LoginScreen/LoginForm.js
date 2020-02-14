@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, Keyboard, StatusBar, ScrollView } from 'react-native';
-import KeyboardAvoidingView from 'react-native'
+
 
 export default class LoginForm extends Component {
     render() {
         return (
-          <ScrollView>
             <KeyboardAvoidingView behavior = "padding" style = {styles.container} >
             <StatusBar 
                 barStyle = "light-content" 
@@ -27,11 +26,11 @@ export default class LoginForm extends Component {
                 secureTextEntry style = {styles.input}
                 ref = {(input) => this.passwordInput = input}
             />
-            <TouchableOpacity style = {styles.buttonContainer}>
+            <TouchableOpacity style = {styles.buttonContainer}
+                    onPress={() => this.props.navigation('HomeStack')}>
                 <Text style = {styles.buttonText} > Login </Text>
             </TouchableOpacity>
             </KeyboardAvoidingView>
-          </ScrollView>
         );
     }
 }
@@ -42,7 +41,8 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 50,
-        backgroundColor: 'rgba(255,255,255,0.2)',
+        // backgroundColor: 'rgba(255,255,255,0.2)',
+        backgroundColor: 'grey',
         marginBottom: 10,
         color: 'white',
         paddingHorizontal: 10
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         textAlign: 'center',
-        color: '#FFFFFF',
+        // color: '#FFFFFF',
         fontWeight: '700'
     }
 });
