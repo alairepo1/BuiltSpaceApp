@@ -96,7 +96,7 @@ render() {
         <SamsListItem
         styles={styles}
         categoryabbreviation={item.assetCategory}
-        checklistId={item.id}
+        checklistId={<Text style={styles.title}>Checklist Id: {item.id}</Text>}
         title={item.title}
         workcategory={item.workCategory}
         onPress={() => {
