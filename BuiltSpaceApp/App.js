@@ -25,7 +25,6 @@ class App extends Component {
   render() {
     return (
       <SafeAreaProvider>
-        {/* <Text>Hello</Text> */}
         <Navigator />
         {/* <RealmDb /> */}
       </SafeAreaProvider>
@@ -34,7 +33,7 @@ class App extends Component {
   }
 }
 export default App;
-
+console.disableYellowBox = true;
 
 const styles = StyleSheet.create({
   container: {
