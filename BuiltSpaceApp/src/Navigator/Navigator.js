@@ -6,7 +6,7 @@ import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
-import LoginScreen from '../screens/LoginScreen/LoginScreen.js';
+import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
@@ -19,10 +19,10 @@ import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
 
 
 const AuthStack = createStackNavigator(
-  // Login Screen
   {
-    LoginScreen: {
-      screen: LoginScreen
+
+    Login: {
+      screen: Login
     },
   },
   {
@@ -35,6 +35,13 @@ const AuthStack = createStackNavigator(
       headerTintColor: 'white'
     }
   }
+
+    Login: {
+      screen: Login,
+    },
+  },
+  {initialRouteName: 'Login'},
+
 );
 
 // add a new screen here
