@@ -6,7 +6,8 @@ export class SelectLocationScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      org_data: [],
+      location_data: [],
+      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
   }
 
@@ -14,7 +15,26 @@ export class SelectLocationScreen extends Component {
     this.fetch();
   };
 
-  fetch = () => {};
+  fetch = () => {
+    fetch(
+        'https://beta.builtspace.com/sites/bcitproject/_vti_bin/wcf/orgdata.svc/buildings',
+        {
+          method: 'get',
+          headers: {
+            Authorization: this.state.api_key,
+          },
+        },
+    )
+        .then(response => response.json())
+        .then(result => {
+          this.setState({
+            location_data: result
+          });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+  };
 
   render() {
     return (
