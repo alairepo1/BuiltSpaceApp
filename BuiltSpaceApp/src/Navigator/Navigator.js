@@ -13,7 +13,7 @@ import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js'
 import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
 import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
 import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
-
+import dbScreen from '../screens/dbScreen/dbScreen'
 const AuthStack = createStackNavigator(
   {
     Login: {
@@ -48,6 +48,9 @@ const HomeStack = createStackNavigator(
     Assets: {
       screen: AssetScreen,
     },
+    dbScreen: {
+      screen: dbScreen
+    }
     // Add Isolated Checklist screens above
   },
   {

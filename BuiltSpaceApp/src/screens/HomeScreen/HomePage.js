@@ -86,6 +86,11 @@ export class HomePage extends Component {
           </View>
           <View style={{flex: 1}}>
             <View style={styles.button_container}>
+            <TouchableOpacity
+                style={styles.buttons}
+                onPress={() => this.props.navigation.navigate('dbScreen')}>
+                <Text style={styles.button_text}> Database Screen </Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttons}
                 onPress={() => this.props.navigation.navigate('Auth')}>
