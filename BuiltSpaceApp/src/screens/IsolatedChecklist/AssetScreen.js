@@ -95,7 +95,7 @@ render() {
         renderItem = {({item}) => 
         <SamsListItem
         styles={styles}
-        assetCategory={item.assetCategory}
+        categoryabbreviation={item.assetCategory}
         checklistId={item.id}
         title={item.title}
         workcategory={item.workCategory}
