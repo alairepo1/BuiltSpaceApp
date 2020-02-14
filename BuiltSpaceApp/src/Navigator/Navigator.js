@@ -20,13 +20,12 @@ import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
 
 const AuthStack = createStackNavigator(
   {
-
     Login: {
       screen: Login
     },
   },
   {
-    initialRouteName: 'LoginScreen',
+    initialRouteName: 'Login',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#436FA1',
@@ -35,12 +34,6 @@ const AuthStack = createStackNavigator(
       headerTintColor: 'white'
     }
   }
-
-    Login: {
-      screen: Login,
-    },
-  },
-  {initialRouteName: 'Login'},
 
 );
 
