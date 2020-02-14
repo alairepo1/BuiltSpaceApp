@@ -6,7 +6,6 @@ import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
-import LoginScreen from '../screens/LoginScreen/LoginScreen.js';
 import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
@@ -16,7 +15,6 @@ import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js'
 import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
 
 const AuthStack = createStackNavigator(
-  // Login Screen
   {
     Login: {
       screen: Login,
