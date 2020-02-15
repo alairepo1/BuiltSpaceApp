@@ -72,13 +72,6 @@ export class HomePage extends Component {
                 <Text style={styles.button_text}> Select organization</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.button_container}>
-              <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('Assets')}>
-                <Text style={styles.button_text}> Select assets</Text>
-              </TouchableOpacity>
-            </View>
           </View>
           <View >
             <View style={styles.button_container}>

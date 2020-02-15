@@ -47,7 +47,7 @@ const HomeStack = createStackNavigator(
     },
     // Operation Screens below
     Organization: {
-      screen: SelectOrgScreen
+      screen: SelectOrgScreen,
     },
     SelectBuilding: {
       screen: SelectBuildingScreen

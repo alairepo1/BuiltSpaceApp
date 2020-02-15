@@ -42,14 +42,26 @@ export class BuildingDetailsScreen extends Component {
             <Text style={styles.detailsTextBold}>Postal Code: <Text style={styles.detailsText}>{buildingPostalCode} </Text></Text>
         </Text>
       <FlatList style={styles.flatList}
-      data={[{title: 'Start Visit'}, {title: 'Browse'}, {title: 'Scan Qr'}]}
+      data={[{title: 'Start Visit',browse: 'Browse',qrcode: 'Scan Qr'}]}
       renderItem={({item}) => 
+      <View>
+
       <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding')}>
         <View style={styles.row}>
             <Text style={styles.text}>{item.title}</Text>
-            
         </View>  
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('Assets')}>
+      <View style={styles.row}>
+          <Text style={styles.text}>{item.browse}</Text>
+      </View>  
+    </TouchableOpacity>
+    <TouchableOpacity >
+    <View style={styles.row}>
+        <Text style={styles.text}>{item.qrcode}</Text>
+    </View>  
+  </TouchableOpacity>
+      </View>
       }
       keyExtractor={item => item.name}
       />
