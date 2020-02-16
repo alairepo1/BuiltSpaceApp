@@ -12,7 +12,8 @@ import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
 import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
 import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
-import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen';
+import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
+import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
 
 
@@ -67,6 +68,9 @@ const HomeStack = createStackNavigator(
     Assets: {
         screen: AssetScreen
     },
+    ExploreBuilding: {
+      screen: ExploreBuildingScreen
+    }
     // Add Isolated Checklist screens above
   },
   
