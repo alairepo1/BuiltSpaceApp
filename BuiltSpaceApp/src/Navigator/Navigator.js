@@ -12,51 +12,85 @@ import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
 import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
 import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
+import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
+import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
+
 import dbScreen from '../screens/dbScreen/dbScreen'
+
 const AuthStack = createStackNavigator(
   {
     Login: {
-      screen: Login,
+      screen: Login
     },
   },
-  {initialRouteName: 'Login'},
+  {
+    initialRouteName: 'Login',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#436FA1',
+      },
+      cardStyle: {backgroundColor: '#324679'},
+      headerTintColor: 'white'
+    }
+  }
+
 );
 
 // add a new screen here
 const HomeStack = createStackNavigator(
+  
   {
+    
     Home: {
-      screen: HomeScreen,
+      screen: HomeScreen
     },
     // Operation Screens below
-    SelectOrg: {
+    Organization: {
       screen: SelectOrgScreen,
     },
     SelectBuilding: {
-      screen: SelectBuildingScreen,
+      screen: SelectBuildingScreen
+    },
+    BuildingDetails: {
+      screen: BuildingDetailsScreen
     },
     SelectLocation: {
-      screen: SelectLocationScreen,
+      screen: SelectLocationScreen
     },
     SelectAsset: {
-      screen: SelectAssetScreen,
+      screen: SelectAssetScreen
     },
     // Add Operation screens above
     //
     // Isolated Checklist Screens below
     Assets: {
-      screen: AssetScreen,
+        screen: AssetScreen
     },
     dbScreen: {
       screen: dbScreen
+  },
+
+    ExploreBuilding: {
+      screen: ExploreBuildingScreen
+
     }
     // Add Isolated Checklist screens above
   },
+  
   {
     initialRouteName: 'Home',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#436FA1',
+      },
+      cardStyle: {backgroundColor: '#324679'},
+      headerTintColor: 'white'
+    }
   },
+
 );
+
 
 // const SelectBuildingStack = createStackNavigator({
 //   SelectBuilding: {

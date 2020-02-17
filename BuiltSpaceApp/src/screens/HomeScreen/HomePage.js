@@ -62,29 +62,18 @@ export class HomePage extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <StatusBar
-          email={this.state.email}
-          organization={this.state.organization}
-          connection_status="Not implemented"
-        />
-
+        <Text style={styles.homePageText}>To Start please select an organization</Text>
         <View style={styles.button_view}>
-          <View style={{flex: 1}}>
+          <View>
             <View style={styles.button_container}>
-              <Text>Org: {this.state.organization}</Text>
               <TouchableOpacity
                 style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('SelectOrg')}>
+                onPress={() => this.props.navigation.navigate('Organization')}>
                 <Text style={styles.button_text}> Select organization</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('Assets')}>
-                <Text style={styles.button_text}> Isolated Checklist </Text>
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{flex: 1}}>
+          <View >
             <View style={styles.button_container}>
             <TouchableOpacity
                 style={styles.buttons}
@@ -106,29 +95,42 @@ export class HomePage extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
-    backgroundColor: '#fff',
+    // flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 50,
+  
+  },
+  homePageText: {
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: 'white'
   },
   button_view: {
-    flex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
+    // flex: 2,
+    flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#324679',
+    marginTop: 15
+  
   },
   button_container: {
-    width: 140,
+    width: 240,
     alignSelf: 'center',
     margin: 10,
   },
   buttons: {
-    backgroundColor: 'white',
+    backgroundColor: 'grey',
     margin: 5,
+    color: 'black',
+    height: 50,
   },
   button_text: {
+    fontSize: 16,
+    fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 13
   },
 });
 
