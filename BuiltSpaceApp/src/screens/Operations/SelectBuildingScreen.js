@@ -60,7 +60,8 @@ export class SelectBuildingScreen extends Component {
         buildingCity: item.city,
         buildingName: item.name,
         buildingProvince: item.provincestate,
-        buildingPostalCode: item.postalcode
+        buildingPostalCode: item.postalcode,
+        buildingId: item.id
       })}>
       <View style={styles.row}>
         <Text style={styles.text}>{item.name} </Text>
