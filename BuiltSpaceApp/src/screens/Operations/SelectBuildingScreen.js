@@ -1,42 +1,48 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
-
+import {get_org_data} from '../../storage/fetchAPI'
 export class SelectBuildingScreen extends Component { 
   constructor(props) {
     super(props);
     this.state = {
-      building_data: [],
+      org_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
   }
 
 
 
-  fetch = () => {
-    fetch(
-        'https://beta.builtspace.com/sites/bcitproject/_vti_bin/wcf/orgdata.svc/buildings', //get buildings
-        {
-          method: 'get',
-          headers: {
-            Authorization: this.state.key
-          },
-        },
-    )
-        .then(response => response.json())
-        .then(result => {
+  // fetch = () => {
+  //   fetch(
+  //       'https://beta.builtspace.com/sites/bcitproject/_vti_bin/wcf/orgdata.svc/buildings', //get buildings
+  //       {
+  //         method: 'get',
+  //         headers: {
+  //           Authorization: this.state.key
+  //         },
+  //       },
+  //   )
+  //       .then(response => response.json())
+  //       .then(result => {
           
-          this.setState({
-            building_data: result
-          })
-        })
-        .catch(e => {
-          console.log(e);
-        });
-  };
+  //         this.setState({
+  //           building_data: result
+  //         })
+  //       })
+  //       .catch(e => {
+  //         console.log(e);
+  //       });
+  // };
 
-  componentDidMount = () => {
-    this.fetch();
+  componentDidMount = async() => {
+    // this.fetch();
+    // console.log(this.props.navigation.state.params)
+    var info = await get_org_data(this.props.navigation.state.params.org_data)
+    console.log(info.buildings)
+    this.setState({
+      org_data: info
+    })
   };
 
   // renderItem({item}) {
@@ -53,15 +59,17 @@ export class SelectBuildingScreen extends Component {
     const {navigate} = this.props.navigation;
     return (
       <FlatList style={styles.container}
-      data={this.state.building_data}
+      data={this.state.org_data.buildings}
       renderItem={({item}) => 
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
+      <TouchableOpacity 
+      onPress={() => this.props.navigation.navigate('BuildingDetails', {
         buildingAddress: item.address,
         buildingCity: item.city,
         buildingName: item.name,
         buildingProvince: item.provincestate,
         buildingPostalCode: item.postalcode
-      })}>
+      })}
+      >
       <View style={styles.row}>
         <Text style={styles.text}>{item.name} </Text>
       </View>  

@@ -12,30 +12,10 @@ export class SelectOrgScreen extends Component {
     };
   }
 
-  fetch = () => {
-    fetch(
-        'https://beta.builtspace.com/_vti_bin/wcf/userdata.svc/MyOrganizations', //get organizations
-        {
-          method: 'get',
-          headers: {
-            Authorization: this.state.key
-          },
-        },
-    )
-        .then(response => response.json())
-        .then(result => {
-          
-          this.setState({
-            org_data: result
-          })
-        })
-        .catch(e => {
-          console.log(e);
-        });
-  };
-
   componentDidMount = () => {
-    this.fetch();
+    this.setState({
+      org_data: this.props.navigation.state.params,
+    })
   };
 
   // renderItem({item}) {
@@ -53,15 +33,15 @@ export class SelectOrgScreen extends Component {
   // }
 
   render() {
+    console.log(this.props.navigation.state)
     const {org_data} = this.state;
     const {navigate} = this.props.navigation;
     return (
         <FlatList style={styles.container}
         data={this.state.org_data}
         renderItem={({item}) => 
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {
-          orgName: item.name
-        })}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {org_data: item}
+        )}>
         <View style={styles.row}>
           <Text style={styles.text}>{item.name}</Text>
         </View>  

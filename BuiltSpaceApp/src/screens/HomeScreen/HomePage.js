@@ -1,17 +1,21 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator} from 'react-native';
 import PropTypes from 'prop-types';
 import StatusBar from '../../statusComponent.js';
-
+import {fetchOrgs} from '../../storage/fetchAPI'
 export class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       // Store user api key for reuse here?
-      api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
-      email: '<fetch sign in email>',
+      account: {
+        api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+        email: 'bcitbuiltspace@gmail.com',
+        id: 200
+      },
       connection_status: 'Not implemented',
-      organization: '<fetch selected org>',
+      organizations: [],
+      isLoading: true
     };
   }
 
@@ -30,65 +34,54 @@ export class HomePage extends Component {
     );
   };
 
-  fetchAPI = () => {
-    fetch(
-      'https://beta.builtspace.com/_vti_bin/wcf/userdata.svc/MyOrganizations',
-      {
-        method: 'get',
-        headers: {
-          Authorization: this.state.api_key,
-        },
-      },
-    )
-      .then(response => response.json())
-      .then(result => {
-        // returns an array of organization objects
-        // Implement a chooser that will set state to selected organization
-        this.setState({
-          organization: result[0].name,
-        });
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
-
-  componentDidMount = () => {
+  componentDidMount = async() => {
     // initialize the api here
-    this.fetchAPI();
+    var org_data = await fetchOrgs(this.state.account)
+    this.setState({
+      organizations: org_data,
+      isLoading: false
+    })
+    
   };
 
   render() {
     const {navigate} = this.props.navigation;
-    return (
+    return ( this.state.isLoading ? ( 
+      <View>
+        <ActivityIndicator/>
+        <Text>Loading...</Text>
+      </View>
+     ) :( 
       <View style={styles.container}>
-        <Text style={styles.homePageText}>To Start please select an organization</Text>
-        <View style={styles.button_view}>
-          <View>
-            <View style={styles.button_container}>
-              <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('Organization')}>
-                <Text style={styles.button_text}> Select organization</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View >
-            <View style={styles.button_container}>
+      <Text style={styles.homePageText}>To Start please select an organization</Text>
+      <View style={styles.button_view}>
+        <View>
+          <View style={styles.button_container}>
             <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('dbScreen')}>
-                <Text style={styles.button_text}> Database Screen </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('Auth')}>
-                <Text style={styles.button_text}> Log Out </Text>
-              </TouchableOpacity>
-            </View>
+              style={styles.buttons}
+              onPress={() => this.props.navigation.navigate('Organization', this.state.organizations)}>
+              <Text style={styles.button_text}> Select organization</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View >
+          <View style={styles.button_container}>
+          <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => this.props.navigation.navigate('dbScreen')}>
+              <Text style={styles.button_text}> Database Screen </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => this.props.navigation.navigate('Auth')}>
+              <Text style={styles.button_text}> Log Out </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
+    </View>
+      )
+
     );
   }
 }

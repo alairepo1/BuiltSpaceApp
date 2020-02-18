@@ -6,14 +6,7 @@ import {insertNewAccount, updateAccount, devare_db, get_account} from './schema/
  */
 
 const url = 'https://beta.builtspace.com'
-var account = {}
 const api_organization = []
-const header = {
-    method: 'get',
-    headers: {
-      Authorization: '',
-    }
-}
 
 export const trigger_new_account = async (accountData) => {
     account = accountData
@@ -22,10 +15,18 @@ export const trigger_new_account = async (accountData) => {
     return api_organization
 }
 
-fetchAPI = async () => {
+export const fetchOrgs = async (accountInfo) => {
     /**
      * Initial api call to fetch account's oragnizations
      */
+    var key = accountInfo.api_key
+    var header = {
+      method: 'get',
+      headers: {
+        Authorization: key,
+      }
+     }
+    var org_list = []
     var currentDate = new Date()
     var formatDate = JSON.stringify(currentDate)
     try{
@@ -35,7 +36,7 @@ fetchAPI = async () => {
           .then(result => {
             // this.setState({api_organization: results});
             for (var i = 0; i < result.length; i++) {
-             api_organization.push({
+             org_list.push({
                 absoluteurl: result[i].absoluteurl,
                 brandingurl: result[i].brandingurl,
                 id: result[i].id,
@@ -52,6 +53,7 @@ fetchAPI = async () => {
           .catch(e => {
             console.log(e);
           });
+        return org_list
     }catch(e) {
         console.log(e)
     }
@@ -59,7 +61,7 @@ fetchAPI = async () => {
 
   export const get_org_data = async (org_info) => {
     var org_name = await org_info.name.replace(' ', '');
-    var org_data = org_info
+    var org_data = await org_info
     var buildings = await get_buildings(org_name)
     var assetGroups = await get_assetGroup(org_name)
     var checklists = await get_checklists(org_name)
@@ -149,9 +151,9 @@ fetchAPI = async () => {
     var assetGroupList = await org_info.assetGroup
     var assets = await get_assets(org_name, assetGroupList, buildingInfo)
     var spaces = await get_spaces(org_name,buildingInfo)
-    org_info.buildings['assets'] = assets
-    org_info.buildings['spaces'] = spaces
-    console.log(JSON.stringify(org_info,null,1))
+    buildingInfo['assets'] = assets
+    buildingInfo['spaces'] = spaces
+    return buildingInfo
   }
 
   get_assets = async(org_name, assetGroupList, buildingInfo) => {
