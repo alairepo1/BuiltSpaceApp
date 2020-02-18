@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
+import {get_building_data} from '../../storage/fetchAPI.js'
+import AssetsModal from './AssetsModal.js'
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
@@ -10,49 +12,41 @@ export class ExploreBuildingScreen extends Component {
           building_data: [],
           key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
           spaces: [],
-          spacesFetched: false
+          spacesFetched: false,
+          assets: [],
+          filteredAssets: [],
+          checklists: [],
+          filteredChecklist: [],
+          dataLoaded: false
         };
-        this.fetchSpaces = this.fetchSpaces.bind(this)
+        this.spacesFilter = this.spacesFilter.bind(this)
       }
 
     spacesFilter = (spaceFloor) => {
-
+      console.log(spaceFloor)
+      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
+      console.log(this.state.filteredAssets)
     }
-    fetchSpaces = async() => {
-      await fetch(
-          `https://beta.builtspace.com/sites/bcitproject/_vti_bin/wcf/orgdata.svc/v2/spaces?buildingid=${this.props.navigation.state.params.buildingId}`, //gets spaces based om the building ID
-          {
-            method: 'get',
-            headers: {
-              Authorization: this.state.key
-            },
-          },
-      ).then(response => response.json()
-      ).then(results => {
-          this.setState({
-              spaces: results,
-              spacesFetched: true
-          })
-      })
-  }
 
-  fetchAssets = async() => {
-    await fetch(
-        `https://beta.builtspace.com/sites/bcitproject/_vti_bin/wcf/orgdata.svc/Assets?AssetGroupId={{assetgroupid}}&BuildingId={{Buildingid}}`, //gets spaces based om the building ID
-        {
-          method: 'get',
-          headers: {
-            Authorization: this.state.key
-          },
-        },
-    ).then(response => response.json()
-    ).then(results => {
-        this.setState({
-            spaces: results,
-            spacesFetched: true
-        })
-    })
-}
+    assetsFilter = (assetCategory) => {
+      console.log(assetCategory)
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.categoryabbr === "" )
+      console.log(this.state.filteredChecklist)
+    }
+    
+    componentDidMount = async() => {
+      console.log("Befor")
+      var orgData =  await this.props.navigation.state.params.orgData
+      var buildingData = await this.props.navigation.state.params.buildingData
+      var AssetsAndSpaces = await get_building_data(orgData, buildingData)
+      console.log("Aye: ",orgData.checklists)
+      this.setState({
+        spaces: AssetsAndSpaces.spaces,
+        assets: AssetsAndSpaces.assets,
+        checklists: orgData.checklists,
+        dataLoaded: true,
+      })
+    }
 
   // renderItem({item}) {
   //   return(
@@ -74,15 +68,18 @@ export class ExploreBuildingScreen extends Component {
     
     const buildingId = navigation.getParam('buildingId', 'None')
     const buildingName = navigation.getParam('buildingName', 'None');
+    if (!this.state.dataLoaded) {
+      return(
+        <Text>Loading</Text>
+      )
+    } else {
     return (
     <View>
       <View style={styles.TextContainer}>
-            <SpacesModal buildingId = {buildingId}/>
+            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>
       <View style={styles.TextContainer}>
-        <TouchableOpacity>
-            <Text style={styles.headingTextBold}> Asset</Text><Text style={styles.detailsText}>None Selected </Text>
-        </TouchableOpacity>
+        <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
       </View>
       <View style={styles.TextContainer}>
         <TouchableOpacity>
@@ -107,6 +104,7 @@ export class ExploreBuildingScreen extends Component {
       
     );
   }
+}
 }
 
 const styles = StyleSheet.create({

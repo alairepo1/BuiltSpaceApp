@@ -11,7 +11,7 @@ const api_organization = []
 const header = {
     method: 'get',
     headers: {
-      Authorization: '',
+      Authorization: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
     }
 }
 
@@ -61,6 +61,7 @@ fetchAPI = async () => {
     var org_name = await org_info.name.replace(' ', '');
     var org_data = org_info
     var buildings = await get_buildings(org_name)
+    console.log(buildings)
     var assetGroups = await get_assetGroup(org_name)
     var checklists = await get_checklists(org_name)
     org_data.buildings = buildings
@@ -71,12 +72,15 @@ fetchAPI = async () => {
 
   get_buildings = async (org_name) => {
     // gets building data from an organization api
+    console.log("in function: ", org_name)
     var buildings = []
+    console.log(url)
     await fetch(
       `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/buildings`, header
     )
       .then(response => response.json())
       .then(result => {
+        console.log("result: ", result)
         buildings = result
             })
       .catch(e => console.log(e));
@@ -142,16 +146,16 @@ fetchAPI = async () => {
         return checklists
   };
 
-  export const get_building_data = async(org_info, building) => {
+   export const get_building_data = async(org_info, building) => {
     // gets building data from api's 
     var org_name = await org_info.name.replace(' ', '');
     var buildingInfo = await building
     var assetGroupList = await org_info.assetGroup
     var assets = await get_assets(org_name, assetGroupList, buildingInfo)
     var spaces = await get_spaces(org_name,buildingInfo)
-    org_info.buildings['assets'] = assets
-    org_info.buildings['spaces'] = spaces
-    console.log(JSON.stringify(org_info,null,1))
+    buildingInfo['assets'] = assets
+    buildingInfo['spaces'] = spaces
+    return buildingInfo
   }
 
   get_assets = async(org_name, assetGroupList, buildingInfo) => {
@@ -160,6 +164,7 @@ fetchAPI = async () => {
      * if asset.buildingid matches the building.id, 
      * adds the asset into building.assets[]
      */
+    console.log("get assets")
     var building = buildingInfo
     var Buildingid = buildingInfo.id
     var assets = []
@@ -184,6 +189,7 @@ fetchAPI = async () => {
   get_spaces = async(org_name, buildingInfo) =>{
     // takes organization name and building info as arguments
     // gets all spaces from a building id
+    console.log("get spaces")
     var building = buildingInfo
     var Buildingid = building.id
     var spaces = []

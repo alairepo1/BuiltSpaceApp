@@ -60,7 +60,7 @@ export class SelectOrgScreen extends Component {
         data={this.state.org_data}
         renderItem={({item}) => 
         <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {
-          orgName: item.name
+          orgName: item
         })}>
         <View style={styles.row}>
           <Text style={styles.text}>{item.name}</Text>

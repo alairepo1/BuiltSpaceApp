@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList} from 'react-native';
 
-export class SpacesModal extends Component {
-
+export class AssetsModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            spaces: [],
-            spacesFetched: false,
+            assets: [],
+            assetsFetched: false,
             key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
             modalVisible: false,
             isSelected: false,
@@ -33,22 +32,26 @@ export class SpacesModal extends Component {
                 Alert.alert('Modal has been closed.');
               }}>
               <View style={{marginTop: 22}}>
-                  <Text style={styles.headingTextBold}>Hello World!</Text>
+                  <Text style={styles.headingTextBold}>Assets</Text>
                 <FlatList
-                data={this.props.spaces}
+                data={this.props.assets}
                 renderItem = {({item}) =>
                   <TouchableOpacity
                     onPress={() => {
-                    this.props.spacesFilter(item.floor)
+                    this.props.assetsFilter(item.categoryabbr)
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
                           isSelected: true,
-                          selection: item.floor
+                          selection: item.name
                       })
                     }}>
                     <View>
-                        <Text>{item.floor}</Text>
-                        <Text>{item.id}</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 22}}>Name: {item.name}</Text>
+                        <Text>Description: {item.description}</Text>
+                        <Text>Serial: {item.serial}</Text>
+                        <Text>Category: {item.categoryabbr}</Text>
+                        <Text>Model: {item.model}</Text>
+                        <Text>Make: {item.make}</Text>
                     </View>
                   </TouchableOpacity>
                 }
@@ -71,7 +74,7 @@ export class SpacesModal extends Component {
                 this.setModalVisible(true);
               }}>
             <View>
-              <Text style={styles.headingTextBold}> Space</Text>
+              <Text style={styles.headingTextBold}> Asset</Text>
               {this.state.isSelected ? selected : noneSelected}
             </View>
             </TouchableOpacity>
@@ -136,4 +139,4 @@ const styles = StyleSheet.create({
     
   })
   
-  export default SpacesModal;
+export default AssetsModal;
