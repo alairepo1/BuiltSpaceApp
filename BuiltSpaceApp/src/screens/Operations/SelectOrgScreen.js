@@ -33,7 +33,6 @@ export class SelectOrgScreen extends Component {
   // }
 
   render() {
-    console.log(this.props.navigation.state)
     const {org_data} = this.state;
     const {navigate} = this.props.navigation;
     return (
