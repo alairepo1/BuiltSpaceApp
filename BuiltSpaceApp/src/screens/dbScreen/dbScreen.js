@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import {acc} from 'react-native-reanimated';
 import { insertNewAccount, updateAccount, delete_db,
-        get_account, checkAccountExists, dbGetInfo,
+        checkAccountExists, dbGetInfo,
         checkDBExists, delete_acc, checklists,
-        buildings} from '../../../storage/schema/dbSchema'
-import {trigger_new_account} from '../../../storage/fetchAPI'
+        buildings} from '../../storage/schema/dbSchema'
+import {trigger_new_account, get_org_data, get_building_data} from '../../storage/fetchAPI'
 
 class RealmDB extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class RealmDB extends Component {
       account: { // fetch account details email, id, key
         key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=', //Key is recieved when logged in
         org: 'bcitproject', // default org
-        id: 200, // 
+        id: 100, // 
         email: 'bcitproject@gmail.com', 
       },
       realm: null,
@@ -48,7 +48,7 @@ class RealmDB extends Component {
     } else {
       if (checkAccountExists(this.state.account)){
         //  get from db instead of fetchAPI
-        //  var info = await trigger_new_account(this.state.account)
+         var info = await trigger_new_account(this.state.account)
          this.setState({
            api_organization: info,
            isLoading: false
@@ -64,22 +64,24 @@ class RealmDB extends Component {
     }
   };
 
-  get_info = () => {
-    var info = dbGetInfo(this.state.account);
-    console.log(this.state.exampleData)
+  get_org_data = async () => {
+    
+    let info = await get_org_data(this.state.api_organization[0]);
+    // console.log(JSON.stringify(info,null,1))
     this.setState({info})
   };
 
   get_checklists = () => {
-    var info = checklists(this.state.account);
-    console.log(info)
+    var info = checklists(this.state.api_organization[0].buildings[0]);
+    // console.log(info)
     // this.setState({exampleData: info})
   };
 
-  get_buildings = async () => {
-    var info = await buildings(this.state.account);
+  get_buildings = () => {
+    // get org_data before buildings
+    var info = get_building_data(this.state.api_organization[0],this.state.api_organization[0].buildings[0]);
     // console.log(info)
-    this.setState({exampleData: info})
+    // this.setState({exampleData: info})
   };
 
   update_db = () => {
@@ -146,13 +148,13 @@ class RealmDB extends Component {
 
               <View style={styles.db_buttons}>
                 <Text>DbB buttons</Text>
-                  <TouchableOpacity style={styles.button} onPress={() => {this.get_info()}}>
-                    <Text>get_info</Text>
+                  <TouchableOpacity style={styles.button} onPress={() => {this.get_org_data()}}>
+                    <Text>get org_data</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.button} disabled={true} onPress={() => {this.get_checklists()}}>
                     <Text>get checklists</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.button} disabled={true} onPress={() => {this.get_buildings()}}>
+                  <TouchableOpacity style={styles.button} disabled={false} onPress={() => {this.get_buildings()}}>
                     <Text>get buildings</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.button} onPress={() => {this.delete()}}>

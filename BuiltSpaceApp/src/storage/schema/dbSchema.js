@@ -35,6 +35,7 @@ export const accountSchema = {
 // organization schema, nested into accountSchema
 export const organizationSchema = {
   name: 'organizations',
+  primaryKey: 'id',
   properties: {
     name: 'string',
     id: 'int',
@@ -106,7 +107,7 @@ export const assetGroupSchema = {
     bulidingid: 'string?',
     assetGroupId: 'int?',
     name:'string',
-    assetids: 'string?'
+    assetids: 'string?[]'
     // assetids: {type: 'list', objectType: 'assetSchema'}
 
   }
@@ -293,7 +294,9 @@ export const delete_acc = async (accountInfo) => {
 
 export const dbGetInfo = async(accountInfo) => {
   Realm.open(databaseOptions).then(realm => {
-    var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)    
+    // var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)
+    var account = realm.objects('Accounts')
+    console.log(account)
     return account
   }).catch((e) => console.log(e))
 }
@@ -313,7 +316,7 @@ export const buildings = async(accountInfo) => {
     // console.log(Array.from(account[0].organizations[0].buildings))
     var data = Array.from(account[0].organizations[0].buildings)
     // console.log(data)
-    return "lakjfs;lekfja;slkejf"
+    return "test"
   }).catch((e) => console.log(e))
 }
 
