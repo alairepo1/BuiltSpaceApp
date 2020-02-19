@@ -33,6 +33,9 @@ export class BuildingDetailsScreen extends Component {
     const buildingProvince =navigation.getParam('buildingProvince', 'None');
     const buildingAddress= navigation.getParam('buildingAddress', 'None');
     const buildingPostalCode = navigation.getParam('buildingPostalCode', 'None');
+    const buildingId = navigation.getParam('buildingId', 'None');
+    const orgData = this.props.navigation.getParam('orgData','None')
+    const buildingData = this.props.navigation.getParam('buildingData', 'None')
     return (
 
     <View style={styles.container}>
@@ -51,7 +54,12 @@ export class BuildingDetailsScreen extends Component {
             <Text style={styles.text}>{item.title}</Text>
         </View>  
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('ExploreBuilding')}>
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('ExploreBuilding', {
+        buildingId: buildingId,
+        orgData: orgData,
+        buildingData: buildingData 
+        
+      })}>
       <View style={styles.row}>
           <Text style={styles.text}>{item.browse}</Text>
       </View>  

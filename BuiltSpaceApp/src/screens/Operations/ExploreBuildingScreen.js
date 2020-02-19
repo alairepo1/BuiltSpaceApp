@@ -1,16 +1,52 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
+import SpacesModal from './SpacesModal.js';
+import {get_building_data} from '../../storage/fetchAPI.js'
+import AssetsModal from './AssetsModal.js'
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
         super(props);
         this.state = {
           building_data: [],
-          key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
+          key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+          spaces: [],
+          spacesFetched: false,
+          assets: [],
+          filteredAssets: [],
+          checklists: [],
+          filteredChecklist: [],
+          dataLoaded: false
         };
+        this.spacesFilter = this.spacesFilter.bind(this)
       }
 
+    spacesFilter = (spaceFloor) => {
+      console.log(spaceFloor)
+      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
+      console.log(this.state.filteredAssets)
+    }
+
+    assetsFilter = (assetCategory) => {
+      console.log(assetCategory)
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.categoryabbr === "" )
+      console.log(this.state.filteredChecklist)
+    }
+    
+    componentDidMount = async() => {
+      console.log("Befor")
+      var orgData =  await this.props.navigation.state.params.orgData
+      var buildingData = await this.props.navigation.state.params.buildingData
+      var AssetsAndSpaces = await get_building_data(orgData, buildingData)
+      console.log("Aye: ",orgData.checklists)
+      this.setState({
+        spaces: AssetsAndSpaces.spaces,
+        assets: AssetsAndSpaces.assets,
+        checklists: orgData.checklists,
+        dataLoaded: true,
+      })
+    }
 
   // renderItem({item}) {
   //   return(
@@ -30,18 +66,20 @@ export class ExploreBuildingScreen extends Component {
   render() {
     const {navigation} = this.props;
     
+    const buildingId = navigation.getParam('buildingId', 'None')
     const buildingName = navigation.getParam('buildingName', 'None');
+    if (!this.state.dataLoaded) {
+      return(
+        <Text>Loading</Text>
+      )
+    } else {
     return (
     <View>
       <View style={styles.TextContainer}>
-        <TouchableOpacity>
-            <Text style={styles.headingTextBold}> Space</Text><Text style={styles.detailsText}>None Selected </Text>
-        </TouchableOpacity>
+            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>
       <View style={styles.TextContainer}>
-        <TouchableOpacity>
-            <Text style={styles.headingTextBold}> Asset</Text><Text style={styles.detailsText}>None Selected </Text>
-        </TouchableOpacity>
+        <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
       </View>
       <View style={styles.TextContainer}>
         <TouchableOpacity>
@@ -66,6 +104,7 @@ export class ExploreBuildingScreen extends Component {
       
     );
   }
+}
 }
 
 const styles = StyleSheet.create({
