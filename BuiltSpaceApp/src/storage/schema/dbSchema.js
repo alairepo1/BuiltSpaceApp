@@ -27,7 +27,7 @@ export const accountSchema = {
   properties: {
     id: 'int',
     email: 'string',
-    key: 'string',
+    api_key: 'string',
     organizations: {type: 'list', objectType: 'organizations'},
   },
 };
@@ -35,14 +35,13 @@ export const accountSchema = {
 // organization schema, nested into accountSchema
 export const organizationSchema = {
   name: 'organizations',
-  primaryKey: 'id',
   properties: {
     name: 'string',
     id: 'int',
     primaryEmail: 'string?',
     logourl: 'string?',
     brandingurl: 'string?',
-    lastLoaded: 'date',
+    lastLoaded: 'string',
     checklists: {type: 'list', objectType: 'checklists'},
     assetGroup: {type: 'list', objectType: 'assetGroup'},
     buildings: {type: 'list', objectType: 'building'}
@@ -178,7 +177,7 @@ export const insertNewAccount = async (accountDetails, accountOrganizations) => 
           const account = realm.create('Accounts', {
             id: accountDetails.id,
             email: accountDetails.email,
-            key: accountDetails.key,
+            api_key: accountDetails.api_key,
             organizations: []
           })
           
@@ -221,18 +220,14 @@ export const checkAccountExists = async (account) => {
   try{
     if (Realm.exists(databaseOptions)) {
       await Realm.open(databaseOptions).then(realm => {
-        if (realm.objects('Accounts').filtered(`id == '${account.id}' && email == '${account.email}'`).isValid()) {
-          return true// check if account exists
-        }else{
-          return false
-        }
+      var account = realm.objects('Accounts')
+      // console.log(account)
+      // .filtered(`id == ${account.id} && email == '${account.email}'`)
       })
     }else{
       await create_db()
-      trigger_new_account(account)
     }
   }catch(e) { console.log(e)} 
-  
 }
 
 /**
@@ -293,12 +288,12 @@ export const delete_acc = async (accountInfo) => {
 }
 
 export const dbGetInfo = async(accountInfo) => {
-  Realm.open(databaseOptions).then(realm => {
-    // var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)
-    var account = realm.objects('Accounts')
-    console.log(account)
+  Realm.open(databaseOptions).then( realm => {
+    var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)
+    // console.log(Array.from(account))
     return account
   }).catch((e) => console.log(e))
+
 }
 
 export const checklists = async(accountInfo) => {
@@ -323,7 +318,9 @@ export const buildings = async(accountInfo) => {
 export const checkDBExists = async() => {
   if (Realm.exists(databaseOptions)) {
     return true
-  }else {return false}
+  }else {
+    create_db()
+  }
 }
 
 /**

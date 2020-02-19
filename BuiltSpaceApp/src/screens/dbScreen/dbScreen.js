@@ -14,14 +14,14 @@ import { insertNewAccount, updateAccount, delete_db,
         checkAccountExists, dbGetInfo,
         checkDBExists, delete_acc, checklists,
         buildings} from '../../storage/schema/dbSchema'
-import {trigger_new_account, get_org_data, get_building_data} from '../../storage/fetchAPI'
+import {trigger_new_account,fetchOrgs, get_org_data, get_building_data} from '../../storage/fetchAPI'
 
 class RealmDB extends Component {
   constructor(props) {
     super(props);
     this.state = {
       account: { // fetch account details email, id, key
-        key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=', //Key is recieved when logged in
+        api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=', //Key is recieved when logged in
         org: 'bcitproject', // default org
         id: 100, // 
         email: 'bcitproject@gmail.com', 
@@ -39,6 +39,12 @@ class RealmDB extends Component {
     /** Check if there is account logged in and fetch data.
      * If account does not exist, creates it in db.
     **/ 
+   var info = await fetchOrgs(this.state.account)
+   this.setState({
+     api_organization: info,
+     isLoading: false
+   })
+   
     if (!checkDBExists()){
       console.log("Create DB?")
       this.setState({
@@ -46,23 +52,20 @@ class RealmDB extends Component {
         isLoading: false
       })
     } else {
-      if (checkAccountExists(this.state.account)){
+      if (checkAccountExists(this.state.account) === 'true'){
         //  get from db instead of fetchAPI
-         var info = await trigger_new_account(this.state.account)
-         this.setState({
-           api_organization: info,
-           isLoading: false
-         })
+        console.log('account exists')
        } else {
         //  prompt add account into database?
-        var info = await trigger_new_account(this.state.account)
-        this.setState({
-          api_organization: info,
-          isLoading: false
-        })
+        // var info = await trigger_new_account(this.state.account)
+        console.log('account does not exist in db')
        }
     }
   };
+
+  get_account = async() => {
+    let info = dbGetInfo(this.state.account)
+  }
 
   get_org_data = async () => {
     
@@ -143,6 +146,9 @@ class RealmDB extends Component {
               </TouchableOpacity>
               <TouchableOpacity style={styles.button} onPress={() => console.log(this.props)}>
                 <Text>Home Screen</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={() => {this.get_account()}}>
+                <Text>Get account info</Text>
               </TouchableOpacity>
             </View>
 
