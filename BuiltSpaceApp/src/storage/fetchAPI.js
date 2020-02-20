@@ -80,9 +80,7 @@ export const fetchOrgs = async (accountInfo) => {
 
   get_buildings = async (org_name,header) => {
     // gets building data from an organization api
-    console.log("in function: ", org_name)
     var buildings = []
-    console.log(url)
     await fetch(
       `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/buildings`, header
     )
@@ -154,25 +152,30 @@ export const fetchOrgs = async (accountInfo) => {
         return checklists
   };
 
-   export const get_building_data = async(org_info, building) => {
+   export const get_building_data = async(org_info, building, key) => {
     // gets building data from api's 
+    var header = {
+      method: 'get',
+      headers: {
+        Authorization: key,
+      }
+     }
     var org_name = await org_info.name.replace(' ', '');
     var buildingInfo = await building
     var assetGroupList = await org_info.assetGroup
-    var assets = await get_assets(org_name, assetGroupList, buildingInfo)
-    var spaces = await get_spaces(org_name,buildingInfo)
+    var assets = await get_assets(org_name, assetGroupList, buildingInfo,header)
+    var spaces = await get_spaces(org_name,buildingInfo,header)
     buildingInfo['assets'] = assets
     buildingInfo['spaces'] = spaces
     return buildingInfo
   }
 
-  get_assets = async(org_name, assetGroupList, buildingInfo) => {
+  get_assets = async(org_name, assetGroupList, buildingInfo, header) => {
     /**  
      * loop each assetGroup then checks 
      * if asset.buildingid matches the building.id, 
      * adds the asset into building.assets[]
      */
-    console.log("get assets")
     var building = buildingInfo
     var Buildingid = buildingInfo.id
     var assets = []
@@ -194,10 +197,9 @@ export const fetchOrgs = async (accountInfo) => {
     return assets
   };
 
-  get_spaces = async(org_name, buildingInfo) =>{
+  get_spaces = async(org_name, buildingInfo,header) =>{
     // takes organization name and building info as arguments
     // gets all spaces from a building id
-    console.log("get spaces")
     var building = buildingInfo
     var Buildingid = building.id
     var spaces = []

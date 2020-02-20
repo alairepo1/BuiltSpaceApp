@@ -16,7 +16,6 @@ export class SelectOrgScreen extends Component {
     this.setState({
       org_data: this.props.navigation.state.params,
     })
-    console.log('org screen', this.props.navigation.state.params)
   };
 
   // renderItem({item}) {

@@ -39,6 +39,7 @@ export class HomePage extends Component {
     // initialize the api here
     fetchOrgs(this.state.account)
     .then(result =>{
+      console.log(result)
       this.setState({
         organizations: result,
         isLoading: false
@@ -46,7 +47,6 @@ export class HomePage extends Component {
     })
 
     checkAccountExists(this.state.account, this.state.organizations)
-    
   };
 
   render() {

@@ -183,7 +183,6 @@ export const insertNewAccount = async (accountDetails, accountOrganizations) => 
             api_key: accountDetails.api_key,
             organizations: []
           }
-
           for (var org = 0; org < accountOrganizations.length; org++){
             account.organizations.push(accountOrganizations[org])
           }

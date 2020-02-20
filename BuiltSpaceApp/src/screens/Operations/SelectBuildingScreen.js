@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
-import {get_org_data} from '../../storage/fetchAPI'
 import {get_org_data} from '../../storage/fetchAPI.js'
 
 export class SelectBuildingScreen extends Component { 
@@ -40,8 +39,7 @@ export class SelectBuildingScreen extends Component {
 
   componentDidMount = async() => {
     // this.fetch();
-    // console.log(this.props.navigation.state.params)
-    var info = await get_org_data(this.props.navigation.state.params.org_data, this.state.key).then(result =>{
+    var info = await get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
         this.setState({
           org_data: result,
           isLoading: false
