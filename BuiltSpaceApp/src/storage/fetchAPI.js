@@ -59,19 +59,25 @@ export const fetchOrgs = async (accountInfo) => {
     }
   };
 
-  export const get_org_data = async (org_info) => {
+  export const get_org_data = async (org_info, key) => {
+    var header = {
+      method: 'get',
+      headers: {
+        Authorization: key,
+      }
+     }
     var org_name = await org_info.name.replace(' ', '');
     var org_data = await org_info
-    var buildings = await get_buildings(org_name)
-    var assetGroups = await get_assetGroup(org_name)
-    var checklists = await get_checklists(org_name)
+    var buildings = await get_buildings(org_name, header)
+    var assetGroups = await get_assetGroup(org_name, header)
+    var checklists = await get_checklists(org_name, header)
     org_data.buildings = buildings
     org_data.assetGroup = assetGroups
     org_data.checklists = checklists
     return org_data
   }
 
-  get_buildings = async (org_name) => {
+  get_buildings = async (org_name,header) => {
     // gets building data from an organization api
     var buildings = []
     await fetch(
@@ -85,7 +91,7 @@ export const fetchOrgs = async (accountInfo) => {
     return buildings
   };
 
-  get_assetGroup = async (org_name) => {
+  get_assetGroup = async (org_name,header) => {
     // gets assetGroups from organization api
     var assetGroup = []
       await fetch(
@@ -98,7 +104,7 @@ export const fetchOrgs = async (accountInfo) => {
     return assetGroup
   };
 
-  get_checklists = async (org_name) => {
+  get_checklists = async (org_name,header) => {
     // Gets checklists and question from an organization
     var checklists = []
       await fetch(
@@ -112,12 +118,12 @@ export const fetchOrgs = async (accountInfo) => {
             checklists.push(checklist);
           }
         });
-    var questions = await get_questions(checklists, org_name)
+    var questions = await get_questions(checklists, org_name, header)
 
     return questions
   };
 
-  get_questions = async (checklist,org_name) => {
+  get_questions = async (checklist,org_name,header) => {
     // gets questions from organization
     var checklists = checklist
       await fetch(

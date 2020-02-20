@@ -16,6 +16,7 @@ export const DBSchema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
+    name: 'string',
     accounts: {type: 'list', objectType: 'Accounts'}
   }
 }
@@ -151,7 +152,9 @@ export const questionsSchema = {
 }
 
 
-
+/**
+ * Database Service/Functions
+ */
 
 // default db options when opening a realm instance
 const databaseOptions = {
@@ -170,30 +173,25 @@ const databaseOptions = {
 
 // create a new account in the db
 export const insertNewAccount = async (accountDetails, accountOrganizations) => {
-  if (Realm.exists(databaseOptions)) {
     try{
       Realm.open(databaseOptions).then(realm => {
         realm.write(() => {
-          const account = realm.create('Accounts', {
+          const db = realm.objects(DB_NAME).filtered(`id == '1' && name == 'BuiltSpaceApp'`)
+          const account = {
             id: accountDetails.id,
             email: accountDetails.email,
             api_key: accountDetails.api_key,
             organizations: []
-          })
-          
+          }
+
           for (var org = 0; org < accountOrganizations.length; org++){
             account.organizations.push(accountOrganizations[org])
           }
+          db[0].accounts.push(account)
         })
         realm.close()
       })
     }catch(err) { console.log(err)}
-  }else {
-    await create_db()
-    insertNewAccount(accountDetails, accountOrganizations)
-  }
-  
-
 }
 
 // update an existing account in the db, the function queries the account id
@@ -214,15 +212,22 @@ export const updateAccount = async (newAccountDetails) => {
 
 /**
  * 
- * @param {object} account account details to check if account exists
+ * check if database exists if not, create it.
+ * then check if logged in account exists, if not 
+ * inserts a new account with insertNewAccount()
  */
-export const checkAccountExists = async (account) => {
+export const checkAccountExists = async (account, org_data) => {
   try{
     if (Realm.exists(databaseOptions)) {
-      await Realm.open(databaseOptions).then(realm => {
-      var account = realm.objects('Accounts')
-      // console.log(account)
-      // .filtered(`id == ${account.id} && email == '${account.email}'`)
+      Realm.open(databaseOptions).then(realm => {
+      var valid = realm.objects('Accounts').filtered(`id == '${account.id}'`).isValid()
+      return valid
+      }).then(result => {
+        if (result){
+
+        }else{
+          insertNewAccount(account, org_data)
+        }
       })
     }else{
       await create_db()
@@ -288,12 +293,19 @@ export const delete_acc = async (accountInfo) => {
 }
 
 export const dbGetInfo = async(accountInfo) => {
+  var organizations = []
   Realm.open(databaseOptions).then( realm => {
-    var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)
-    // console.log(Array.from(account))
-    return account
+    realm.write(()=> {
+      var acc = realm.objects('Accounts').filtered('id == $0', accountInfo.id)
+      //.filtered("SUBQUERY(accounts, $Accounts, $Accounts.id == '200')")
+      console.log(acc.values)
+      acc[0].organizations.forEach(org => {
+        organizations.push(org)
+      })
+    })
+    
   }).catch((e) => console.log(e))
-
+return organizations
 }
 
 export const checklists = async(accountInfo) => {
@@ -333,6 +345,7 @@ create_db =  async() => {
     realm.write(() => {
       realm.create(DB_NAME, {
         id: 1,
+        name: "BuiltSpaceApp",
         accounts: []
       })
     })

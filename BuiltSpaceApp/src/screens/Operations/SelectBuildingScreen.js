@@ -7,7 +7,8 @@ export class SelectBuildingScreen extends Component {
     super(props);
     this.state = {
       org_data: [],
-      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
+      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+      isLoading: true
     };
   }
 
@@ -38,11 +39,13 @@ export class SelectBuildingScreen extends Component {
   componentDidMount = async() => {
     // this.fetch();
     // console.log(this.props.navigation.state.params)
-    var info = await get_org_data(this.props.navigation.state.params.org_data)
-    console.log(info.buildings)
-    this.setState({
-      org_data: info
-    })
+    var info = await get_org_data(this.props.navigation.state.params.org_data, this.state.key).then(result =>{
+        this.setState({
+          org_data: result,
+          isLoading: false
+        })
+      })
+    
   };
 
   // renderItem({item}) {
@@ -57,7 +60,11 @@ export class SelectBuildingScreen extends Component {
   render() {
     const {building_data} = this.state;
     const {navigate} = this.props.navigation;
-    return (
+    return ( this.state.isLoading ? 
+      <View>
+        <Text>Loading</Text> 
+      </View>
+      :
       <FlatList style={styles.container}
       data={this.state.org_data.buildings}
       renderItem={({item}) => 

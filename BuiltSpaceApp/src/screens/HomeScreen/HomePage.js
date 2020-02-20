@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator} from
 import PropTypes from 'prop-types';
 import StatusBar from '../../statusComponent.js';
 import {fetchOrgs} from '../../storage/fetchAPI'
+import {checkAccountExists} from '../../storage/schema/dbSchema'
 export class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -36,11 +37,15 @@ export class HomePage extends Component {
 
   componentDidMount = async() => {
     // initialize the api here
-    var org_data = await fetchOrgs(this.state.account)
-    this.setState({
-      organizations: org_data,
-      isLoading: false
+    fetchOrgs(this.state.account)
+    .then(result =>{
+      this.setState({
+        organizations: result,
+        isLoading: false
+      })
     })
+
+    checkAccountExists(this.state.account, this.state.organizations)
     
   };
 

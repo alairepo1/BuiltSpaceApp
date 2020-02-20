@@ -23,8 +23,8 @@ class RealmDB extends Component {
       account: { // fetch account details email, id, key
         api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=', //Key is recieved when logged in
         org: 'bcitproject', // default org
-        id: 100, // 
-        email: 'bcitproject@gmail.com', 
+        id: 200, // 
+        email: 'TEST@gmail.com', 
       },
       realm: null,
       url: 'https://beta.builtspace.com',
@@ -39,18 +39,14 @@ class RealmDB extends Component {
     /** Check if there is account logged in and fetch data.
      * If account does not exist, creates it in db.
     **/ 
-   var info = await fetchOrgs(this.state.account)
+  //  var info = await fetchOrgs(this.state.account)
    this.setState({
-     api_organization: info,
+    //  api_organization: info,
      isLoading: false
    })
    
     if (!checkDBExists()){
-      console.log("Create DB?")
-      this.setState({
-        api_organization: "DB not created",
-        isLoading: false
-      })
+      console.log("DB created")
     } else {
       if (checkAccountExists(this.state.account) === 'true'){
         //  get from db instead of fetchAPI
@@ -64,7 +60,10 @@ class RealmDB extends Component {
   };
 
   get_account = async() => {
-    let info = dbGetInfo(this.state.account)
+    let info = await dbGetInfo(this.state.account).then(result => {
+      this.setState({exampleData: result})
+     })
+    //  console.log(JSON.stringify(this.state.exampleData,null,1))
   }
 
   get_org_data = async () => {
@@ -106,7 +105,9 @@ class RealmDB extends Component {
     const info = this.state.api_organization
       ? 'Organizations: ' + JSON.stringify(this.state.api_organization, null, 1)
       : 'Loading...';
-
+    const offlineData = this.state.exampleData
+      ? this.state.exampleData
+      : 'Loading...'
     const have_network = <View style={styles.container}>
                           <ScrollView>
                             <Text>{JSON.stringify(this.state.api_organization, null, 1)}</Text>
@@ -116,11 +117,13 @@ class RealmDB extends Component {
     const no_network = <View style={styles.container}>
                           <FlatList
                             style={styles.flatlist}
-                            data={this.state.exampleData}
-                            extraData={this.state.exampleData}
+                            data={offlineData}
+                            extraData={offlineData}
                             renderItem={({item}) => 
                             <View>
-                              <Text>{item}</Text>
+                              <Text>{item.id}</Text>
+                              <Text>{item.name}</Text>
+                              <Text>{item.lastLoaded}</Text>
                             </View>
                           }
                           keyExtractor={item => item.id}
@@ -182,7 +185,7 @@ class RealmDB extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
+    flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 5,
