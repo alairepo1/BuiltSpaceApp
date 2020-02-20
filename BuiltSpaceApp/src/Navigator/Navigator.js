@@ -15,6 +15,7 @@ import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js'
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
+import SpacesModal from '../screens/Operations/SpacesModal.js';
 
 import dbScreen from '../screens/dbScreen/dbScreen'
 
@@ -60,6 +61,9 @@ const HomeStack = createStackNavigator(
     },
     SelectAsset: {
       screen: SelectAssetScreen
+    },
+    SpacesModal: {
+      screen: SpacesModal
     },
     // Add Operation screens above
     //

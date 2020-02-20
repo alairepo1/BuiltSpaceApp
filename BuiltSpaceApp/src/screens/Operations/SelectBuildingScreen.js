@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import {get_org_data} from '../../storage/fetchAPI'
+import {get_org_data} from '../../storage/fetchAPI.js'
+
 export class SelectBuildingScreen extends Component { 
   constructor(props) {
     super(props);
@@ -28,7 +30,7 @@ export class SelectBuildingScreen extends Component {
   //       .then(result => {
           
   //         this.setState({
-  //           building_data: result
+  //           org_data: result
   //         })
   //       })
   //       .catch(e => {
@@ -46,6 +48,7 @@ export class SelectBuildingScreen extends Component {
         })
       })
     
+
   };
 
   // renderItem({item}) {
@@ -74,9 +77,11 @@ export class SelectBuildingScreen extends Component {
         buildingCity: item.city,
         buildingName: item.name,
         buildingProvince: item.provincestate,
-        buildingPostalCode: item.postalcode
-      })}
-      >
+        buildingPostalCode: item.postalcode,
+        buildingId: item.id,
+        orgData: this.state.org_data,
+        buildingData: item
+      })}>
       <View style={styles.row}>
         <Text style={styles.text}>{item.name} </Text>
       </View>  

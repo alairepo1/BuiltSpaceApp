@@ -8,6 +8,7 @@ import {insertNewAccount, updateAccount, devare_db, get_account} from './schema/
 const url = 'https://beta.builtspace.com'
 const api_organization = []
 
+
 export const trigger_new_account = async (accountData) => {
     account = accountData
     header.headers = {Authorization: accountData.key}
@@ -79,12 +80,15 @@ export const fetchOrgs = async (accountInfo) => {
 
   get_buildings = async (org_name,header) => {
     // gets building data from an organization api
+    console.log("in function: ", org_name)
     var buildings = []
+    console.log(url)
     await fetch(
       `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/buildings`, header
     )
       .then(response => response.json())
       .then(result => {
+        console.log("result: ", result)
         buildings = result
             })
       .catch(e => console.log(e));
@@ -150,7 +154,7 @@ export const fetchOrgs = async (accountInfo) => {
         return checklists
   };
 
-  export const get_building_data = async(org_info, building) => {
+   export const get_building_data = async(org_info, building) => {
     // gets building data from api's 
     var org_name = await org_info.name.replace(' ', '');
     var buildingInfo = await building
@@ -168,6 +172,7 @@ export const fetchOrgs = async (accountInfo) => {
      * if asset.buildingid matches the building.id, 
      * adds the asset into building.assets[]
      */
+    console.log("get assets")
     var building = buildingInfo
     var Buildingid = buildingInfo.id
     var assets = []
@@ -192,6 +197,7 @@ export const fetchOrgs = async (accountInfo) => {
   get_spaces = async(org_name, buildingInfo) =>{
     // takes organization name and building info as arguments
     // gets all spaces from a building id
+    console.log("get spaces")
     var building = buildingInfo
     var Buildingid = building.id
     var spaces = []
