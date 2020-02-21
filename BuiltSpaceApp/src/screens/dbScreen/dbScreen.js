@@ -13,7 +13,7 @@ import {acc} from 'react-native-reanimated';
 import { insertNewAccount, updateAccount, delete_db,
         checkAccountExists, dbGetInfo,
         checkDBExists, delete_acc, checklists,
-        buildings} from '../../storage/schema/dbSchema'
+        buildings, insertOrgData} from '../../storage/schema/dbSchema'
 import {trigger_new_account,fetchOrgs, get_org_data, get_building_data} from '../../storage/fetchAPI'
 
 class RealmDB extends Component {
@@ -39,9 +39,9 @@ class RealmDB extends Component {
     /** Check if there is account logged in and fetch data.
      * If account does not exist, creates it in db.
     **/ 
-  //  var info = await fetchOrgs(this.state.account)
+   var info = await fetchOrgs(this.state.account)
    this.setState({
-    //  api_organization: info,
+     api_organization: info[0],
      isLoading: false
    })
    
@@ -68,22 +68,20 @@ class RealmDB extends Component {
 
   get_org_data = async () => {
     
-    let info = await get_org_data(this.state.api_organization[0]);
-    // console.log(JSON.stringify(info,null,1))
-    this.setState({info})
-  };
+    let info = await get_org_data(this.state.api_organization, this.state.account.api_key).then(result => {
+      console.log(this.state.api_organization)
+      this.setState({api_organization : result})
+      // let newdata = insertOrgData(this.state.account, result)
 
-  get_checklists = () => {
-    var info = checklists(this.state.api_organization[0].buildings[0]);
-    // console.log(info)
-    // this.setState({exampleData: info})
+    })
+    
   };
 
   get_buildings = () => {
     // get org_data before buildings
-    var info = get_building_data(this.state.api_organization[0],this.state.api_organization[0].buildings[0]);
+    // var info = get_building_data(this.state.api_organization[0],this.state.api_organization[0].buildings[0]);
     // console.log(info)
-    // this.setState({exampleData: info})
+    this.setState({exampleData: this.state.api_organization.buildings})
   };
 
   update_db = () => {
@@ -123,7 +121,6 @@ class RealmDB extends Component {
                             <View>
                               <Text>{item.id}</Text>
                               <Text>{item.name}</Text>
-                              <Text>{item.lastLoaded}</Text>
                             </View>
                           }
                           keyExtractor={item => item.id}
@@ -159,12 +156,6 @@ class RealmDB extends Component {
                 <Text>DbB buttons</Text>
                   <TouchableOpacity style={styles.button} onPress={() => {this.get_org_data()}}>
                     <Text>get org_data</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.button} disabled={true} onPress={() => {this.get_checklists()}}>
-                    <Text>get checklists</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.button} disabled={false} onPress={() => {this.get_buildings()}}>
-                    <Text>get buildings</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.button} onPress={() => {this.delete()}}>
                     <Text>Del DB</Text>

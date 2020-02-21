@@ -2,11 +2,16 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import {get_org_data} from '../../storage/fetchAPI.js'
+import {insertOrgData} from '../../storage/schema/dbSchema'
 
 export class SelectBuildingScreen extends Component { 
   constructor(props) {
     super(props);
     this.state = {
+      account: {
+        email: 'bcitbuiltspace@gmail.com',
+        id: 200
+      },
       org_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
       isLoading: true
@@ -40,6 +45,7 @@ export class SelectBuildingScreen extends Component {
   componentDidMount = async() => {
     // this.fetch();
     var info = await get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+      insertOrgData(this.state.account, this.props.navigation.state.params.orgName)
         this.setState({
           org_data: result,
           isLoading: false

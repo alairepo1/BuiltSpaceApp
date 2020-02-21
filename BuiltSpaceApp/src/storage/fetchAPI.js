@@ -86,7 +86,6 @@ export const fetchOrgs = async (accountInfo) => {
     )
       .then(response => response.json())
       .then(result => {
-        console.log("result: ", result)
         buildings = result
             })
       .catch(e => console.log(e));

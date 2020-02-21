@@ -297,7 +297,6 @@ export const dbGetInfo = async(accountInfo) => {
     realm.write(()=> {
       var acc = realm.objects('Accounts').filtered('id == $0', accountInfo.id)
       //.filtered("SUBQUERY(accounts, $Accounts, $Accounts.id == '200')")
-      console.log(acc.values)
       acc[0].organizations.forEach(org => {
         organizations.push(org)
       })
@@ -350,4 +349,16 @@ create_db =  async() => {
     })
     realm.close()
   }).catch((e)=> {console.log(e)})
+}
+
+export const insertOrgData = async (accountDetails, orgData) => {
+  console.log(orgData)
+
+  await Realm.open(databaseOptions).then(realm => {
+    realm.write(()=>{
+      var account = realm.objects('Accounts').filtered('')
+      console.log('account after', account)
+    })
+  }).catch((e)=>{console.log(e)})
+
 }
