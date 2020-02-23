@@ -4,7 +4,7 @@
  */
 
 import Realm from 'realm';
-import {trigger_new_account} from '../fetchAPI'
+import {trigger_new_account, fetchOrgs} from '../fetchAPI'
 import { acc } from 'react-native-reanimated';
 // name variables
 export const DB_NAME = "BuiltSpaceDB"
@@ -29,6 +29,7 @@ export const accountSchema = {
     id: 'int',
     email: 'string',
     api_key: 'string',
+    lastUpdated: 'date?',
     organizations: {type: 'list', objectType: 'organizations'},
   },
 };
@@ -42,7 +43,9 @@ export const organizationSchema = {
     primaryEmail: 'string?',
     logourl: 'string?',
     brandingurl: 'string?',
-    lastLoaded: 'string',
+    absoluteurl: 'string?',
+    lastLoaded: 'date',
+    lastUpdated: 'date?',
     checklists: {type: 'list', objectType: 'checklists'},
     assetGroup: {type: 'list', objectType: 'assetGroup'},
     buildings: {type: 'list', objectType: 'building'}
@@ -66,6 +69,8 @@ export const buildingSchema = {
     privateid: 'int',
     status: 'string?',
     url: "string?",
+    lastLoaded: 'date',
+    lastUpdated: 'date?',
     assets: {type: 'list', objectType: 'asset'}
     
   }
@@ -102,6 +107,7 @@ export const assetSchema = {
 export const assetGroupSchema = {
   name: 'assetGroup',
   properties: {
+    id: 'string',
     assetcategoryid: 'string',
     buildinggroupid: 'string',
     bulidingid: 'string?',
@@ -172,7 +178,9 @@ const databaseOptions = {
 }
 
 // create a new account in the db
-export const insertNewAccount = async (accountDetails, accountOrganizations) => {
+const insertNewAccount = (accountDetails, accountOrganizations) => {
+  var currentDate = new Date()
+  var formatDate = JSON.stringify(currentDate)
     try{
       Realm.open(databaseOptions).then(realm => {
         realm.write(() => {
@@ -181,32 +189,34 @@ export const insertNewAccount = async (accountDetails, accountOrganizations) => 
             id: accountDetails.id,
             email: accountDetails.email,
             api_key: accountDetails.api_key,
+            lastUpdated: currentDate,
             organizations: []
           }
           for (var org = 0; org < accountOrganizations.length; org++){
+            // accountOrganizations[org]['lastUpdated'] = ''
             account.organizations.push(accountOrganizations[org])
           }
           db[0].accounts.push(account)
         })
         realm.close()
-      })
+      }).catch(e => {console.log(e)})
     }catch(err) { console.log(err)}
 }
 
-// update an existing account in the db, the function queries the account id
-export const updateAccount = async (newAccountDetails) => {
-  Realm.open(databaseOptions).then(realm => {
-    realm.write(() => {
-      let updateAccount = realm.objectForPrimaryKey(DB_NAME, newAccountDetails.id)
 
-      // update account below
-      new_organizations = []
-      newAccountDetails.organizations.forEach(org => {new_organizations.push(org)})
+export const updateOrgs = (accountDetails, orgs) => {
+  // updates organizations after 1 hr or refreshed
+  var realm = Realm.open(databaseOptions).then(realm => {
+    realm.write(()=>{
+      realm.create('Accounts',{id: accountDetails.id, organizations: orgs} ,'modified')
+    })
 
-      updateAccount.organizations = new_organizations
+  }).catch(e => {console.log('updateOrgs: ', e)})
+  
+}
 
-        })
-  })
+export const updateBuildings = (accountDetails, building) => {
+  
 }
 
 /**
@@ -215,33 +225,60 @@ export const updateAccount = async (newAccountDetails) => {
  * then check if logged in account exists, if not 
  * inserts a new account with insertNewAccount()
  */
-export const checkAccountExists = async (account, org_data) => {
+export const checkAccountExists = async (account) => {
   try{
     if (Realm.exists(databaseOptions)) {
-      Realm.open(databaseOptions).then(realm => {
-      var valid = realm.objects('Accounts').filtered(`id == '${account.id}'`).isValid()
-      return valid
-      }).then(result => {
-        if (result){
+      Realm.open(databaseOptions).then( async realm => {
+      var valid = realm.objectForPrimaryKey(`Accounts`, account.id)
+      if (valid !== undefined){
+        console.log('account exists')
+      }
 
-        }else{
-          insertNewAccount(account, org_data)
-        }
+      if (valid == undefined){
+        console.log("no account found: ", valid)
+        var orgs = await fetchOrgs(account)
+        insertNewAccount(account, orgs)
+      }
+      
       })
     }else{
       await create_db()
     }
-  }catch(e) { console.log(e)} 
+  }catch(e) { console.log('checkAccountExists: ',e)} 
 }
 
 /**
- * @param {object} accountDetails passed in by Home Screen
+ * Gets account details and orgs from database
  */
-export const get_account = async (accountDetails) => {
+export const getAccountOrgs = async (accountDetails) => {
   // Fetches account info from realm
-  if (Realm.exists(databaseOptions)) {
+  try{
+    var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
+    var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+    return Promise.resolve(account)
 
+  }catch(e){console.log('getAccountOrgs error: ', e)}
+}
+
+export const DBcheckOrgData = async (accountDetails, organization) => {
+  var realm = await Realm.open(databaseOptions).catch(e => {console.log('failed to open realm in DBcheckOrgData()')})
+  var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+  var org = account.organizations.filtered(`id = ${organization.id}`)
+  
+  if (!org[0].buildings.isEmpty()){
+    return Promise.resolve(Array.from(org))
+  } else {
+    return Promise.resolve(false)
   }
+
+}
+
+export const DBgetOrgData = async (accountDetails, organization) => {
+  var realm = await Realm.open(databaseOptions).catch(e => {console.log('failed to open realm in getBuilding()')})
+  var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+  var org = account.organizations.filtered(`id = ${organization.id}`)
+  console.log(org)
+  return Array.from(org)
 }
 
 // delete db for testing
@@ -250,82 +287,69 @@ export const delete_db = async () => {
     try{
       Realm.deleteFile(databaseOptions)
       console.log("db deleted.")
-    }catch(e) {console.log(e)} 
+    }catch(e) {console.log('delete db',e)} 
   }else{
     console.log("Does not exist")
   }
 }
 
-export const delete_acc = async (accountInfo) => {
-  Realm.open(databaseOptions).then(realm => {
-    realm.write(()=> {
-      var theaccount =realm.objects('Accounts')
+// export const delete_acc = async (accountInfo) => {
 
-      var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id} && email == '${accountInfo.email}'`)
+//   try{
 
-      // delete bottom arrays
-      account.forEach(account => { 
-        account.organizations.forEach( async org => {
-          org.assetGroup.forEach(assetGroup => {
-            realm.delete(assetGroup)
-          })
-          org.checklists.forEach(checklist => {
-            realm.delete(checklist.questions)
-          })
-          org.buildings.forEach(building => {
-            realm.delete(building.assets)
-            })
-          })
-        })
-
-        //delete secondary arrays
-        account.forEach(account => {
-          account.organizations.forEach(org => {
-            realm.delete(org.buildings)
-            realm.delete(org.checklists)
-          })
-          realm.delete(account) // delete account
-        })
-    })
-  })
-
-}
+//     Realm.open(databaseOptions).then(realm => {
+//       realm.write(()=> {
+//         var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id} && email == '${accountInfo.email}'`)
+  
+//         // delete bottom arrays
+//         account.forEach(account => { 
+//           account.organizations.forEach( async org => {
+//             org.assetGroup.forEach(assetGroup => {
+//               realm.delete(assetGroup)
+//             })
+//             org.checklists.forEach(checklist => {
+//               realm.delete(checklist.questions)
+//             })
+//             org.buildings.forEach(building => {
+//               realm.delete(building.assets)
+//               })
+//             })
+//           })
+  
+//           //delete secondary arrays
+//           account.forEach(account => {
+//             account.organizations.forEach(org => {
+//               realm.delete(org.buildings)
+//               realm.delete(org.checklists)
+//             })
+//             realm.delete(account) // delete account
+//           })
+//       })
+//     })
+//   }catch(e){
+//     console.log('delete account error: ', e)
+//   }
+// }
 
 export const dbGetInfo = async(accountInfo) => {
   var organizations = []
-  Realm.open(databaseOptions).then( realm => {
-    realm.write(()=> {
-      var acc = realm.objects('Accounts').filtered('id == $0', accountInfo.id)
-      //.filtered("SUBQUERY(accounts, $Accounts, $Accounts.id == '200')")
-      acc[0].organizations.forEach(org => {
-        organizations.push(org)
+  try{
+    Realm.open(databaseOptions).then( realm => {
+      realm.write(()=> {
+        var acc = realm.objects('Accounts').filtered('id == $0', accountInfo.id)
+        var orgs = acc[0].organizations.filtered('id = 560')
+        orgs.forEach(org => organizations.push(org))
       })
-    })
-    
-  }).catch((e) => console.log(e))
-return organizations
+      
+    }).catch((e) => console.log(e))
+    return organizations
+
+  }catch(e){
+    console.log('dbGetInfo error: ', e)
+  }
 }
 
-export const checklists = async(accountInfo) => {
-  Realm.open(databaseOptions).then(realm => {
-    var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)    
-    // should be filtering an organizations checklist
-    return 
-  }).catch((e) => console.log(e))
-}
-
-export const buildings = async(accountInfo) => {
-  Realm.open(databaseOptions).then(realm => {
-    var account = realm.objects('Accounts').filtered(`id == ${accountInfo.id}`)    
-    // should be filtering an organizations buildings
-    // console.log(Array.from(account[0].organizations[0].buildings))
-    var data = Array.from(account[0].organizations[0].buildings)
-    // console.log(data)
-    return "test"
-  }).catch((e) => console.log(e))
-}
-
-export const checkDBExists = async() => {
+export const checkDBExists = () => {
   if (Realm.exists(databaseOptions)) {
     return true
   }else {
@@ -338,8 +362,8 @@ export const checkDBExists = async() => {
  * usually when app is first started
  */
 
-create_db =  async() => {
-  await Realm.open(databaseOptions).then(realm => {
+create_db =  () => {
+   Realm.open(databaseOptions).then(realm => {
     realm.write(() => {
       realm.create(DB_NAME, {
         id: 1,
@@ -348,17 +372,76 @@ create_db =  async() => {
       })
     })
     realm.close()
-  }).catch((e)=> {console.log(e)})
+  }).catch((e)=> {console.log('create db errror: ', e)})
 }
 
+/**
+ * 
+ * inserts an organizations data into the account
+ */
 export const insertOrgData = async (accountDetails, orgData) => {
-  console.log(orgData)
+  // console.log(orgData)
+  var currentDate = new Date()
+  var formatDate = JSON.stringify(currentDate)
+  try{
+    await Realm.open(databaseOptions).then(realm => {
+      realm.write(()=>{
+        var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+        // orgData.buildings.forEach(building => {
+        //   building['lastUpdated'] = '' //since buildings are empty, we assign lastUpdated to empty string
+        // })
 
-  await Realm.open(databaseOptions).then(realm => {
-    realm.write(()=>{
-      var account = realm.objects('Accounts').filtered('')
-      console.log('account after', account)
+        account.organizations.forEach(org => {
+          if (account.organizations.filtered(`id = ${org.id}`).isEmpty()){
+            // if organization is empty/does not exist
+            orgData['lastUpdated'] = currentDate
+            account.organizations.push(orgData)
+          } 
+
+          if (!account.organizations.filtered(`id = ${org.id}`).isEmpty()){
+            // if organization exists 
+            if (org.lastUpdated == null){
+              orgData['lastUpdated'] = currentDate
+              realm.create('Accounts', 
+              {id: accountDetails.id, organizations: [orgData]} //replaces organizations
+              ,'modified') 
+              // console.log('not empty: ',JSON.stringify(org,null,1))
+
+            }else if (lastUpdated !== ''){
+              var lastUpdated = new Date(org.lastUpdated)
+              if (lastUpdated.getHours() > lastUpdated.getHours() + 1 ){
+                orgData['lastUpdated'] = currentDate
+                realm.delete(account.organizations.filtered(`id = ${org.id}`))
+                account.organizations.push(orgData)
+                console.log('deleted and updated')
+                }
+            }
+          } 
+
+        })  
+        return account
+      })
+    }).catch((e)=>{console.log('insertOrgData Error: ',e)})
+
+  }catch(e){
+    console.log('insertOrgData: ', e)
+  }
+}
+
+export const insertBuildingData = async (accountDetails, org ,buildingData) => {
+  var last_Loaded = buildingData.lastLoaded
+  try{
+    await Realm.open(databaseOptions).then(realm => {
+      realm.write(() => {
+        var account = realm.objects('Accounts').filtered(`id = '${accountDetails.id}'`) //need to filter for org data 
+        var org = account.filtered(`id = ${org.id}`)
+        org.buildings.push(buildingData)
+        console.log(org)
+        // console.log('insertBuildingData: ', org)
+      })
     })
-  }).catch((e)=>{console.log(e)})
 
+  }catch(e){
+    console.log('insertBuildingData error: ', e)
+  }
 }

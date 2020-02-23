@@ -39,6 +39,7 @@ export class BuildingDetailsScreen extends Component {
     return (
 
     <View style={styles.container}>
+      <StatusBar/>
         <Text style={styles.detailsTextContainer}>
             <Text style={styles.detailsTextBold}>City: <Text style={styles.detailsText}>{buildingCity} {'\n\n'}</Text></Text>
             <Text style={styles.detailsTextBold}>Address: <Text style={styles.detailsText}>{buildingAddress}, {buildingCity}, {buildingProvince} {'\n\n'}</Text></Text>

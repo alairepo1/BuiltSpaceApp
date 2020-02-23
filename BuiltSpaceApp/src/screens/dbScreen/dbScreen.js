@@ -47,16 +47,17 @@ class RealmDB extends Component {
    
     if (!checkDBExists()){
       console.log("DB created")
-    } else {
-      if (checkAccountExists(this.state.account) === 'true'){
-        //  get from db instead of fetchAPI
-        console.log('account exists')
-       } else {
-        //  prompt add account into database?
-        // var info = await trigger_new_account(this.state.account)
-        console.log('account does not exist in db')
-       }
-    }
+    } 
+    // else {
+    //   if (checkAccountExists(this.state.account) === 'true'){
+    //     //  get from db instead of fetchAPI
+    //     console.log('account exists')
+    //    } else {
+    //     //  prompt add account into database?
+    //     // var info = await trigger_new_account(this.state.account)
+    //     console.log('account does not exist in db')
+    //    }
+    // }
   };
 
   get_account = async() => {
@@ -69,7 +70,7 @@ class RealmDB extends Component {
   get_org_data = async () => {
     
     let info = await get_org_data(this.state.api_organization, this.state.account.api_key).then(result => {
-      console.log(this.state.api_organization)
+      insertOrgData(this.state.account, result)
       this.setState({api_organization : result})
       // let newdata = insertOrgData(this.state.account, result)
 
@@ -100,6 +101,7 @@ class RealmDB extends Component {
   }
 
   render() {
+    console.log(this.state.exampleData)
     const info = this.state.api_organization
       ? 'Organizations: ' + JSON.stringify(this.state.api_organization, null, 1)
       : 'Loading...';

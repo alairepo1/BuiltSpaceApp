@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import {get_org_data} from '../../storage/fetchAPI.js'
-import {insertOrgData} from '../../storage/schema/dbSchema'
+import {insertOrgData, DBgetOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
 
 export class SelectBuildingScreen extends Component { 
   constructor(props) {
@@ -44,15 +44,46 @@ export class SelectBuildingScreen extends Component {
 
   componentDidMount = async() => {
     // this.fetch();
-    var info = await get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-      insertOrgData(this.state.account, this.props.navigation.state.params.orgName)
-        this.setState({
-          org_data: result,
-          isLoading: false
-        })
-      })
-    
 
+    //API call to get org_data and update the database
+    DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
+      if (!result){
+        console.log("no data in org, fetching data...")
+        get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+          // console.log(this.props.navigation.state.params.orgName)
+          insertOrgData(this.state.account, this.props.navigation.state.params.orgName)
+            this.setState({
+              org_data: result,
+              isLoading: false
+            })
+          })
+      } else {
+        DBgetOrgData(this.state.account, this.props.navigation.state.params.orgName).then(result => {
+          console.log('from database')
+          var resultDate = result[0].lastUpdated;
+          var addHour = resultDate.getHours() + 1;
+
+          if (resultDate < resultDate.setHours(addHour)) {
+            this.setState({
+              org_data: result[0],
+              isLoading: false
+            })
+          }
+
+          if (resultDate >= resultDate.setHours(addHour)) {
+            get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+              // console.log(this.props.navigation.state.params.orgName)
+              updateOrgs(this.state.account, new Array(this.props.navigation.state.params.orgName))
+                this.setState({
+                  org_data: result,
+                  isLoading: false
+                })
+              })
+          }
+        })
+      }
+
+    }).catch(e => {console.log(e)})
   };
 
   // renderItem({item}) {
@@ -72,27 +103,30 @@ export class SelectBuildingScreen extends Component {
         <Text>Loading</Text> 
       </View>
       :
-      <FlatList style={styles.container}
-      data={this.state.org_data.buildings}
-      renderItem={({item}) => 
-      <TouchableOpacity 
-      onPress={() => this.props.navigation.navigate('BuildingDetails', {
-        buildingAddress: item.address,
-        buildingCity: item.city,
-        buildingName: item.name,
-        buildingProvince: item.provincestate,
-        buildingPostalCode: item.postalcode,
-        buildingId: item.id,
-        orgData: this.state.org_data,
-        buildingData: item
-      })}>
-      <View style={styles.row}>
-        <Text style={styles.text}>{item.name} </Text>
-      </View>  
-      </TouchableOpacity>
-      }
-      keyExtractor={item => item.name}
-      />
+      <View style={styles.container}>
+        <StatusBar/>
+        <FlatList 
+        data={this.state.org_data.buildings}
+        renderItem={({item}) => 
+        <TouchableOpacity 
+        onPress={() => this.props.navigation.navigate('BuildingDetails', {
+          buildingAddress: item.address,
+          buildingCity: item.city,
+          buildingName: item.name,
+          buildingProvince: item.provincestate,
+          buildingPostalCode: item.postalcode,
+          buildingId: item.id,
+          orgData: this.state.org_data,
+          buildingData: item
+        })}>
+        <View style={styles.row}>
+          <Text style={styles.text}>{item.name} </Text>
+        </View>  
+        </TouchableOpacity>
+        }
+        keyExtractor={item => item.name}
+        />
+      </View>
     );
   }
 }

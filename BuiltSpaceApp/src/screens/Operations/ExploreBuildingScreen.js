@@ -23,23 +23,23 @@ export class ExploreBuildingScreen extends Component {
       }
 
     spacesFilter = (spaceFloor) => {
-      console.log(spaceFloor)
+      // console.log(spaceFloor)
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
-      console.log(this.state.filteredAssets)
+      // console.log(this.state.filteredAssets)
     }
 
     assetsFilter = (assetCategory) => {
-      console.log(assetCategory)
+      // console.log(assetCategory)
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.categoryabbr === "" )
-      console.log(this.state.filteredChecklist)
+      // console.log(this.state.filteredChecklist)
     }
     
     componentDidMount = async() => {
-      console.log("Befor")
+      // console.log("Befor")
       var orgData =  await this.props.navigation.state.params.orgData
       var buildingData = await this.props.navigation.state.params.buildingData
       var AssetsAndSpaces = await get_building_data(orgData, buildingData, this.state.key)
-      console.log("Aye: ",orgData.checklists)
+      // console.log("Aye: ",orgData.checklists)
       this.setState({
         spaces: AssetsAndSpaces.spaces,
         assets: AssetsAndSpaces.assets,
@@ -75,6 +75,7 @@ export class ExploreBuildingScreen extends Component {
     } else {
     return (
     <View>
+      <StatusBar/>
       <View style={styles.TextContainer}>
             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>

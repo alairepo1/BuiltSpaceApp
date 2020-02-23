@@ -1,19 +1,56 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 
 export class StatusBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isConnected: '',
+      connectionMsg: ''
+    };
   }
+
+  subscribe = NetInfo.addEventListener(state => {
+    console.log('wifi status: ', state.isConnected)
+    if (state.isConnected) {
+      this.setState({
+        connection_color: 'lightgrey',
+        connectionMsg: 'Connected'
+      });
+    }
+
+    if (!state.isConnected) {
+      this.setState({
+        isConnected: state.isConnected,
+        connection_color: 'red',
+        connectionMsg: 'No Connection.'
+      });
+    }
+  });
+
+  componentDidMount = () => {
+    this.subscribe();
+  };
+
   render() {
-    return (
+    return this.state.isConnected ? (
       <View style={styles.status}>
-        <View style={styles.connection_color}>
-          <Text>Connection Status: {this.props.connection_status}</Text>
+        <View
+          style={
+            ([styles.input], {backgroundColor: this.state.connection_color})
+          }>
+          <Text>Connection Status: {this.state.connectionMsg}</Text>
         </View>
-        <Text>Signed in as: {this.props.email}</Text>
-        <Text>Current Organization: {this.props.organization}</Text>
+      </View>
+    ) : (
+      <View style={styles.status}>
+        <View
+          style={
+            ([styles.input], {backgroundColor: this.state.connection_color})
+          }>
+          <Text>Connection Status: {this.state.connectionMsg}</Text>
+        </View>
       </View>
     );
   }
@@ -21,9 +58,9 @@ export class StatusBar extends Component {
 
 const styles = StyleSheet.create({
   status_container: {},
-  connection_color: {
-    backgroundColor: 'lightgreen',
-  },
+  // connection_color: {
+  //   backgroundColor: 'lightgreen',
+  // },
 });
 
 export default StatusBar;

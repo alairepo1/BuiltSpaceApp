@@ -36,7 +36,9 @@ export class SelectOrgScreen extends Component {
     const {org_data} = this.state;
     const {navigate} = this.props.navigation;
     return (
-        <FlatList style={styles.container}
+      <View style={styles.container}>
+        <StatusBar/>
+        <FlatList 
         data={this.state.org_data}
         renderItem={({item}) => 
         <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {
@@ -49,6 +51,7 @@ export class SelectOrgScreen extends Component {
         }
         keyExtractor={item => item.name}
         />
+      </View>
       
      
     );
