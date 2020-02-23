@@ -229,6 +229,7 @@ export const checkAccountExists = async (account) => {
   try{
     if (Realm.exists(databaseOptions)) {
       Realm.open(databaseOptions).then( async realm => {
+      console.log(realm.path)
       var valid = realm.objectForPrimaryKey(`Accounts`, account.id)
       if (valid !== undefined){
         console.log('account exists')
@@ -277,7 +278,6 @@ export const DBgetOrgData = async (accountDetails, organization) => {
   var realm = await Realm.open(databaseOptions).catch(e => {console.log('failed to open realm in getBuilding()')})
   var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
   var org = account.organizations.filtered(`id = ${organization.id}`)
-  console.log(org)
   return Array.from(org)
 }
 
@@ -380,7 +380,6 @@ create_db =  () => {
  * inserts an organizations data into the account
  */
 export const insertOrgData = async (accountDetails, orgData) => {
-  // console.log(orgData)
   var currentDate = new Date()
   var formatDate = JSON.stringify(currentDate)
   try{

@@ -34,18 +34,20 @@ export class ExploreBuildingScreen extends Component {
       // console.log(this.state.filteredChecklist)
     }
     
-    componentDidMount = async() => {
+    componentDidMount = () => {
       // console.log("Befor")
-      var orgData =  await this.props.navigation.state.params.orgData
-      var buildingData = await this.props.navigation.state.params.buildingData
-      var AssetsAndSpaces = await get_building_data(orgData, buildingData, this.state.key)
-      // console.log("Aye: ",orgData.checklists)
-      this.setState({
-        spaces: AssetsAndSpaces.spaces,
-        assets: AssetsAndSpaces.assets,
-        checklists: orgData.checklists,
-        dataLoaded: true,
+      var orgData =  this.props.navigation.state.params.orgData
+      var buildingData = this.props.navigation.state.params.buildingData
+      var AssetsAndSpaces = get_building_data(orgData, buildingData, this.state.key).then(result => {
+        this.setState({
+          spaces: result.spaces,
+          assets: result.assets,
+          checklists: orgData.checklists,
+          dataLoaded: true,
+        })
       })
+      // console.log("Aye: ",orgData.checklists)
+
     }
 
   // renderItem({item}) {

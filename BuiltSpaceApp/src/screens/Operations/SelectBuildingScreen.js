@@ -10,7 +10,7 @@ export class SelectBuildingScreen extends Component {
     this.state = {
       account: {
         email: 'bcitbuiltspace@gmail.com',
-        id: 200
+        id: 400
       },
       org_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',

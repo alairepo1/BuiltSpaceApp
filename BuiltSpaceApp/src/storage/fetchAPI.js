@@ -72,6 +72,7 @@ export const get_org_data = async (org_info, key) => {
   var buildings = await get_buildings(org_name, header);
   var assetGroups = await get_assetGroup(org_name, header);
   var checklists = await get_checklists(org_name, header);
+  console.log(assetGroups)
   org_data.buildings = buildings;
   org_data.assetGroup = assetGroups;
   org_data.checklists = checklists;
@@ -107,13 +108,14 @@ get_assetGroup = async (org_name, header) => {
   )
     .then(response => response.json())
     .then(result => {
-      result.forEach(assetGroup => {
+      var rawGroups = result
+      rawGroups.forEach(assetGroup => {
         if (assetGroup.assetids == null) {
           assetGroup.assetids = [] // any assetids that are null are changed to an empty array
         }
       })
+      assetGroup = rawGroups
     });
-
   return assetGroup;
 };
 

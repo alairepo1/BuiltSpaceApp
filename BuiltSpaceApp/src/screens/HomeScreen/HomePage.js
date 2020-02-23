@@ -25,7 +25,7 @@ export class HomePage extends Component {
       account: {
         api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
         email: 'bcitbuiltspace@gmail.com',
-        id: 200,
+        id: 400,
       },
       connection_status: 'Not implemented',
       organizations: [],
@@ -54,6 +54,8 @@ export class HomePage extends Component {
     await checkAccountExists(this.state.account);
 
     await getAccountOrgs(this.state.account).then(result => {
+
+      if (result.lastUpdated !== undefined) {
       var resultDate = result.lastUpdated;
       var addHour = resultDate.getHours() + 1;
       // Check if org data last updated is past 1 hr
@@ -65,6 +67,7 @@ export class HomePage extends Component {
         });
       }
       // Check if org data last updated is past 1 hr
+      // Should check connection before refetching data from API
       if (resultDate >= resultDate.setHours(addHour)) {
         fetchOrgs(this.state.account).then(result => {
           updateOrgs(this.state.account, result)
@@ -74,6 +77,16 @@ export class HomePage extends Component {
           });
         });
       }
+      } else {
+        fetchOrgs(this.state.account).then(result => {
+          updateOrgs(this.state.account, result)
+          this.setState({
+            organizations: result,
+            isLoading: false,
+          });
+        });
+      }
+      
     }).catch(e => {console.log(e)});
 
   };
