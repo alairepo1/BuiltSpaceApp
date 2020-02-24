@@ -3,12 +3,18 @@ import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
 import {get_building_data} from '../../storage/fetchAPI.js'
+import {insertBuildingData, DBcheckBuildingData} from '../../storage/schema/dbSchema'
 import AssetsModal from './AssetsModal.js'
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
         super(props);
         this.state = {
+          account: {
+            api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+            email: 'bcitbuiltspace@gmail.com',
+            id: 400,
+          },
           building_data: [],
           key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
           spaces: [],
@@ -38,7 +44,29 @@ export class ExploreBuildingScreen extends Component {
       // console.log("Befor")
       var orgData =  this.props.navigation.state.params.orgData
       var buildingData = this.props.navigation.state.params.buildingData
-      var AssetsAndSpaces = get_building_data(orgData, buildingData, this.state.key).then(result => {
+
+      // DBcheckBuildingData(this.state.account, orgData,buildingData).then(result => {
+      //   console.log('dbcheckbulidingdata result: ', result)
+      //   // var resultDate = result[0].lastUpdated;
+      //   // var addHour = resultDate.getHours() + 1;
+
+      //   // // Check last updated timestamp is within 1 hour
+      //   // if (resultDate < resultDate.setHours(addHour)) {
+      //   //   this.setState({
+      //   //     spaces: result.spaces,
+      //   //     assets: result.assets,
+      //   //     checklists: orgData.checklists,
+      //   //     dataLoaded: true
+      //   //   })
+      //   // }
+
+      //   // Check network before fetching API
+      //   // if (resultDate >= resultDate.setHours(addHour)) {}
+
+      // })
+      get_building_data(orgData, buildingData, this.state.key).then(result => {
+        var allBuildingData = result
+        insertBuildingData(this.state.account, orgData.id, allBuildingData)
         this.setState({
           spaces: result.spaces,
           assets: result.assets,

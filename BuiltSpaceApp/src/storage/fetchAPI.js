@@ -72,7 +72,6 @@ export const get_org_data = async (org_info, key) => {
   var buildings = await get_buildings(org_name, header);
   var assetGroups = await get_assetGroup(org_name, header);
   var checklists = await get_checklists(org_name, header);
-  console.log(assetGroups)
   org_data.buildings = buildings;
   org_data.assetGroup = assetGroups;
   org_data.checklists = checklists;
@@ -171,7 +170,7 @@ get_questions = async (checklist, org_name, header) => {
   return checklists;
 };
 
-export const get_building_data = (org_info, building, key) => {
+export const get_building_data = async(org_info, building, key) => {
   // gets building data from api's
   var header = {
     method: 'get',
@@ -180,19 +179,17 @@ export const get_building_data = (org_info, building, key) => {
     },
   };
   var currentDate = new Date();
-  var formatDate = JSON.stringify(currentDate);
 
-  org_info.assetGroup.forEach(assetGroup => {console.log(assetGroup.id)})
-  // var org_name = org_info.name.replace(' ', '');
-  // var buildingInfo = building;
-  // var assetGroupList = org_info.assetGroup;
-  // var allAssetId = assetGroupList.filter(asset => asset.name == 'All Assets');
-  // var assets = get_assets(org_name, allAssetId[0], buildingInfo, header);
-  // var spaces = get_spaces(org_name, buildingInfo, header);
-  // // buildingInfo['assets'] = assets;
-  // buildingInfo['spaces'] = spaces;
-  // buildingInfo['lastLoaded'] = currentDate;
-  // return buildingInfo;
+  var org_name = await org_info.name.replace(' ', '');
+  var buildingInfo = await building;
+  var assetGroupList = await org_info.assetGroup;
+  var allAssetId = await assetGroupList.filter(asset => asset.name == 'All Assets');
+  var assets = await get_assets(org_name, allAssetId[0], buildingInfo, header);
+  var spaces = await get_spaces(org_name, buildingInfo, header);
+  buildingInfo['assets'] = assets;
+  buildingInfo['spaces'] = spaces;
+  buildingInfo['lastLoaded'] = currentDate;
+  return buildingInfo;
 };
 
 get_assets = async (org_name, allAssetId, buildingInfo, header) => {
@@ -204,7 +201,6 @@ get_assets = async (org_name, allAssetId, buildingInfo, header) => {
   var building = buildingInfo;
   var Buildingid = buildingInfo.id;
   var assets = [];
-  console.log(allAssetId.id)
   await fetch(
     `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/Assets?AssetGroupId=${allAssetId.id}&BuildingId=${Buildingid}`,
     header,
@@ -220,7 +216,6 @@ get_assets = async (org_name, allAssetId, buildingInfo, header) => {
       });
     })
     .catch(e => console.log(e));
-  console.log(assets)
   return assets;
 };
 
