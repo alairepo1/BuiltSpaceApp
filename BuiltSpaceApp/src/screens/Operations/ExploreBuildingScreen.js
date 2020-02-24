@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
 import {get_building_data} from '../../storage/fetchAPI.js'
-import {insertBuildingData, updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
 import AssetsModal from './AssetsModal.js'
+import {insertBuildingData, updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
