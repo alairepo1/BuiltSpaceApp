@@ -189,16 +189,37 @@ export const get_building_data = async(org_info, building, key) => {
   };
   var currentDate = new Date();
 
+  // buliding_info is from realm and cannot be modified outside, find a way to make it mutable.
+  // Because of this, org_data remakes the organization with its properties.
   var org_name = await org_info.name.replace(' ', '');
-  var buildingInfo = await building;
+  var building_info = {
+    id: building.id,
+    name: building.name,
+    address: building.address,
+    city: building.city,
+    postal_code: building.postal_code,
+    description: building.description,
+    buildingnotes: building.buildingnotes,
+    contacts: building.contacts,
+    customer: building.customer,
+    customerid: building.customerid,
+    privateid: building.privateid,
+    status: building.status,
+    url: building.url,
+    lastLoaded: building.lastLoaded,
+    lastUpdated: building.lastUpdated,
+    assets: [],
+    spaces: []
+  }
+  
   var assetGroupList = await org_info.assetGroup;
   var allAssetId = await assetGroupList.filter(asset => asset.name == 'All Assets');
-  var assets = await get_assets(org_name, allAssetId[0], buildingInfo, header);
-  var spaces = await get_spaces(org_name, buildingInfo, header);
-  buildingInfo['assets'] = assets;
-  buildingInfo['spaces'] = spaces;
-  buildingInfo['lastLoaded'] = currentDate;
-  return buildingInfo;
+  var assets = await get_assets(org_name, allAssetId[0], building, header);
+  var spaces = await get_spaces(org_name, building, header);
+  building_info.assets = await assets;
+  building_info.spaces = await spaces;
+  building_info['lastLoaded'] = currentDate;
+  return building_info;
 };
 
 get_assets = async (org_name, allAssetId, buildingInfo, header) => {

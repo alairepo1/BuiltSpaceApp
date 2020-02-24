@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
 import {get_building_data} from '../../storage/fetchAPI.js'
-import {insertBuildingData, DBcheckBuildingData} from '../../storage/schema/dbSchema'
+import {insertBuildingData, updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
 import AssetsModal from './AssetsModal.js'
 
 export class ExploreBuildingScreen extends Component { 
@@ -42,18 +42,16 @@ export class ExploreBuildingScreen extends Component {
     
     componentDidMount = () => {
       // console.log("Befor")
-      var orgData =  this.props.navigation.state.params.orgData
-      var buildingData = this.props.navigation.state.params.buildingData
+      var orgData =  this.props.navigation.state.params.orgData // realm object
+      var buildingData = this.props.navigation.state.params.buildingData //realm object
       this.setState({checklists: orgData.checklists}) //sets checklists
 
-      DBcheckBuildingData(this.state.account, orgData,buildingData).then(result => {
+      DBcheckBuildingData(this.state.account, orgData, buildingData).then(result => {
         if (!result){
           get_building_data(orgData, buildingData, this.state.key).then(result => {
             console.log('get_building_data api call: ') 
-            var allBuildingData = result
-            var org = orgData
-            org.buildings = [result]
-            insertBuildingData(this.state.account, org)
+            var building_data = result
+            insertBuildingData(this.state.account, orgData.id,building_data)
             this.setState({
               spaces: result.spaces,
               assets: result.assets,
@@ -73,43 +71,39 @@ export class ExploreBuildingScreen extends Component {
             var currentDate = new Date()
 
             // Check last updated timestamp is within 1 hour
-            if (currentDate < addHour) {
-              console.log("ExploreBuildingScreen load from database: ")
-              this.setState({
-                spaces: result[0].spaces,
-                assets: result[0].assets,
-                dataLoaded: true
-              })
-            }
+            // if (currentDate < addHour) {
+            //   console.log("ExploreBuildingScreen load from database: ")
+            //   this.setState({
+            //     spaces: result[0].spaces,
+            //     assets: result[0].assets,
+            //     dataLoaded: true
+            //   })
+            // }
     
             // Check network before fetching API
-            if (currentDate >= addHour) {
-              get_building_data(orgData, buildingData, this.state.key).then(result => {
-                console.log("ExploreBulidingScreen refetch data 1 after hour")
-                var allBuildingData = result
-                var org = orgData
-                org.buildings = [result]
-                insertBuildingData(this.state.account, org)
-                this.setState({
-                  spaces: result.spaces,
-                  assets: result.assets,
-                  checklists: orgData.checklists,
-                  dataLoaded: true,
-              })
-            })
-            }
+            // if (currentDate >= addHour) {
+                get_building_data(orgData, buildingData, this.state.key).then(api_result => {
+                  console.log("ExploreBulidingScreen refetch data 1 after hour")
+                  var building_data = api_result
+                  updateBuilding(this.state.account, orgData.id, building_data)
+                  this.setState({
+                    spaces: api_result.spaces,
+                    assets: api_result.assets,
+                    checklists: orgData.checklists,
+                    dataLoaded: true,
+                 })
+                })
+            // }
 
           }else{
             console.log('updatebuildings pls')
-            get_building_data(orgData, buildingData, this.state.key).then(result => {
+            get_building_data(orgData, buildingData, this.state.key).then(api_result => {
               console.log('get_building_data api call: ') 
-              var allBuildingData = result
-              var org = orgData
-              org.buildings = [result]
-              insertBuildingData(this.state.account, org)
+              var building_data = api_result
+              updateBuilding(this.state.account, orgData.id, building_data)
               this.setState({
-                spaces: result.spaces,
-                assets: result.assets,
+                spaces: api_result.spaces,
+                assets: api_result.assets,
                 checklists: orgData.checklists,
                 dataLoaded: true,
               })
