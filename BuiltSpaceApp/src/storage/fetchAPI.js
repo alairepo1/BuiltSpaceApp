@@ -68,13 +68,22 @@ export const get_org_data = async (org_info, key) => {
     },
   };
   var org_name = await org_info.name.replace(' ', '');
-  var org_data = await org_info;
+
+  // org_info is from realm and cannot be modified outside, find a way to make it mutable.
+  // Because of this, org_data remakes the organization with its properties.
+  var org_data = {
+    id: org_info.id,
+    name: org_info.name,
+    buildings: [],
+    assetGroup: [],
+    checklists: []
+  }
   var buildings = await get_buildings(org_name, header);
   var assetGroups = await get_assetGroup(org_name, header);
   var checklists = await get_checklists(org_name, header);
-  org_data.buildings = buildings;
-  org_data.assetGroup = assetGroups;
-  org_data.checklists = checklists;
+  org_data.buildings = await buildings
+  org_data.assetGroup = await assetGroups
+  org_data.checklists = await checklists
   return org_data;
 };
 

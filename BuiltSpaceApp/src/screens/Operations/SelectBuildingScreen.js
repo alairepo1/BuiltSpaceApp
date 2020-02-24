@@ -42,45 +42,61 @@ export class SelectBuildingScreen extends Component {
   //       });
   // };
 
-  componentDidMount = async() => {
+  componentDidMount = () => {
     // this.fetch();
-
     //API call to get org_data and update the database
     DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
       if (!result){
         console.log("no data in org, fetching data...")
         get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-          // console.log(this.props.navigation.state.params.orgName)
-          insertOrgData(this.state.account, this.props.navigation.state.params.orgName)
+          console.log('get_org_data')
+          // insertOrgData(this.state.account, result)
             this.setState({
               org_data: result,
               isLoading: false
             })
           })
       } else {
-        DBgetOrgData(this.state.account, this.props.navigation.state.params.orgName).then(result => {
-          console.log('from database')
-          var resultDate = result[0].lastUpdated;
-          var addHour = resultDate.getHours() + 1;
+          if (result[0].lastUpdated !== undefined && result[0].lastUpdated !== null) {
 
-          if (resultDate < resultDate.setHours(addHour)) {
-            this.setState({
-              org_data: result[0],
-              isLoading: false
-            })
-          }
-
-          if (resultDate >= resultDate.setHours(addHour)) {
+            //get datetime of last updated organizations
+            //and add 1 hour to last updated time
+            var addHour = result[0].lastUpdated
+            addHour.setHours(addHour.getHours() + 1 )
+            
+            //current datetime
+            // var currentDateString = new Date().toISOString().replace('Z', '')
+            var currentDate = new Date()
+            
+            if (currentDate < addHour) {
+              console.log('SelectBuildingScreeN: Fetch from database' )
+              this.setState({
+                org_data: result[0],
+                isLoading: false
+              })
+            }
+  
+            if (currentDate >= addHour) {
+              get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+                console.log("selectBuildingScreen fetch api and update by time")
+                updateOrgs(this.state.account, result)
+                  this.setState({
+                    org_data: result,
+                    isLoading: false
+                  })
+                })
+            }
+          } else {
             get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-              // console.log(this.props.navigation.state.params.orgName)
-              updateOrgs(this.state.account, new Array(this.props.navigation.state.params.orgName))
+              console.log("selectBuildingScreen fetch api and update")
+              updateOrgs(this.state.account, result)
                 this.setState({
                   org_data: result,
                   isLoading: false
                 })
               })
           }
-        })
+        
       }
 
     }).catch(e => {console.log(e)})

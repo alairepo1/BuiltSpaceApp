@@ -48,37 +48,47 @@ export class HomePage extends Component {
     );
   };
 
-  componentDidMount = async () => {
+  componentDidMount = async() => {
     // initialize the api here
     checkDBExists();
     await checkAccountExists(this.state.account);
 
     await getAccountOrgs(this.state.account).then(result => {
-
       if (result.lastUpdated !== undefined) {
-      var resultDate = result.lastUpdated;
-      var addHour = resultDate.getHours() + 1;
-      // Check if org data last updated is past 1 hr
-      if (resultDate < resultDate.setHours(addHour)) {
-        var orgs = Array.from(result.organizations);
-        this.setState({
-          organizations: orgs,
-          isLoading: false,
-        });
-      }
-      // Check if org data last updated is past 1 hr
-      // Should check connection before refetching data from API
-      if (resultDate >= resultDate.setHours(addHour)) {
-        fetchOrgs(this.state.account).then(result => {
-          updateOrgs(this.state.account, result)
+
+        //get datetime of last updated organizations
+        //and add 1 hour to last updated time
+        var addHour = result.lastUpdated
+        addHour.setHours(addHour.getHours() + 1 )
+
+        //current datetime
+        // var currentDateString = new Date().toISOString().replace('Z', '')
+        var currentDate = new Date()
+
+        // Check if org data last updated is past 1 hr
+        if (currentDate < addHour) {
+          console.log('Home load from database.')
+          var orgs = Array.from(result.organizations);
           this.setState({
-            organizations: result,
+            organizations: orgs,
             isLoading: false,
           });
-        });
-      }
+        }
+      // Check if org data last updated is past 1 hr
+      // Should check connection before refetching data from API
+        if (currentDate >= addHour) {
+          fetchOrgs(this.state.account).then(result => {
+            console.log('Home: fetchorgs api call')
+            updateOrgs(this.state.account, result)
+            this.setState({
+              organizations: result,
+              isLoading: false,
+            });
+          });
+        }
       } else {
         fetchOrgs(this.state.account).then(result => {
+          console.log('Home: no lastupdated fetchOrg call')
           updateOrgs(this.state.account, result)
           this.setState({
             organizations: result,

@@ -44,37 +44,83 @@ export class ExploreBuildingScreen extends Component {
       // console.log("Befor")
       var orgData =  this.props.navigation.state.params.orgData
       var buildingData = this.props.navigation.state.params.buildingData
+      this.setState({checklists: orgData.checklists}) //sets checklists
 
-      // DBcheckBuildingData(this.state.account, orgData,buildingData).then(result => {
-      //   console.log('dbcheckbulidingdata result: ', result)
-      //   // var resultDate = result[0].lastUpdated;
-      //   // var addHour = resultDate.getHours() + 1;
+      DBcheckBuildingData(this.state.account, orgData,buildingData).then(result => {
+        if (!result){
+          get_building_data(orgData, buildingData, this.state.key).then(result => {
+            console.log('get_building_data api call: ') 
+            var allBuildingData = result
+            var org = orgData
+            org.buildings = [result]
+            insertBuildingData(this.state.account, org)
+            this.setState({
+              spaces: result.spaces,
+              assets: result.assets,
+              dataLoaded: true,
+            })
+          })
+        }else {
+          if (result[0].lastUpdated !== undefined && result[0].lastUpdated !== null) {
 
-      //   // // Check last updated timestamp is within 1 hour
-      //   // if (resultDate < resultDate.setHours(addHour)) {
-      //   //   this.setState({
-      //   //     spaces: result.spaces,
-      //   //     assets: result.assets,
-      //   //     checklists: orgData.checklists,
-      //   //     dataLoaded: true
-      //   //   })
-      //   // }
+            //get datetime of last updated organizations
+            //and add 1 hour to last updated time
+            var addHour = result[0].lastUpdated
+            addHour.setHours(addHour.getHours() + 1 )
+            
+            //current datetime
+            // var currentDateString = new Date().toISOString().replace('Z', '')
+            var currentDate = new Date()
 
-      //   // Check network before fetching API
-      //   // if (resultDate >= resultDate.setHours(addHour)) {}
+            // Check last updated timestamp is within 1 hour
+            if (currentDate < addHour) {
+              console.log("ExploreBuildingScreen load from database: ")
+              this.setState({
+                spaces: result[0].spaces,
+                assets: result[0].assets,
+                dataLoaded: true
+              })
+            }
+    
+            // Check network before fetching API
+            if (currentDate >= addHour) {
+              get_building_data(orgData, buildingData, this.state.key).then(result => {
+                console.log("ExploreBulidingScreen refetch data 1 after hour")
+                var allBuildingData = result
+                var org = orgData
+                org.buildings = [result]
+                insertBuildingData(this.state.account, org)
+                this.setState({
+                  spaces: result.spaces,
+                  assets: result.assets,
+                  checklists: orgData.checklists,
+                  dataLoaded: true,
+              })
+            })
+            }
 
-      // })
-      get_building_data(orgData, buildingData, this.state.key).then(result => {
-        var allBuildingData = result
-        insertBuildingData(this.state.account, orgData.id, allBuildingData)
-        this.setState({
-          spaces: result.spaces,
-          assets: result.assets,
-          checklists: orgData.checklists,
-          dataLoaded: true,
-        })
+          }else{
+            console.log('updatebuildings pls')
+            get_building_data(orgData, buildingData, this.state.key).then(result => {
+              console.log('get_building_data api call: ') 
+              var allBuildingData = result
+              var org = orgData
+              org.buildings = [result]
+              insertBuildingData(this.state.account, org)
+              this.setState({
+                spaces: result.spaces,
+                assets: result.assets,
+                checklists: orgData.checklists,
+                dataLoaded: true,
+              })
+            })
+          }
+
+
+        }
+
       })
-      // console.log("Aye: ",orgData.checklists)
+
 
     }
 
