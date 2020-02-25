@@ -50,7 +50,7 @@ export class SelectBuildingScreen extends Component {
         console.log("no data in org, fetching data...")
         get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
           console.log('get_org_data')
-          // insertOrgData(this.state.account, result)
+          insertOrgData(this.state.account, result)
             this.setState({
               org_data: result,
               isLoading: false
@@ -65,11 +65,10 @@ export class SelectBuildingScreen extends Component {
             addHour.setHours(addHour.getHours() + 1 )
             
             //current datetime
-            // var currentDateString = new Date().toISOString().replace('Z', '')
             var currentDate = new Date()
             
             if (currentDate < addHour) {
-              console.log('SelectBuildingScreeN: Fetch from database' )
+              console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
               this.setState({
                 org_data: result[0],
                 isLoading: false
@@ -78,7 +77,7 @@ export class SelectBuildingScreen extends Component {
   
             if (currentDate >= addHour) {
               get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-                console.log("selectBuildingScreen fetch api and update by time")
+                console.log("selectBuildingScreen fetch api and update by time", + result[0].name)
                 updateOrgs(this.state.account, result)
                   this.setState({
                     org_data: result,
@@ -88,7 +87,7 @@ export class SelectBuildingScreen extends Component {
             }
           } else {
             get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-              console.log("selectBuildingScreen fetch api and update")
+              console.log("selectBuildingScreen fetch api and update"+ result[0].name)
               updateOrgs(this.state.account, result)
                 this.setState({
                   org_data: result,

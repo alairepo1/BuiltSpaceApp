@@ -4,7 +4,7 @@ import StatusBar from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import AssetsModal from './AssetsModal.js'
-import {insertBuildingData, updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
+import {updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
@@ -51,7 +51,7 @@ export class ExploreBuildingScreen extends Component {
           get_building_data(orgData, buildingData, this.state.key).then(result => {
             console.log('get_building_data api call: ') 
             var building_data = result
-            insertBuildingData(this.state.account, orgData.id,building_data)
+            updateBuilding(this.state.account, orgData.id,building_data)
             this.setState({
               spaces: result.spaces,
               assets: result.assets,
@@ -71,19 +71,19 @@ export class ExploreBuildingScreen extends Component {
             var currentDate = new Date()
 
             // Check last updated timestamp is within 1 hour
-            // if (currentDate < addHour) {
-            //   console.log("ExploreBuildingScreen load from database: ")
-            //   this.setState({
-            //     spaces: result[0].spaces,
-            //     assets: result[0].assets,
-            //     dataLoaded: true
-            //   })
-            // }
+            if (currentDate < addHour) {
+              console.log("ExploreBuildingScreen load from database: " + result[0].name)
+              this.setState({
+                spaces: result[0].spaces,
+                assets: result[0].assets,
+                dataLoaded: true
+              })
+            }
     
             // Check network before fetching API
-            // if (currentDate >= addHour) {
+            if (currentDate >= addHour) {
                 get_building_data(orgData, buildingData, this.state.key).then(api_result => {
-                  console.log("ExploreBulidingScreen refetch data 1 after hour")
+                  console.log("ExploreBulidingScreen refetch data 1 after hour" + result[0].name)
                   var building_data = api_result
                   updateBuilding(this.state.account, orgData.id, building_data)
                   this.setState({
@@ -93,12 +93,12 @@ export class ExploreBuildingScreen extends Component {
                     dataLoaded: true,
                  })
                 })
-            // }
+            }
 
           }else{
             console.log('updatebuildings pls')
             get_building_data(orgData, buildingData, this.state.key).then(api_result => {
-              console.log('get_building_data api call: ') 
+              console.log('get_building_data api call: ' + result[0].name) 
               var building_data = api_result
               updateBuilding(this.state.account, orgData.id, building_data)
               this.setState({
