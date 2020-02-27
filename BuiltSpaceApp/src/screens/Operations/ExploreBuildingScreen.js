@@ -17,7 +17,8 @@ export class ExploreBuildingScreen extends Component {
           filteredAssets: [],
           checklists: [],
           filteredChecklist: [],
-          dataLoaded: false
+          dataLoaded: false,
+          spaceSelected: false
         };
         this.spacesFilter = this.spacesFilter.bind(this)
       }
@@ -26,12 +27,18 @@ export class ExploreBuildingScreen extends Component {
       console.log(spaceFloor)
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
       console.log(this.state.filteredAssets)
+      this.setState({
+        spaceSelected: true
+      })
     }
 
     assetsFilter = (assetCategory) => {
       console.log(assetCategory)
-      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.categoryabbr === "" )
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory)
       console.log(this.state.filteredChecklist)
+      this.setState({
+        assetSelected: true
+      })
     }
     
     componentDidMount = async() => {
@@ -47,27 +54,18 @@ export class ExploreBuildingScreen extends Component {
         dataLoaded: true,
       })
     }
-
-  // renderItem({item}) {
-  //   return(
-  //     <View style={styles.row}>
-  //       <Text style={styles.text}>{item.address}</Text>
-  //     </View>
-      
-  //   )
-  // }
-
-//   buildingAddress: item.name,
-//         buildingCity: item.city,
-//         buildingName: item.name,
-//         buildingProvince: item.provincestate,
-//         buildingPostalCode: item.postalcode
-
   render() {
     const {navigation} = this.props;
     
-    const buildingId = navigation.getParam('buildingId', 'None')
-    const buildingName = navigation.getParam('buildingName', 'None');
+    // const buildingId = navigation.getParam('buildingId', 'None')
+    // const buildingName = navigation.getParam('buildingName', 'None');
+    const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
+    const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter}/>
+    
+    const noItemSelected = styles.TextContainer
+    const yesItemSelected = styles.TextContainerSelected
+    
+
     if (!this.state.dataLoaded) {
       return(
         <Text>Loading</Text>
@@ -75,11 +73,11 @@ export class ExploreBuildingScreen extends Component {
     } else {
     return (
     <View>
-      <View style={styles.TextContainer}>
+      <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>
-      <View style={styles.TextContainer}>
-        <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
+      <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
+        {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
       </View>
       <View style={styles.TextContainer}>
         <TouchableOpacity>
@@ -118,6 +116,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     borderRightColor: 'red',
+    borderRightWidth: 50
+  },
+  TextContainerSelected: {
+    padding: 15,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 30,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    borderRightColor: 'green',
     borderRightWidth: 50
   },
   headingTextBold: {

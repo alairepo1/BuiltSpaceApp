@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList} from 'react-native';
+import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
 
 export class AssetsModal extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ export class AssetsModal extends Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+                this.setModalVisible(!this.state.modalVisible)
               }}>
               <View style={{marginTop: 22}}>
                   <Text style={styles.headingTextBold}>Assets</Text>
