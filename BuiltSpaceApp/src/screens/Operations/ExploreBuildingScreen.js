@@ -34,7 +34,7 @@ export class ExploreBuildingScreen extends Component {
 
     assetsFilter = (assetCategory) => {
       console.log(assetCategory)
-      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory)
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
       console.log(this.state.filteredChecklist)
       this.setState({
         assetSelected: true
