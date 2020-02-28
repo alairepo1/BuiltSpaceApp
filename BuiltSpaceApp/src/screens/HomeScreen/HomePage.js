@@ -15,7 +15,7 @@ import {
   checkAccountExists,
   checkDBExists,
   getAccountOrgs,
-  updateOrgs
+  updateAccount
 } from '../../storage/schema/dbSchema';
 
 export class HomePage extends Component {
@@ -64,6 +64,7 @@ export class HomePage extends Component {
     
             //current datetime
             var currentDate = new Date()
+            console.log(currentDate, addHour)
     
             // Check if org data last updated is past 1 hr
             if (currentDate < addHour) {
@@ -79,7 +80,7 @@ export class HomePage extends Component {
             if (currentDate >= addHour) {
               fetchOrgs(this.state.account).then(result => {
                 console.log('Home: fetchorgs api call')
-                updateOrgs(this.state.account, result)
+                updateAccount(this.state.account, result)
                 this.setState({
                   organizations: result,
                   isLoading: false,
@@ -89,7 +90,7 @@ export class HomePage extends Component {
           } else {
             fetchOrgs(this.state.account).then(result => {
               console.log('Home: no lastupdated fetchOrg call')
-              updateOrgs(this.state.account, result)
+              updateAccount(this.state.account, result)
               this.setState({
                 organizations: result,
                 isLoading: false,
@@ -116,7 +117,7 @@ export class HomePage extends Component {
 
   refreshData = () => {
     fetchOrgs(this.state.account).then(result => {
-      updateOrgs(this.state.account, result)
+      updateAccount(this.state.account, result)
       this.setState({
         organizations: result,
         isLoading: false,

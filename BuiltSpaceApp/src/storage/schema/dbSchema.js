@@ -234,6 +234,36 @@ export const updateOrgs = (accountDetails, orgs) => {
 
 }
 
+export const updateAccount = (accountDetails, orgs) => {
+    // updates organizations after 1 hr or refreshed
+    var currentDate = new Date()
+  
+    Realm.open(databaseOptions).then(realm => {
+      realm.beginTransaction()
+        var account = realm.objectForPrimaryKey(`Accounts`, accountDetails.id)
+        var orgsObj = account.organizations
+        var orgList = Array.from(orgsObj)
+        account.lastUpdated = currentDate
+        orgList.find(orgList => {
+          orgs.forEach(orgs => {
+            if (orgList.id == orgs.id){
+              orgList.name = orgs.name
+              orgList.logourl = orgs.logourl
+              orgList.primaryEmail = orgs.primaryEmail
+              orgList.brandingurl = orgs.brandingurl
+              orgList.absoluteurl = orgs.absoluteurl
+            }else{
+              account.organization.push(orgs)
+            }
+          })
+        })
+        realm.commitTransaction()      
+        realm.close()
+  
+      console.log('updated Account')
+    }).catch(e => {console.log('updateOrgs: ', e)}) 
+}
+
 export const updateBuilding = async (accountDetails, organization_id, buildingAPI) => {
   var currentDate = new Date()
   try{
@@ -312,8 +342,9 @@ export const DBcheckOrgData = async (accountDetails, organization) => {
     
     if (!org[0].buildings.isEmpty()){
       orgArray.push(org[0])
+      console.log(orgArray)
       return orgArray
-
+    
       // return Promise.resolve(orgArray)
     } else {
       return Promise.resolve(false)

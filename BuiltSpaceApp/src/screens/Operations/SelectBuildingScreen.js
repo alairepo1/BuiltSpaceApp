@@ -46,6 +46,7 @@ export class SelectBuildingScreen extends Component {
     // this.fetch();
     //API call to get org_data and update the database
     DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
+      // Error throws because it cannot find the object in DB due to deletion/updated in orgsupdate?
       if (!result){
         console.log("no data in org, fetching data...")
         get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
@@ -106,7 +107,6 @@ export class SelectBuildingScreen extends Component {
   //     <View style={styles.row}>
   //       <Text style={styles.text}>{item.address}</Text>
   //     </View>
-      
   //   )
   // }
 
