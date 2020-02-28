@@ -39,6 +39,7 @@ const AuthStack = createStackNavigator(
 );
 
 // add a new screen here
+
 const HomeStack = createStackNavigator(
   
   {

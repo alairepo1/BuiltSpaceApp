@@ -76,7 +76,7 @@ export class ExploreBuildingScreen extends Component {
     return (
     <View>
       <View style={styles.TextContainer}>
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>
       <View style={styles.TextContainer}>
         <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
