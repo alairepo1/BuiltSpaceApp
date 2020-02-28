@@ -21,7 +21,7 @@ export class AssetsModal extends Component {
     }
     render() {
         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
+        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
         return(
             <View style={{marginTop: 22}}>
             <Modal
@@ -59,9 +59,6 @@ export class AssetsModal extends Component {
                 ></FlatList>
                 <TouchableOpacity
                 onPress={() => {
-                    this.setState({
-                        isSelected: false
-                    })
                     this.setModalVisible(!this.state.modalVisible);
                   }}>
                     <Text>Close</Text>
@@ -139,4 +136,4 @@ const styles = StyleSheet.create({
     
   })
   
-export default AssetsModal;
+export default AssetsModal

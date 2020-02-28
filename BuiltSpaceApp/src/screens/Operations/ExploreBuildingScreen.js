@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import StatusBar from '../../statusComponent.js';
-import SpacesModal from './SpacesModal.js';
 import {get_building_data} from '../../storage/fetchAPI.js'
+import SpacesModal from './SpacesModal.js';
 import AssetsModal from './AssetsModal.js'
+import ChecklistModal from './ChecklistModal.js'
+import MaterialsType from './MaterialsType.js'
+import LabourType from './LabourType.js'
+import GeneralType from './GeneralType.js'
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
@@ -18,9 +22,15 @@ export class ExploreBuildingScreen extends Component {
           checklists: [],
           filteredChecklist: [],
           dataLoaded: false,
-          spaceSelected: false
+          spaceSelected: false,
+          checklistSelected: false,
+          questions:[],
+          MaterialsQuestions: [],
+          LabourQuestions: [],
+          GeneralQuestions: []
         };
         this.spacesFilter = this.spacesFilter.bind(this)
+        this.assetsFilter = this.assetsFilter.bind(this)
       }
 
     spacesFilter = (spaceFloor) => {
@@ -35,9 +45,29 @@ export class ExploreBuildingScreen extends Component {
     assetsFilter = (assetCategory) => {
       console.log(assetCategory)
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
-      console.log(this.state.filteredChecklist)
+      console.log(this.state.filteredChecklist[0].questions)
+      
       this.setState({
         assetSelected: true
+      })
+    }
+
+    loadQuestions = (questions, name) => {
+      console.log(questions)
+      for (let i = 0; i < questions.length; i++) {
+        if (questions[i].questiontype === "") {
+          this.state.GeneralQuestions.push(questions[i])} 
+        else if (questions[i].questiontype === "Materials"){
+          this.state.MaterialsQuestions.push(questions[i])}
+        else if (questions[i].questiontype === "Labour"){
+          this.state.LabourQuestions.push(questions[i])}
+      }
+      console.log("General:" ,this.state.GeneralQuestions.length)
+      console.log("Labour:", this.state.LabourQuestions.length)
+      console.log("Materials:", this.state.MaterialsQuestions.length)
+      this.setState({
+        questions: questions,
+        checklistSelected: true
       })
     }
     
@@ -46,7 +76,6 @@ export class ExploreBuildingScreen extends Component {
       var orgData =  await this.props.navigation.state.params.orgData
       var buildingData = await this.props.navigation.state.params.buildingData
       var AssetsAndSpaces = await get_building_data(orgData, buildingData)
-      console.log("Aye: ",orgData.checklists)
       this.setState({
         spaces: AssetsAndSpaces.spaces,
         assets: AssetsAndSpaces.assets,
@@ -65,12 +94,14 @@ export class ExploreBuildingScreen extends Component {
     const noItemSelected = styles.TextContainer
     const yesItemSelected = styles.TextContainerSelected
     
+    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions}  ></ChecklistModal>
+    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} ></ChecklistModal>
 
     if (!this.state.dataLoaded) {
       return(
         <Text>Loading</Text>
       )
-    } else {
+    } else if (this.state.dataLoaded && !this.state.checklistSelected){
     return (
     <View>
       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
@@ -79,11 +110,10 @@ export class ExploreBuildingScreen extends Component {
       <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
       </View>
-      <View style={styles.TextContainer}>
-        <TouchableOpacity>
-            <Text style={styles.headingTextBold}> Checklist</Text><Text style={styles.detailsText}>None Selected </Text>
-        </TouchableOpacity>     
+      <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
+        {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
       </View>
+    
   <FlatList style={styles.flatList}
       data={[{qrcode: 'Scan Qr'}]}
       renderItem={({item}) => 
@@ -98,16 +128,61 @@ export class ExploreBuildingScreen extends Component {
       keyExtractor={item => item.name}
       />
     </View>
-      
-      
     );
+  } else if (this.state.dataLoaded && this.state.checklistSelected){
+    
+    const Materials = <MaterialsType questionsData = {this.state.MaterialsQuestions}></MaterialsType>
+    const Labour = <LabourType questionsData = {this.state.LabourQuestions}></LabourType>
+    const General = <GeneralType questionsData = {this.state.GeneralQuestions}></GeneralType>
+
+    return (
+      <ScrollView>
+      <View>
+        <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+              <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+        </View>
+        <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
+          {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
+        </View>
+        <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
+          
+          {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
+        </View>
+        <Text style={styles.questionsHeader}>Questions</Text>
+        <FlatList style={styles.flatList}
+          data={this.state.questions}
+          renderItem = {({item}) => 
+          <View>
+          {item.questiontype == "" ? General 
+          : ( item.questiontype =="Materials" ? Materials
+          : ( item.questiontpye == "Labour" ? Labour :
+            General))}
+          </View>
+        }
+        keyExtractor={item => item.id}
+        />
+        
+    <FlatList style={styles.flatList}
+        data={[{qrcode: 'Scan Qr'}]}
+        renderItem={({item}) => 
+        <View>
+      <TouchableOpacity >
+      <View style={styles.row}>
+          <Text style={styles.text}>{item.qrcode}</Text>
+      </View>  
+    </TouchableOpacity>
+        </View>
+        }
+        keyExtractor={item => item.name}
+        />
+      </View>
+      </ScrollView>  
+      );
   }
 }
 }
 
 const styles = StyleSheet.create({
-  
-
   TextContainer: {
     padding: 15,
     marginLeft: 15,
@@ -135,6 +210,15 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
     
   },
+  questionsHeader: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30,
+    alignSelf: 'flex-start',
+    padding: 15
+    
+  },
+
   detailsText: {
       color: 'red',
       fontWeight: 'normal',

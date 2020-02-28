@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
 
-export class SpacesModal extends Component {
-
+export class ChecklistModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            spaces: [],
-            spacesFetched: false,
+            checklists: [],
+            checklistsFetched: false,
             key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
             modalVisible: false,
             isSelected: false,
@@ -33,22 +32,21 @@ export class SpacesModal extends Component {
                 this.setModalVisible(!this.state.modalVisible)
               }}>
               <View style={{marginTop: 22}}>
-                  <Text style={styles.headingTextBold}>Spaces</Text>
+                  <Text style={styles.headingTextBold}>Checklists</Text>
                 <FlatList
-                data={this.props.spaces}
+                data={this.props.checklists}
                 renderItem = {({item}) =>
                   <TouchableOpacity
                     onPress={() => {
-                    this.props.spacesFilter(item.floor)
+                      this.props.loadQuestions(item.questions, item.title)
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
                           isSelected: true,
-                          selection: item.floor
+                          selection: item.title
                       })
                     }}>
                     <View>
-                        <Text>{item.floor}</Text>
-                        <Text>{item.id}</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
                     </View>
                   </TouchableOpacity>
                 }
@@ -56,8 +54,10 @@ export class SpacesModal extends Component {
                 ></FlatList>
                 <TouchableOpacity
                 onPress={() => {
+                    this.setState({
+                        isSelected: false
+                    })
                     this.setModalVisible(!this.state.modalVisible);
-                    
                   }}>
                     <Text>Close</Text>
                 </TouchableOpacity>
@@ -69,7 +69,7 @@ export class SpacesModal extends Component {
                 this.setModalVisible(true);
               }}>
             <View>
-              <Text style={styles.headingTextBold}> Space</Text>
+              <Text style={styles.headingTextBold}> Checklist</Text>
               {this.state.isSelected ? selected : noneSelected}
             </View>
             </TouchableOpacity>
@@ -134,4 +134,4 @@ const styles = StyleSheet.create({
     
   })
   
-  export default SpacesModal;
+export default ChecklistModal
