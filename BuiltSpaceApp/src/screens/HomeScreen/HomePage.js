@@ -102,7 +102,7 @@ export class HomePage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
