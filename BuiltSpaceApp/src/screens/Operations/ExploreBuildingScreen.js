@@ -27,7 +27,8 @@ export class ExploreBuildingScreen extends Component {
           questions:[],
           MaterialsQuestions: [],
           LabourQuestions: [],
-          GeneralQuestions: []
+          GeneralQuestions: [],
+          setQuestions: [],
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
@@ -51,24 +52,20 @@ export class ExploreBuildingScreen extends Component {
         assetSelected: true
       })
     }
+    checkQuestionType = (questionObj) => {
+      // console.log('q type: ', questionObj.questiontype)
 
-    loadQuestions = (questions, name) => {
-      console.log(questions)
-      for (let i = 0; i < questions.length; i++) {
-        if (questions[i].questiontype === "") {
-          this.state.GeneralQuestions.push(questions[i])} 
-        else if (questions[i].questiontype === "Materials"){
-          this.state.MaterialsQuestions.push(questions[i])}
-        else if (questions[i].questiontype === "Labour"){
-          this.state.LabourQuestions.push(questions[i])}
+      if (questionObj.questiontype == '') {
+        return <GeneralType question={questionObj}/>
       }
-      console.log("General:" ,this.state.GeneralQuestions.length)
-      console.log("Labour:", this.state.LabourQuestions.length)
-      console.log("Materials:", this.state.MaterialsQuestions.length)
-      this.setState({
-        questions: questions,
-        checklistSelected: true
-      })
+
+      if (questionObj.questiontype == 'Labour') {
+        return <LabourType question={questionObj}/>
+      }
+
+      if (questionObj.questiontype == 'Materials') {
+        return <MaterialsType question={questionObj}/>
+      }
     }
     
     componentDidMount = async() => {
@@ -149,32 +146,43 @@ export class ExploreBuildingScreen extends Component {
           {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
         </View>
         <Text style={styles.questionsHeader}>Questions</Text>
-        <FlatList style={styles.flatList}
-          data={this.state.questions}
-          renderItem = {({item}) => 
-          <View>
-          {item.questiontype == "" ? General 
-          : ( item.questiontype =="Materials" ? Materials
-          : ( item.questiontpye == "Labour" ? Labour :
-            General))}
-          </View>
+        
+    <FlatList style={styles.flatList}
+        data={this.state.setQuestions}
+        renderItem={({item}) => {
+
+          if (item.questiontype === '') {
+            return <GeneralType question={{item}}/>
+            // return <View>
+            //         <Text>General Type</Text>
+            //         <Text>{item.number} {item.question}</Text>
+            //       </View>
+          }
+    
+          if (item.questiontype === 'Labour') {
+            return <LabourType question={{item}}/>
+            // return <View>
+            //         <Text>Labour Type</Text>
+            //         <Text>{item.number} {item.question}</Text>
+            //       </View>
+          }
+    
+          if (item.questiontype === 'Materials') {
+          return <MaterialsType question={{item}}/>
+            // return <View>
+            //         <Text>Materials Type</Text>
+            //         <Text>{item.number} {item.question}</Text>
+            //       </View>
+          }
+        }
         }
         keyExtractor={item => item.id}
         />
-        
-    <FlatList style={styles.flatList}
-        data={[{qrcode: 'Scan Qr'}]}
-        renderItem={({item}) => 
-        <View>
       <TouchableOpacity >
       <View style={styles.row}>
-          <Text style={styles.text}>{item.qrcode}</Text>
+          <Text style={styles.text}>Qr Code</Text>
       </View>  
     </TouchableOpacity>
-        </View>
-        }
-        keyExtractor={item => item.name}
-        />
       </View>
       </ScrollView>  
       );
@@ -215,7 +223,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
     alignSelf: 'flex-start',
-    padding: 15
+    padding: 5
     
   },
 
@@ -231,7 +239,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 3,
     marginLeft: 15,
-    marginTop: 170,
+    // marginTop: 170,
     marginRight: 15,
     borderBottomColor: 'white',
     borderBottomWidth: 2,
