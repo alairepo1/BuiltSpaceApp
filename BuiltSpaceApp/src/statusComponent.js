@@ -14,6 +14,9 @@ export class StatusBar extends Component {
   subscribe = NetInfo.addEventListener(state => {
     console.log('wifi status: ', state.isConnected)
     if (state.isConnected) {
+      // is connected
+      this.props.isConnected.updateConnection(state.isConnected)
+      // runn updateConnection function
       this.setState({
         connection_color: 'lightgrey',
         connectionMsg: 'Connected'
@@ -21,8 +24,9 @@ export class StatusBar extends Component {
     }
 
     if (!state.isConnected) {
+      // not connected
+      this.props.isConnected.updateConnection(state.isConnected)
       this.setState({
-        isConnected: state.isConnected,
         connection_color: 'red',
         connectionMsg: 'No Connection.'
       });

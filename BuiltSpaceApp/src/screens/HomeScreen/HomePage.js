@@ -31,6 +31,9 @@ export class HomePage extends Component {
       connection_status: 'Not implemented',
       organizations: [],
       isLoading: true,
+
+      connection: '',
+      
     };
   }
 
@@ -48,6 +51,18 @@ export class HomePage extends Component {
       {cancelable: false},
     );
   };
+
+  updateConnection = (bool) => {
+    if (bool){
+      this.setState({
+        connection : bool
+      })
+    }else {
+      this.setState({
+        connection : bool
+      })
+    }
+  }
 
   componentDidMount = async() => {
     // initialize the api here
@@ -134,7 +149,7 @@ export class HomePage extends Component {
       </View>
     ) : (
       <View style={styles.container}>
-        <StatusBar />
+        <StatusBar isConnected={this.updateConnection} />
         <Text style={styles.homePageText}>
           To Start please select an organization
         </Text>
