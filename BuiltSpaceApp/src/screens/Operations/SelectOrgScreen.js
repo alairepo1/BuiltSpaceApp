@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import { ScrollView } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class SelectOrgScreen extends Component {
   constructor(props) {
@@ -14,24 +15,24 @@ export class SelectOrgScreen extends Component {
 
   fetch = () => {
     fetch(
-        'https://beta.builtspace.com/_vti_bin/wcf/userdata.svc/MyOrganizations', //get organizations
-        {
-          method: 'get',
-          headers: {
-            Authorization: this.state.key
-          },
+      'https://beta.builtspace.com/_vti_bin/wcf/userdata.svc/MyOrganizations', //get organizations
+      {
+        method: 'get',
+        headers: {
+          Authorization: this.state.key
         },
+      },
     )
-        .then(response => response.json())
-        .then(result => {
-          
-          this.setState({
-            org_data: result
-          })
+      .then(response => response.json())
+      .then(result => {
+
+        this.setState({
+          org_data: result
         })
-        .catch(e => {
-          console.log(e);
-        });
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   componentDidMount = () => {
@@ -48,40 +49,43 @@ export class SelectOrgScreen extends Component {
   //       </TouchableOpacity>
   //     </View>
   //     </ScrollView>
-      
+
   //   )
   // }
 
   render() {
-    const {org_data} = this.state;
-    const {navigate} = this.props.navigation;
+    const { org_data } = this.state;
+    const { navigate } = this.props.navigation;
     return (
-        <FlatList style={styles.container}
+      <FlatList style={styles.container}
         data={this.state.org_data}
-        renderItem={({item}) => 
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {
-          orgName: item
-        })}>
-        <View style={styles.row}>
-          <Text style={styles.text}>{item.name}</Text>
-        </View>  
-        </TouchableOpacity>
+        renderItem={({ item }) =>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {
+            orgName: item
+          })}>
+            <View style={styles.row}>
+              <Text style={styles.text}>{item.name}</Text>
+              <View>
+                <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
+              </View>
+            </View>
+          </TouchableOpacity>
         }
         keyExtractor={item => item.name}
-        />
-      
-     
+      />
+
+
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
-   marginTop: 40,
-   marginLeft: 15,
-   marginRight: 15,
-   backgroundColor: '#324679'
+    flex: 1,
+    marginTop: 40,
+    marginLeft: 15,
+    marginRight: 15,
+    backgroundColor: '#324679'
   },
   row: {
     flexDirection: 'row',
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
     borderBottomColor: 'white',
     borderBottomWidth: 2,
-  
+
   },
   text: {
     flex: 1,
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30
   },
-  
+
 })
 
 

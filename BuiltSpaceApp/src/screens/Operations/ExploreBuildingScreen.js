@@ -8,6 +8,7 @@ import ChecklistModal from './ChecklistModal.js'
 import MaterialsType from './MaterialsType.js'
 import LabourType from './LabourType.js'
 import GeneralType from './GeneralType.js'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
@@ -101,8 +102,13 @@ export class ExploreBuildingScreen extends Component {
     } else if (this.state.dataLoaded && !this.state.checklistSelected){
     return (
     <View>
-      <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+
+//       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+//             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+
+      <View style={styles.TextContainer}>
+        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+
       </View>
       <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
