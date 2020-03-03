@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList} from 'react-native';
+import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
 
 export class AssetsModal extends Component {
     constructor(props) {
@@ -21,8 +21,7 @@ export class AssetsModal extends Component {
     }
     render() {
         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
-        
+        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
         return(
             <View style={{marginTop: 22}}>
 
@@ -31,7 +30,7 @@ export class AssetsModal extends Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
+                this.setModalVisible(!this.state.modalVisible)
               }}>
               <View style={styles.listContainer}>
                 <View style={styles.titleTop}>
@@ -66,6 +65,13 @@ export class AssetsModal extends Component {
                 }
                 keyExtractor={item => item.id}
                 ></FlatList>
+// <<<<<<< zach
+//                 <TouchableOpacity
+//                 onPress={() => {
+//                     this.setModalVisible(!this.state.modalVisible);
+//                   }}>
+//                     <Text>Close</Text>
+//                 </TouchableOpacity>
                 
                 {/* Bottom clos button container */}
                 <View style={styles.bottomContainer}> 
@@ -195,4 +201,4 @@ const styles = StyleSheet.create({
     
   })
   
-export default AssetsModal;
+export default AssetsModal
