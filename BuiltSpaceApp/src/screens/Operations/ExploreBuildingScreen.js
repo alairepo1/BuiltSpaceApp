@@ -4,6 +4,7 @@ import StatusBar from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import AssetsModal from './AssetsModal.js'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class ExploreBuildingScreen extends Component { 
     constructor(props) {
@@ -76,7 +77,7 @@ export class ExploreBuildingScreen extends Component {
     return (
     <View>
       <View style={styles.TextContainer}>
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>
       <View style={styles.TextContainer}>
         <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
 import {get_org_data} from '../../storage/fetchAPI.js'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class SelectBuildingScreen extends Component { 
   constructor(props) {
@@ -69,8 +70,12 @@ export class SelectBuildingScreen extends Component {
         buildingData: item
       })}>
       <View style={styles.row}>
-        <Text style={styles.text}>{item.name} </Text>
+        <Text style={styles.text}>{item.name}</Text>
+        <View>
+        <Icon style={styles.listIcon}name="angle-right" size={30} color="white" />
+      </View>
       </View>  
+      
       </TouchableOpacity>
       }
       keyExtractor={item => item.name}
@@ -100,7 +105,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 25
-  }
+  },
+  listIcon: {
+    justifyContent: 'flex-end',
+    textAlign:"right"
+  },
   
 })
 
