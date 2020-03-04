@@ -230,7 +230,6 @@ export const updateOrgs = (accountDetails, orgs) => {
     })
     console.log('updated orgs')
   }).catch(e => {console.log('updateOrgs: ', e)})
-  Realm.close()
 
 }
 
@@ -342,7 +341,6 @@ export const DBcheckOrgData = async (accountDetails, organization) => {
     
     if (!org[0].buildings.isEmpty()){
       orgArray.push(org[0])
-      console.log(orgArray)
       return orgArray
     
       // return Promise.resolve(orgArray)

@@ -20,16 +20,17 @@ import {
 import Navigator from './src/Navigator/Navigator.js';
 import SafeAreaView from 'react-native-safe-area-view';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import NetworkProvider from './src/statusComponent'
 
 class App extends Component {
   render() {
     return (
       <SafeAreaProvider>
+        <NetworkProvider>
         <Navigator />
-        {/* <RealmDb /> */}
+        </NetworkProvider>
       </SafeAreaProvider>
     );
-    // <BottomTabNavigator />;
   }
 }
 export default App;

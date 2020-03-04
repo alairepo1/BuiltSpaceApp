@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import StatusBar from '../../statusComponent.js';
+import { NetworkContext } from '../../statusComponent.js';
 import {fetchOrgs} from '../../storage/fetchAPI';
 import {
   insertNewAccount,
@@ -19,6 +19,7 @@ import {
 } from '../../storage/schema/dbSchema';
 
 export class HomePage extends Component {
+  static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -149,7 +150,7 @@ export class HomePage extends Component {
       </View>
     ) : (
       <View style={styles.container}>
-        <StatusBar isConnected={this.updateConnection} />
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <Text style={styles.homePageText}>
           To Start please select an organization
         </Text>

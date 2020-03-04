@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import StatusBar from '../../statusComponent.js';
+import { NetworkContext } from '../../statusComponent.js';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export class SelectOrgScreen extends Component {
+  static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
@@ -37,7 +38,7 @@ export class SelectOrgScreen extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <StatusBar/>
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <FlatList 
         data={this.state.org_data}
         renderItem={({item}) => 

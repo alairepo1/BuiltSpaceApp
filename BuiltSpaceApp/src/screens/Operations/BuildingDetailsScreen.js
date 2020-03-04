@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import StatusBar from '../../statusComponent.js';
+import { NetworkContext } from '../../statusComponent.js';
 
 export class BuildingDetailsScreen extends Component { 
     constructor(props) {
@@ -39,7 +39,7 @@ export class BuildingDetailsScreen extends Component {
     return (
 
     <View style={styles.container}>
-      <StatusBar/>
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <Text style={styles.detailsTextContainer}>
             <Text style={styles.detailsTextBold}>City: <Text style={styles.detailsText}>{buildingCity} {'\n\n'}</Text></Text>
             <Text style={styles.detailsTextBold}>Address: <Text style={styles.detailsText}>{buildingAddress}, {buildingCity}, {buildingProvince} {'\n\n'}</Text></Text>

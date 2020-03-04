@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import StatusBar from '../../statusComponent.js';
+import { NetworkContext } from '../../statusComponent.js';
 
 export class SelectLocationScreen extends Component {
+  static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {
