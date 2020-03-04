@@ -21,7 +21,7 @@ export class ChecklistModal extends Component {
     }
     render() {
         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
+        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
         return(
             <View style={{marginTop: 22}}>
             <Modal
@@ -38,12 +38,13 @@ export class ChecklistModal extends Component {
                 renderItem = {({item}) =>
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.loadQuestions(item.questions, item.title)
+                      this.props.loadQuestions(item.questions)
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
                           isSelected: true,
                           selection: item.title
                       })
+                      console.log(this.state.selection)
                     }}>
                     <View>
                         <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
@@ -54,9 +55,6 @@ export class ChecklistModal extends Component {
                 ></FlatList>
                 <TouchableOpacity
                 onPress={() => {
-                    this.setState({
-                        isSelected: false
-                    })
                     this.setModalVisible(!this.state.modalVisible);
                   }}>
                     <Text>Close</Text>

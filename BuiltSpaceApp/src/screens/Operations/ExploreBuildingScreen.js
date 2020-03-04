@@ -52,20 +52,26 @@ export class ExploreBuildingScreen extends Component {
         assetSelected: true
       })
     }
-    checkQuestionType = (questionObj) => {
-      // console.log('q type: ', questionObj.questiontype)
+    // checkQuestionType = (questionObj) => {
+    //   // console.log('q type: ', questionObj.questiontype)
 
-      if (questionObj.questiontype == '') {
-        return <GeneralType question={questionObj}/>
-      }
+    //   if (questionObj.questiontype == '') {
+    //     return <GeneralType question={questionObj}/>
+    //   }
 
-      if (questionObj.questiontype == 'Labour') {
-        return <LabourType question={questionObj}/>
-      }
+    //   if (questionObj.questiontype == 'Labour') {
+    //     return <LabourType question={questionObj}/>
+    //   }
 
-      if (questionObj.questiontype == 'Materials') {
-        return <MaterialsType question={questionObj}/>
-      }
+    //   if (questionObj.questiontype == 'Materials') {
+    //     return <MaterialsType question={questionObj}/>
+    //   }
+    // }
+    loadQuestions = (questions) => {
+      this.setState({    
+        setQuestions: questions,    
+        checklistSelected: true    
+      })    
     }
     
     componentDidMount = async() => {
