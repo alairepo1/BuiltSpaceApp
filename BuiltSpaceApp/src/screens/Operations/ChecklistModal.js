@@ -38,7 +38,7 @@ export class ChecklistModal extends Component {
                 renderItem = {({item}) =>
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.loadQuestions(item.questions, item.title)
+                      this.props.loadQuestions(item.questions)
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
                           isSelected: true,
@@ -47,6 +47,7 @@ export class ChecklistModal extends Component {
                     }}>
                     <View>
                         <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.assetCategory}</Text>
                     </View>
                   </TouchableOpacity>
                 }

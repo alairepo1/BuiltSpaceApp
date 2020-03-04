@@ -11,22 +11,7 @@ export class BuildingDetailsScreen extends Component {
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
   }
-
-  // renderItem({item}) {
-  //   return(
-  //     <View style={styles.row}>
-  //       <Text style={styles.text}>{item.address}</Text>
-  //     </View>
-
-  //   )
-  // }
-
-  //   buildingAddress: item.name,
-  //         buildingCity: item.city,
-  //         buildingName: item.name,
-  //         buildingProvince: item.provincestate,
-  //         buildingPostalCode: item.postalcode
-
+  
   render() {
     const { navigation } = this.props;
     const buildingName = navigation.getParam('buildingName', 'None');

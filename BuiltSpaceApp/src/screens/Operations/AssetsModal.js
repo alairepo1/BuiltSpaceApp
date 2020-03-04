@@ -65,13 +65,12 @@ export class AssetsModal extends Component {
                 }
                 keyExtractor={item => item.id}
                 ></FlatList>
-// <<<<<<< zach
-//                 <TouchableOpacity
-//                 onPress={() => {
-//                     this.setModalVisible(!this.state.modalVisible);
-//                   }}>
-//                     <Text>Close</Text>
-//                 </TouchableOpacity>
+                {/* <TouchableOpacity
+                onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                    <Text>Close</Text>
+                </TouchableOpacity> */}
                 
                 {/* Bottom clos button container */}
                 <View style={styles.bottomContainer}> 

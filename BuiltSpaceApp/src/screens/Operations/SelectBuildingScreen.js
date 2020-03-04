@@ -20,41 +20,15 @@ export class SelectBuildingScreen extends Component {
     };
   }
 
-
-
-  // fetch = () => {
-  //   fetch(
-  //       'https://beta.builtspace.com/sites/bcitproject/_vti_bin/wcf/orgdata.svc/buildings', //get buildings
-  //       {
-  //         method: 'get',
-  //         headers: {
-  //           Authorization: this.state.key
-  //         },
-  //       },
-  //   )
-  //       .then(response => response.json())
-  //       .then(result => {
-          
-  //         this.setState({
-  //           org_data: result
-  //         })
-  //       })
-  //       .catch(e => {
-  //         console.log(e);
-  //       });
-  // };
-
   componentDidMount = () => {
     // this.fetch();
     //API call to get org_data and update the database
     DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
-      console.log(result[0].name)
-      // console.log(result[0])
       // Error throws because it cannot find the object in DB due to deletion/updated in orgsupdate?
       if (!result){
         console.log("no data in org, fetching data...")
         get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-          console.log('get_org_data')
+          console.log('no data in db, get_org_data')
           insertOrgData(this.state.account, result)
             this.setState({
               org_data: result,
@@ -105,14 +79,6 @@ export class SelectBuildingScreen extends Component {
 
     }).catch(e => {console.log(e)})
   };
-
-  // renderItem({item}) {
-  //   return(
-  //     <View style={styles.row}>
-  //       <Text style={styles.text}>{item.address}</Text>
-  //     </View>
-  //   )
-  // }
 
   render() {
     const {building_data} = this.state;

@@ -14,56 +14,19 @@ export class SelectOrgScreen extends Component {
     };
   }
 
-
-//   fetch = () => {
-//     fetch(
-//       'https://beta.builtspace.com/_vti_bin/wcf/userdata.svc/MyOrganizations', //get organizations
-//       {
-//         method: 'get',
-//         headers: {
-//           Authorization: this.state.key
-//         },
-//       },
-//     )
-//       .then(response => response.json())
-//       .then(result => {
-
-//         this.setState({
-//           org_data: result
-//         })
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   };
-
   componentDidMount = () => {
     this.setState({
       org_data: this.props.navigation.state.params,
     })
   };
 
-  // renderItem({item}) {
-  //   return(
-  //     <ScrollView>
-  //     <View style={styles.row}>
-  //       <TouchableOpacity
-  //         onPress={() => this.props.navigation.navigate('SelectBuilding')}>
-  //       <Text style={styles.text}>{item.name}</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //     </ScrollView>
-
-  //   )
-  // }
-
   render() {
     const { org_data } = this.state;
     const { navigate } = this.props.navigation;
     return (
-      <View>
+      <View style={styles.container}>
       <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-      <FlatList style={styles.container}
+      <FlatList 
         data={this.state.org_data}
         renderItem={({ item }) =>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {

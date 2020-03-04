@@ -14,10 +14,6 @@ import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
 import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
-import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
-import SpacesModal from '../screens/Operations/SpacesModal.js';
-
-import dbScreen from '../screens/dbScreen/dbScreen'
 
 const AuthStack = createStackNavigator(
   {
@@ -63,24 +59,9 @@ const HomeStack = createStackNavigator(
     SelectAsset: {
       screen: SelectAssetScreen
     },
-    SpacesModal: {
-      screen: SpacesModal
-    },
-    // Add Operation screens above
-    //
-    // Isolated Checklist Screens below
-    Assets: {
-        screen: AssetScreen
-    },
-    dbScreen: {
-      screen: dbScreen
-  },
-
     ExploreBuilding: {
       screen: ExploreBuildingScreen
-
     }
-    // Add Isolated Checklist screens above
   },
   
   {

@@ -15,7 +15,8 @@ import {
   checkAccountExists,
   checkDBExists,
   getAccountOrgs,
-  updateAccount
+  updateAccount,
+  delete_db
 } from '../../storage/schema/dbSchema';
 
 export class HomePage extends Component {
@@ -171,10 +172,10 @@ export class HomePage extends Component {
           </View>
           <View>
             <View style={styles.button_container}>
-              <TouchableOpacity
+            <TouchableOpacity
                 style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('dbScreen')}>
-                <Text style={styles.button_text}> Database Screen </Text>
+                onPress={() => delete_db()}>
+                <Text style={styles.button_text}> Del DB </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttons}

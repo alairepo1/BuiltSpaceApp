@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { NetworkContext } from '../../statusComponent.js';
-import SpacesModal from './SpacesModal.js';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
@@ -41,19 +40,34 @@ export class ExploreBuildingScreen extends Component {
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
+        this.loadQuestions = this.loadQuestions.bind(this)
       }
 
     spacesFilter = (spaceFloor) => {
-      // console.log(spaceFloor)
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
-      console.log(this.state.filteredAssets)
+      // console.log(this.state.filteredAssets)
       this.setState({
         spaceSelected: true
       })
     }
-     
+    assetsFilter = (assetCategory) => {
+      // console.log(assetCategory)
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
+      // console.log(this.state.filteredChecklist[0].questions)
+      
+      this.setState({
+        assetSelected: true
+      })
+    }
+
+    loadQuestions = (questions) => {
+      this.setState({
+        setQuestions: Array.from(questions),
+        checklistSelected: true
+      })
+    }
+
     componentDidMount = () => {
-      // console.log("Befor")
       var orgData =  this.props.navigation.state.params.orgData // realm object
       var buildingData = this.props.navigation.state.params.buildingData //realm object
       this.setState({checklists: orgData.checklists}) //sets checklists
@@ -108,7 +122,6 @@ export class ExploreBuildingScreen extends Component {
             }
 
           }else{
-            console.log('updatebuildings pls')
             get_building_data(orgData, buildingData, this.state.key).then(api_result => {
               console.log('get_building_data api call: ' + result[0].name) 
               var building_data = api_result
@@ -122,18 +135,11 @@ export class ExploreBuildingScreen extends Component {
             })
           }
         }
+
+
+
  
-    assetsFilter = (assetCategory) => {
-//       console.log(assetCategory)
-      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
-//       console.log(this.state.filteredChecklist[0].questions)
-      
-      this.setState({
-        assetSelected: true
-      })
-    }
     checkQuestionType = (questionObj) => {
-      // console.log('q type: ', questionObj.questiontype)
 
       if (questionObj.questiontype == '') {
         return <GeneralType question={questionObj}/>
@@ -148,16 +154,6 @@ export class ExploreBuildingScreen extends Component {
       }
     }
   
-//     componentDidMount = async() => {
-//       console.log("Befor")
-//       var orgData =  await this.props.navigation.state.params.orgData
-//       var buildingData = await this.props.navigation.state.params.buildingData
-//       var AssetsAndSpaces = await get_building_data(orgData, buildingData)
-//       this.setState({
-//         spaces: AssetsAndSpaces.spaces,
-//         assets: AssetsAndSpaces.assets,
-//         checklists: orgData.checklists,
-//         dataLoaded: true,
       })
 
 
@@ -184,11 +180,11 @@ export class ExploreBuildingScreen extends Component {
     return (
     <View>
       <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-       {/* <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
-             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/> */}
+       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
 
-      <View style={styles.TextContainer}>
-        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+      {/* <View style={styles.TextContainer}>
+        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/> */}
 
       </View>
       <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
@@ -234,32 +230,20 @@ export class ExploreBuildingScreen extends Component {
         </View>
         <Text style={styles.questionsHeader}>Questions</Text>
         
-    <FlatList style={styles.flatList}
+    <FlatList 
         data={this.state.setQuestions}
         renderItem={({item}) => {
 
           if (item.questiontype === '') {
             return <GeneralType question={{item}}/>
-            // return <View>
-            //         <Text>General Type</Text>
-            //         <Text>{item.number} {item.question}</Text>
-            //       </View>
           }
     
           if (item.questiontype === 'Labour') {
             return <LabourType question={{item}}/>
-            // return <View>
-            //         <Text>Labour Type</Text>
-            //         <Text>{item.number} {item.question}</Text>
-            //       </View>
           }
     
           if (item.questiontype === 'Materials') {
           return <MaterialsType question={{item}}/>
-            // return <View>
-            //         <Text>Materials Type</Text>
-            //         <Text>{item.number} {item.question}</Text>
-            //       </View>
           }
         }
         }
