@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import { NetworkContext } from '../../statusComponent.js';
 import {get_org_data} from '../../storage/fetchAPI.js'
 import {insertOrgData, DBgetOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class SelectBuildingScreen extends Component { 
   static contextType = NetworkContext;
@@ -116,35 +117,36 @@ export class SelectBuildingScreen extends Component {
   render() {
     const {building_data} = this.state;
     const {navigate} = this.props.navigation;
+
     return ( this.state.isLoading ? 
       <View>
         <Text>Loading</Text> 
       </View>
       :
-      <View style={styles.container}>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <FlatList 
-        data={this.state.org_data.buildings}
-        renderItem={({item}) => 
-        <TouchableOpacity 
-        onPress={() => this.props.navigation.navigate('BuildingDetails', {
-          buildingAddress: item.address,
-          buildingCity: item.city,
-          buildingName: item.name,
-          buildingProvince: item.provincestate,
-          buildingPostalCode: item.postalcode,
-          buildingId: item.id,
-          orgData: this.state.org_data,
-          buildingData: item
-        })}>
-        <View style={styles.row}>
-          <Text style={styles.text}>{item.name} </Text>
-        </View>  
-        </TouchableOpacity>
-        }
-        keyExtractor={item => item.name}
-        />
+      <FlatList style={styles.container}
+      data={this.state.org_data.buildings}
+      renderItem={({item}) => 
+      <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
+        buildingAddress: item.address,
+        buildingCity: item.city,
+        buildingName: item.name,
+        buildingProvince: item.provincestate,
+        buildingPostalCode: item.postalcode,
+        buildingId: item.id,
+        orgData: this.state.org_data,
+        buildingData: item
+      })}>
+      <View style={styles.row}>
+        <Text style={styles.text}>{item.name}</Text>
+        <View>
+        <Icon style={styles.listIcon}name="angle-right" size={30} color="white" />
       </View>
+      </View>  
+      
+      </TouchableOpacity>
+      }
+      keyExtractor={item => item.name}
+      />
     );
   }
 }
@@ -170,7 +172,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 25
-  }
+  },
+  listIcon: {
+    justifyContent: 'flex-end',
+    textAlign:"right"
+  },
   
 })
 

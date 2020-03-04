@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import { NetworkContext } from '../../statusComponent.js';
 import SpacesModal from './SpacesModal.js';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
+import SpacesModal from './SpacesModal.js';
 import AssetsModal from './AssetsModal.js'
 import {updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
+import ChecklistModal from './ChecklistModal.js'
+import MaterialsType from './MaterialsType.js'
+import LabourType from './LabourType.js'
+import GeneralType from './GeneralType.js'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class ExploreBuildingScreen extends Component { 
   static contextType = NetworkContext;
@@ -24,23 +30,28 @@ export class ExploreBuildingScreen extends Component {
           filteredAssets: [],
           checklists: [],
           filteredChecklist: [],
-          dataLoaded: false
+          dataLoaded: false,
+          spaceSelected: false,
+          checklistSelected: false,
+          questions:[],
+          MaterialsQuestions: [],
+          LabourQuestions: [],
+          GeneralQuestions: [],
+          setQuestions: [],
         };
         this.spacesFilter = this.spacesFilter.bind(this)
+        this.assetsFilter = this.assetsFilter.bind(this)
       }
 
     spacesFilter = (spaceFloor) => {
       // console.log(spaceFloor)
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
-      // console.log(this.state.filteredAssets)
+      console.log(this.state.filteredAssets)
+      this.setState({
+        spaceSelected: true
+      })
     }
-
-    assetsFilter = (assetCategory) => {
-      // console.log(assetCategory)
-      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.categoryabbr === "" )
-      // console.log(this.state.filteredChecklist)
-    }
-    
+     
     componentDidMount = () => {
       // console.log("Befor")
       var orgData =  this.props.navigation.state.params.orgData // realm object
@@ -110,54 +121,83 @@ export class ExploreBuildingScreen extends Component {
               })
             })
           }
-
-
         }
+ 
+    assetsFilter = (assetCategory) => {
+//       console.log(assetCategory)
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
+//       console.log(this.state.filteredChecklist[0].questions)
+      
+      this.setState({
+        assetSelected: true
+      })
+    }
+    checkQuestionType = (questionObj) => {
+      // console.log('q type: ', questionObj.questiontype)
 
+      if (questionObj.questiontype == '') {
+        return <GeneralType question={questionObj}/>
+      }
+
+      if (questionObj.questiontype == 'Labour') {
+        return <LabourType question={questionObj}/>
+      }
+
+      if (questionObj.questiontype == 'Materials') {
+        return <MaterialsType question={questionObj}/>
+      }
+    }
+  
+//     componentDidMount = async() => {
+//       console.log("Befor")
+//       var orgData =  await this.props.navigation.state.params.orgData
+//       var buildingData = await this.props.navigation.state.params.buildingData
+//       var AssetsAndSpaces = await get_building_data(orgData, buildingData)
+//       this.setState({
+//         spaces: AssetsAndSpaces.spaces,
+//         assets: AssetsAndSpaces.assets,
+//         checklists: orgData.checklists,
+//         dataLoaded: true,
       })
 
 
     }
-
-  // renderItem({item}) {
-  //   return(
-  //     <View style={styles.row}>
-  //       <Text style={styles.text}>{item.address}</Text>
-  //     </View>
-      
-  //   )
-  // }
-
-//   buildingAddress: item.name,
-//         buildingCity: item.city,
-//         buildingName: item.name,
-//         buildingProvince: item.provincestate,
-//         buildingPostalCode: item.postalcode
-
   render() {
     const {navigation} = this.props;
     
-    const buildingId = navigation.getParam('buildingId', 'None')
-    const buildingName = navigation.getParam('buildingName', 'None');
+    // const buildingId = navigation.getParam('buildingId', 'None')
+    // const buildingName = navigation.getParam('buildingName', 'None');
+    const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
+    const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter}/>
+    
+    const noItemSelected = styles.TextContainer
+    const yesItemSelected = styles.TextContainerSelected
+    
+    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions}  ></ChecklistModal>
+    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} ></ChecklistModal>
+
     if (!this.state.dataLoaded) {
       return(
         <Text>Loading</Text>
       )
-    } else {
+    } else if (this.state.dataLoaded && !this.state.checklistSelected){
     return (
     <View>
       <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+       {/* <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/> */}
+
       <View style={styles.TextContainer}>
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+
       </View>
-      <View style={styles.TextContainer}>
-        <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
+      <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
+        {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
       </View>
-      <View style={styles.TextContainer}>
-        <TouchableOpacity>
-            <Text style={styles.headingTextBold}> Checklist</Text><Text style={styles.detailsText}>None Selected </Text>
-        </TouchableOpacity>     
+      <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
+        {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
       </View>
+    
   <FlatList style={styles.flatList}
       data={[{qrcode: 'Scan Qr'}]}
       renderItem={({item}) => 
@@ -172,16 +212,72 @@ export class ExploreBuildingScreen extends Component {
       keyExtractor={item => item.name}
       />
     </View>
-      
-      
     );
+  } else if (this.state.dataLoaded && this.state.checklistSelected){
+    
+    const Materials = <MaterialsType questionsData = {this.state.MaterialsQuestions}></MaterialsType>
+    const Labour = <LabourType questionsData = {this.state.LabourQuestions}></LabourType>
+    const General = <GeneralType questionsData = {this.state.GeneralQuestions}></GeneralType>
+
+    return (
+      <ScrollView>
+      <View>
+        <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+              <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+        </View>
+        <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
+          {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
+        </View>
+        <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
+          
+          {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
+        </View>
+        <Text style={styles.questionsHeader}>Questions</Text>
+        
+    <FlatList style={styles.flatList}
+        data={this.state.setQuestions}
+        renderItem={({item}) => {
+
+          if (item.questiontype === '') {
+            return <GeneralType question={{item}}/>
+            // return <View>
+            //         <Text>General Type</Text>
+            //         <Text>{item.number} {item.question}</Text>
+            //       </View>
+          }
+    
+          if (item.questiontype === 'Labour') {
+            return <LabourType question={{item}}/>
+            // return <View>
+            //         <Text>Labour Type</Text>
+            //         <Text>{item.number} {item.question}</Text>
+            //       </View>
+          }
+    
+          if (item.questiontype === 'Materials') {
+          return <MaterialsType question={{item}}/>
+            // return <View>
+            //         <Text>Materials Type</Text>
+            //         <Text>{item.number} {item.question}</Text>
+            //       </View>
+          }
+        }
+        }
+        keyExtractor={item => item.id}
+        />
+      <TouchableOpacity >
+      <View style={styles.row}>
+          <Text style={styles.text}>Qr Code</Text>
+      </View>  
+    </TouchableOpacity>
+      </View>
+      </ScrollView>  
+      );
   }
 }
 }
 
 const styles = StyleSheet.create({
-  
-
   TextContainer: {
     padding: 15,
     marginLeft: 15,
@@ -192,6 +288,16 @@ const styles = StyleSheet.create({
     borderRightColor: 'red',
     borderRightWidth: 50
   },
+  TextContainerSelected: {
+    padding: 15,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 30,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    borderRightColor: 'green',
+    borderRightWidth: 50
+  },
   headingTextBold: {
     color: 'black',
     fontWeight: 'bold',
@@ -199,6 +305,15 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
     
   },
+  questionsHeader: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30,
+    alignSelf: 'flex-start',
+    padding: 5
+    
+  },
+
   detailsText: {
       color: 'red',
       fontWeight: 'normal',
@@ -211,7 +326,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 3,
     marginLeft: 15,
-    marginTop: 170,
+    // marginTop: 170,
     marginRight: 15,
     borderBottomColor: 'white',
     borderBottomWidth: 2,
