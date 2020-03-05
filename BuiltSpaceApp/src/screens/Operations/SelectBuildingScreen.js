@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import { NetworkContext } from '../../statusComponent.js';
+import { NetworkContext } from '../../networkProvider';
 import {get_org_data} from '../../storage/fetchAPI.js'
 import {insertOrgData, DBgetOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -21,7 +21,7 @@ export class SelectBuildingScreen extends Component {
   }
 
   componentDidMount = () => {
-    // this.fetch();
+
     //API call to get org_data and update the database
     DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
       // Error throws because it cannot find the object in DB due to deletion/updated in orgsupdate?
@@ -49,6 +49,7 @@ export class SelectBuildingScreen extends Component {
             if (currentDate < addHour) {
               console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
               this.setState({
+                orglastUpdated: result[0].lastUpdated.toLocaleString(),
                 org_data: result[0],
                 isLoading: false
               })
@@ -59,6 +60,7 @@ export class SelectBuildingScreen extends Component {
                 console.log("selectBuildingScreen fetch api and update by time", result.name)
                 updateOrgs(this.state.account, result)
                   this.setState({
+                    // set date
                     org_data: result,
                     isLoading: false
                   })
@@ -69,6 +71,7 @@ export class SelectBuildingScreen extends Component {
               console.log("selectBuildingScreen fetch api and update")
               updateOrgs(this.state.account, result)
                 this.setState({
+                  // set date
                   org_data: result,
                   isLoading: false
                 })
@@ -89,30 +92,33 @@ export class SelectBuildingScreen extends Component {
         <Text>Loading</Text> 
       </View>
       :
-      <FlatList style={styles.container}
-      data={this.state.org_data.buildings}
-      renderItem={({item}) => 
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
-        buildingAddress: item.address,
-        buildingCity: item.city,
-        buildingName: item.name,
-        buildingProvince: item.provincestate,
-        buildingPostalCode: item.postalcode,
-        buildingId: item.id,
-        orgData: this.state.org_data,
-        buildingData: item
-      })}>
-      <View style={styles.row}>
-        <Text style={styles.text}>{item.name}</Text>
-        <View>
-        <Icon style={styles.listIcon}name="angle-right" size={30} color="white" />
+      <View style={styles.container}>
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <FlatList 
+        data={this.state.org_data.buildings}
+        renderItem={({item}) => 
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
+          buildingAddress: item.address,
+          buildingCity: item.city,
+          buildingName: item.name,
+          buildingProvince: item.provincestate,
+          buildingPostalCode: item.postalcode,
+          buildingId: item.id,
+          orgData: this.state.org_data,
+          buildingData: item
+        })}>
+        <View style={styles.row}>
+          <Text style={styles.text}>{item.name}</Text>
+          <View>
+          <Icon style={styles.listIcon}name="angle-right" size={30} color="white" />
+        </View>
+        </View>  
+        
+        </TouchableOpacity>
+        }
+        keyExtractor={item => item.name}
+        />
       </View>
-      </View>  
-      
-      </TouchableOpacity>
-      }
-      keyExtractor={item => item.name}
-      />
     );
   }
 }

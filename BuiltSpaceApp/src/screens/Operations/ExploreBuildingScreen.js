@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { NetworkContext } from '../../statusComponent.js';
+import { NetworkContext } from '../../networkProvider';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
@@ -100,6 +100,7 @@ export class ExploreBuildingScreen extends Component {
             if (currentDate < addHour) {
               console.log("ExploreBuildingScreen load from database: " + result[0].name)
               this.setState({
+                orglastUpdated: result[0].lastUpdated.toLocaleString(),
                 spaces: result[0].spaces,
                 assets: result[0].assets,
                 dataLoaded: true
@@ -179,7 +180,7 @@ export class ExploreBuildingScreen extends Component {
     } else if (this.state.dataLoaded && !this.state.checklistSelected){
     return (
     <View>
-      <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
        <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
              <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
 

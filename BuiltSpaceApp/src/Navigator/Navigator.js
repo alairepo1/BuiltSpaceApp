@@ -10,8 +10,6 @@ import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
-import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
-import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 
@@ -52,12 +50,6 @@ const HomeStack = createStackNavigator(
     },
     BuildingDetails: {
       screen: BuildingDetailsScreen
-    },
-    SelectLocation: {
-      screen: SelectLocationScreen
-    },
-    SelectAsset: {
-      screen: SelectAssetScreen
     },
     ExploreBuilding: {
       screen: ExploreBuildingScreen

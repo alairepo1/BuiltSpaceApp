@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import { NetworkContext } from '../../statusComponent.js';
+import { NetworkContext } from '../../networkProvider';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class BuildingDetailsScreen extends Component {
+  static contextType = NetworkContext;
   constructor(props) {
     super(props);
     this.state = {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { NetworkContext } from '../../statusComponent.js';
+import { NetworkContext } from '../../networkProvider';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';

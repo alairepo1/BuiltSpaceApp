@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { NetworkContext } from '../../statusComponent.js';
+import { NetworkContext } from '../../networkProvider';
 import {fetchOrgs} from '../../storage/fetchAPI';
 import {
   insertNewAccount,
@@ -30,40 +30,10 @@ export class HomePage extends Component {
         email: 'bcitbuiltspace@gmail.com',
         id: 400,
       },
-      connection_status: 'Not implemented',
+      lastUpdated: '',
       organizations: [],
-      isLoading: true,
-
-      connection: '',
-      
+      isLoading: true,      
     };
-  }
-
-  notImplemented = () => {
-    Alert.alert(
-      'Not Implemented',
-      'Button is not implemented yet',
-      [
-        {
-          text: 'Close',
-          onPress: () => console.log('Not implemented'),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
-  updateConnection = (bool) => {
-    if (bool){
-      this.setState({
-        connection : bool
-      })
-    }else {
-      this.setState({
-        connection : bool
-      })
-    }
   }
 
   componentDidMount = async() => {
@@ -81,20 +51,20 @@ export class HomePage extends Component {
     
             //current datetime
             var currentDate = new Date()
-            console.log(currentDate, addHour)
     
             // Check if org data last updated is past 1 hr
             if (currentDate < addHour) {
               console.log('Home load from database.')
               var orgs = Array.from(result.organizations);
               this.setState({
+                accountlastUpdated: result.lastUpdated.toLocaleString(),
                 organizations: orgs,
                 isLoading: false,
               });
             }
           // Check if org data last updated is past 1 hr
           // Should check connection before refetching data from API
-            if (currentDate >= addHour) {
+            if (currentDate >= addHour && this.context.isConnected) {
               fetchOrgs(this.state.account).then(result => {
                 console.log('Home: fetchorgs api call')
                 updateAccount(this.state.account, result)
@@ -127,9 +97,6 @@ export class HomePage extends Component {
         })
       }
     });
-
-
-
   };
 
   refreshData = () => {
@@ -152,6 +119,8 @@ export class HomePage extends Component {
     ) : (
       <View style={styles.container}>
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>
         <Text style={styles.homePageText}>
           To Start please select an organization
         </Text>

@@ -20,7 +20,7 @@ import {
 import Navigator from './src/Navigator/Navigator.js';
 import SafeAreaView from 'react-native-safe-area-view';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import NetworkProvider from './src/statusComponent'
+import NetworkProvider from './src/networkProvider'
 
 class App extends Component {
   render() {
