@@ -10,8 +10,8 @@ export class ChecklistModal extends Component {
             checklistsFetched: false,
             key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
             modalVisible: false,
-            isSelected: false,
-            selection: ""
+            checklistIsSelected: false,
+            checklistSelection: ""
             
         }
     this.setModalVisible = this.setModalVisible.bind(this)
@@ -21,7 +21,7 @@ export class ChecklistModal extends Component {
     }
     render() {
         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
+        const selected = <Text style={styles.detailsTextSelected}>{this.state.checklistSelection}</Text>
         return(
             <View style={{marginTop: 22}}>
             <Modal
@@ -41,10 +41,10 @@ export class ChecklistModal extends Component {
                       this.props.loadQuestions(item.questions)
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
-                          isSelected: true,
-                          selection: item.title
+                          checklistIsSelected: true,
+                          checklistSelection: item.title
                       })
-                      console.log(this.state.selection)
+                      console.log(this.state.checklistSelection)
                     }}>
                     <View>
                         <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
@@ -68,7 +68,7 @@ export class ChecklistModal extends Component {
               }}>
             <View>
               <Text style={styles.headingTextBold}> Checklist</Text>
-              {this.state.isSelected ? selected : noneSelected}
+              {this.state.checklistIsSelected ? selected : noneSelected}
             </View>
             </TouchableOpacity>
           </View>
