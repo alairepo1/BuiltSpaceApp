@@ -8,7 +8,6 @@ export class GeneralType extends Component {
         super(props);
     }
     render() {
-        console.log(this.props.question.item)
         return (
             <View>
                 <Text>General Type</Text>
