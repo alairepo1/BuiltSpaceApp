@@ -94,6 +94,7 @@ export class SelectBuildingScreen extends Component {
       :
       <View style={styles.container}>
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.state.account.email}</Text>
         <FlatList 
         data={this.state.org_data.buildings}
         renderItem={({item}) => 

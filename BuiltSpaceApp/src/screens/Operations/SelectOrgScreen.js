@@ -9,6 +9,10 @@ export class SelectOrgScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      account:{
+        email: 'bcitbuiltspace@gmail.com',
+        id: 400
+      },
       org_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
@@ -26,6 +30,7 @@ export class SelectOrgScreen extends Component {
     return (
       <View style={styles.container}>
       <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+      <Text>Logged in as: {this.state.account.email}</Text>
       <FlatList 
         data={this.state.org_data}
         renderItem={({ item }) =>

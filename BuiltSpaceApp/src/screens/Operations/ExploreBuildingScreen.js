@@ -36,7 +36,7 @@ export class ExploreBuildingScreen extends Component {
           MaterialsQuestions: [],
           LabourQuestions: [],
           GeneralQuestions: [],
-          setQuestions: [],
+          setQuestions: []
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
@@ -53,8 +53,8 @@ export class ExploreBuildingScreen extends Component {
     assetsFilter = (assetCategory) => {
       // console.log(assetCategory)
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
-      // console.log(this.state.filteredChecklist[0].questions)
-      
+            // console.log(this.state.filteredChecklist[0].questions)
+
       this.setState({
         assetSelected: true
       })
@@ -100,7 +100,7 @@ export class ExploreBuildingScreen extends Component {
             if (currentDate < addHour) {
               console.log("ExploreBuildingScreen load from database: " + result[0].name)
               this.setState({
-                orglastUpdated: result[0].lastUpdated.toLocaleString(),
+                buildingLastUpdated: result[0].lastUpdated.toLocaleString(),
                 spaces: result[0].spaces,
                 assets: result[0].assets,
                 checklists: orgData.checklists,
@@ -182,6 +182,8 @@ export class ExploreBuildingScreen extends Component {
     return (
     <View>
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
        <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
              <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
 
@@ -219,6 +221,9 @@ export class ExploreBuildingScreen extends Component {
 
     return (
       <ScrollView>
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
       <View>
         <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
               <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
