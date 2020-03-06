@@ -140,28 +140,25 @@ export class ExploreBuildingScreen extends Component {
           }
         }
 
-
-
  
-    checkQuestionType = (questionObj) => {
+    // checkQuestionType = (questionObj) => {
 
-      if (questionObj.questiontype == '') {
-        return <GeneralType question={questionObj}/>
-      }
+    //   if (questionObj.questiontype == '') {
+    //     return <GeneralType question={questionObj}/>
+    //   }
 
-      if (questionObj.questiontype == 'Labour') {
-        return <LabourType question={questionObj}/>
-      }
+    //   if (questionObj.questiontype == 'Labour') {
+    //     return <LabourType question={questionObj}/>
+    //   }
 
-      if (questionObj.questiontype == 'Materials') {
-        return <MaterialsType question={questionObj}/>
-      }
-    }
+    //   if (questionObj.questiontype == 'Materials') {
+    //     return <MaterialsType question={questionObj}/>
+    //   }
+    // }
   
       })
-
-
     }
+
   render() {
     const {navigation} = this.props;
     
@@ -184,6 +181,9 @@ export class ExploreBuildingScreen extends Component {
     return (
       
       <ScrollView>
+        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>
     <View>
       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
