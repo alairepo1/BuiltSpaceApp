@@ -61,10 +61,12 @@ export class ExploreBuildingScreen extends Component {
     }
 
     loadQuestions = (questions) => {
+      console.log("questions",questions.length)
       this.setState({
         setQuestions: Array.from(questions),
         checklistSelected: true
       })
+      console.log("setquestions ",this.state.setQuestions.length)
     }
 
     componentDidMount = () => {
@@ -178,18 +180,13 @@ export class ExploreBuildingScreen extends Component {
       return(
         <Text>Loading</Text>
       )
-    } else if (this.state.dataLoaded && !this.state.checklistSelected){
+    } else if (this.state.dataLoaded){
     return (
+      
+      <ScrollView>
     <View>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.state.account.email}</Text>
-        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
-       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
-             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
-
-      {/* <View style={styles.TextContainer}>
-        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/> */}
-
+      <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
       </View>
       <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
@@ -197,47 +194,12 @@ export class ExploreBuildingScreen extends Component {
       <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
         {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
       </View>
-    
-  <FlatList style={styles.flatList}
-      data={[{qrcode: 'Scan Qr'}]}
-      renderItem={({item}) => 
       <View>
-    <TouchableOpacity >
-    <View style={styles.row}>
-        <Text style={styles.text}>{item.qrcode}</Text>
-    </View>  
-  </TouchableOpacity>
-      </View>
-      }
-      keyExtractor={item => item.name}
-      />
-    </View>
-    );
-  } else if (this.state.dataLoaded && this.state.checklistSelected){
-    
-    const Materials = <MaterialsType questionsData = {this.state.MaterialsQuestions}></MaterialsType>
-    const Labour = <LabourType questionsData = {this.state.LabourQuestions}></LabourType>
-    const General = <GeneralType questionsData = {this.state.GeneralQuestions}></GeneralType>
-
-    return (
-      <ScrollView>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.state.account.email}</Text>
-        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
+      {this.state.checklistSelected ?  
       <View>
-        <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
-              <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
-        </View>
-        <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
-          {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
-        </View>
-        <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
-          
-          {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
-        </View>
-        <Text style={styles.questionsHeader}>Questions</Text>
-        
-    <FlatList 
+          <Text style={styles.questionsHeader}>Questions</Text>
+      </View> : null }
+      <FlatList style={styles.flatList}
         data={this.state.setQuestions}
         renderItem={({item}) => {
 
@@ -262,9 +224,20 @@ export class ExploreBuildingScreen extends Component {
       </View>  
     </TouchableOpacity>
       </View>
-      </ScrollView>  
-      );
-  }
+    
+  <FlatList style={styles.flatList}
+      data={[{qrcode: 'Scan Qr'}]}
+      renderItem={({item}) => 
+      <View>
+
+      </View>
+      }
+      keyExtractor={item => item.name}
+      />
+  </View>
+  </ScrollView>
+    );
+    }
 }
 }
 

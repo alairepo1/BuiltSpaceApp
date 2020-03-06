@@ -46,7 +46,7 @@ export class ChecklistModal extends Component {
                       })
                     }}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.id}{item.title}</Text>
                     </View>
                   </TouchableOpacity>
                 }

@@ -134,6 +134,7 @@ export const checklistsSchema = {
   name: 'checklists',
   properties: {
     id: 'string',
+    title: 'string?',
     workCategory: 'string',
     assetCategory: 'string',
     questions: {type: 'list', objectType: 'questions'}
@@ -300,7 +301,7 @@ export const checkAccountExists = async (accountDetails) => {
       var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
       var account = await realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
       realm.close()
-      // console.log(realm.path)
+      console.log(realm.path)
       if (account !== undefined){
         console.log('account exists fetching account orgs')
         return Promise.resolve(true)

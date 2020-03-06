@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, FlatList, ShadowPropTypesIOS} from 'react-native';
-import { ButtonGroup, selectedIndex } from 'react-native-elements';
+import { ButtonGroup } from 'react-native-elements';
 
 export class MaterialsType extends Component {
     constructor(props) {
         super(props);
         this.state={
-            selectedIndex: 0,
+            selectedIndex: '',
             format: this.props.question.item.format.split('|'),
             colors: this.props.question.item.colorformat.split('|'),
         }
@@ -22,29 +22,25 @@ export class MaterialsType extends Component {
         })
         return buttons
     }
+    
     updateIndex(selectedIndex) {
         this.setState({selectedIndex})
     }
 
-
     render() {
-        // const colors = this.props.question.item.colorformat.split('|')
-        // const format = this.props.question.item.format.split('|')
-        const butts = this.buttonComponents()
+        const buttonArray = this.buttonComponents()
         const { selectedIndex } = this.state
 
         return (
-            <View style={{margin: 5, padding: 5 }}>
+            <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
                 <Text style={{fontWeight: "bold"}}>{this.props.question.item.question}</Text>
                 <ButtonGroup
                 selectMultiple={false}
-                buttons={butts}
+                buttons={buttonArray}
                 onPress={this.updateIndex}
                 selectedIndex={selectedIndex}
-                underlayColor={this.state.colors[4]}
+                underlayColor={'red'}
                 />
-
-
 
                 <View style={{flex: 2, flexDirection: "row"}}>
                 <View style={{flex:2}}>

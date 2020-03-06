@@ -9,7 +9,7 @@ export class LabourType extends Component{
     }
     render() {
         return (
-            <View>
+            <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
                 <Text>Labour Type</Text>
                 <Text>{this.props.question.item.id} {this.props.question.item.question}</Text>
             </View>
