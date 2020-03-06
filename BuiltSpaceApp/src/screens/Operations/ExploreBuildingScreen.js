@@ -54,10 +54,13 @@ export class ExploreBuildingScreen extends Component {
     }
    
     loadQuestions = (questions) => {
-      this.setState({    
+      
+      this.setState({   
+        setQuestions: [], 
         setQuestions: questions,    
         checklistSelected: true    
       })    
+      console.log("what is this",this.state.setQuestions.length)  
     }
     
     componentDidMount = async() => {
@@ -97,6 +100,7 @@ export class ExploreBuildingScreen extends Component {
       )
     } else if (this.state.dataLoaded){
     return (
+      
       <ScrollView>
     <View>
       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
@@ -109,6 +113,10 @@ export class ExploreBuildingScreen extends Component {
         {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
       </View>
       <View>
+      {this.state.checklistSelected ?  
+      <View>
+          <Text style={styles.questionsHeader}>Questions</Text>
+      </View> : null }
       <FlatList style={styles.flatList}
         data={this.state.setQuestions}
         renderItem={({item}) => {
