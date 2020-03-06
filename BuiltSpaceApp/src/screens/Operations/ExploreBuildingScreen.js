@@ -103,6 +103,7 @@ export class ExploreBuildingScreen extends Component {
                 orglastUpdated: result[0].lastUpdated.toLocaleString(),
                 spaces: result[0].spaces,
                 assets: result[0].assets,
+                checklists: orgData.checklists,
                 dataLoaded: true
               })
             }
