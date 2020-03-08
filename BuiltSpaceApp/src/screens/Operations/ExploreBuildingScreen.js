@@ -140,30 +140,11 @@ export class ExploreBuildingScreen extends Component {
           }
         }
 
- 
-    // checkQuestionType = (questionObj) => {
-
-    //   if (questionObj.questiontype == '') {
-    //     return <GeneralType question={questionObj}/>
-    //   }
-
-    //   if (questionObj.questiontype == 'Labour') {
-    //     return <LabourType question={questionObj}/>
-    //   }
-
-    //   if (questionObj.questiontype == 'Materials') {
-    //     return <MaterialsType question={questionObj}/>
-    //   }
-    // }
-  
       })
     }
 
   render() {
-    const {navigation} = this.props;
     
-    // const buildingId = navigation.getParam('buildingId', 'None')
-    // const buildingName = navigation.getParam('buildingName', 'None');
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
     const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter}/>
     

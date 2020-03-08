@@ -18,7 +18,7 @@ export class MaterialsType extends Component {
     buttonComponents = () => {
         var buttons = []
         this.state.format.forEach((button,index) => {
-            buttons.push({element:  () => <Text style={{width: '100%', height: '100%',color : this.state.colors[index]}}>{button}</Text>})
+            buttons.push({element:  () => <Text style={{width: '100%', height: '100%',borderColor : this.state.colors[index]}}>{button}</Text>})
         })
         return buttons
     }
