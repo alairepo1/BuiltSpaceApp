@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -19,7 +19,7 @@ import {
 // import BottomTabNavigator from './src/BottomTabNavigator.js';
 import Navigator from './src/Navigator/Navigator.js';
 import SafeAreaView from 'react-native-safe-area-view';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 class App extends Component {
   render() {
@@ -42,5 +42,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
 });

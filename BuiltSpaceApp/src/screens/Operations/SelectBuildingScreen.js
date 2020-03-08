@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import StatusBar from '../../statusComponent.js';
-import {get_org_data} from '../../storage/fetchAPI.js'
+import { get_org_data } from '../../storage/fetchAPI.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export class SelectBuildingScreen extends Component { 
+export class SelectBuildingScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +27,7 @@ export class SelectBuildingScreen extends Component {
   //   )
   //       .then(response => response.json())
   //       .then(result => {
-          
+
   //         this.setState({
   //           org_data: result
   //         })
@@ -37,7 +37,7 @@ export class SelectBuildingScreen extends Component {
   //       });
   // };
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
     // this.fetch();
     var org_info = await get_org_data(this.props.navigation.state.params.orgName)
     this.setState({
@@ -50,35 +50,35 @@ export class SelectBuildingScreen extends Component {
   //     <View style={styles.row}>
   //       <Text style={styles.text}>{item.address}</Text>
   //     </View>
-      
+
   //   )
   // }
 
   render() {
     return (
       <FlatList style={styles.container}
-      data={this.state.org_data.buildings}
-      renderItem={({item}) => 
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
-        buildingAddress: item.address,
-        buildingCity: item.city,
-        buildingName: item.name,
-        buildingProvince: item.provincestate,
-        buildingPostalCode: item.postalcode,
-        buildingId: item.id,
-        orgData: this.state.org_data,
-        buildingData: item
-      })}>
-      <View style={styles.row}>
-        <Text style={styles.text}>{item.name}</Text>
-        <View>
-        <Icon style={styles.listIcon}name="angle-right" size={30} color="white" />
-      </View>
-      </View>  
-      
-      </TouchableOpacity>
-      }
-      keyExtractor={item => item.name}
+        data={this.state.org_data.buildings}
+        renderItem={({ item }) =>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
+            buildingAddress: item.address,
+            buildingCity: item.city,
+            buildingName: item.name,
+            buildingProvince: item.provincestate,
+            buildingPostalCode: item.postalcode,
+            buildingId: item.id,
+            orgData: this.state.org_data,
+            buildingData: item
+          })}>
+            <View style={styles.row}>
+              <Text style={styles.text}>{item.name}</Text>
+              <View>
+                <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
+              </View>
+            </View>
+
+          </TouchableOpacity>
+        }
+        keyExtractor={item => item.name}
       />
     );
   }
@@ -86,11 +86,11 @@ export class SelectBuildingScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
-   marginTop: 40,
-   marginLeft: 15,
-   marginRight: 15,
-   backgroundColor: '#324679',
+    flex: 1,
+    marginTop: 40,
+    marginLeft: 15,
+    marginRight: 15,
+    backgroundColor: '#324679',
   },
   row: {
     flexDirection: 'row',
@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
   },
   listIcon: {
     justifyContent: 'flex-end',
-    textAlign:"right"
+    textAlign: "right"
   },
-  
+
 })
 
 export default SelectBuildingScreen;
