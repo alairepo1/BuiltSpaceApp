@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import {ContextInfo} from '../../combinedProvider';
+import {ContextInfo} from '../../ContextInfoProvider';
 import {get_org_data} from '../../storage/fetchAPI.js'
 import {insertOrgData, DBgetOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
 import Icon from 'react-native-vector-icons/FontAwesome';

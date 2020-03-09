@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, Keyboard, StatusBar, ScrollView } from 'react-native';
-import {ContextInfo} from '../../combinedProvider';
+import {ContextInfo} from '../../ContextInfoProvider';
 
 export default class LoginForm extends Component {
     static contextType = ContextInfo

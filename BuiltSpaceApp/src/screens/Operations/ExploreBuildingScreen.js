@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ContextInfo} from '../../combinedProvider';
+import {ContextInfo} from '../../ContextInfoProvider';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';

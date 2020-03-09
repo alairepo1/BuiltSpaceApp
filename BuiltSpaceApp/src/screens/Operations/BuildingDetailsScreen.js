@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import {ContextInfo} from '../../combinedProvider';
+import {ContextInfo} from '../../ContextInfoProvider';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 

@@ -6,7 +6,7 @@ export const AccountContext = React.createContext({});
 
 export const ContextInfo = React.createContext();
 
-class CombinedProvider extends Component {
+class ContextInfoProvider extends Component {
   state = {
       isConnected: true,
       account: {
@@ -54,4 +54,4 @@ class CombinedProvider extends Component {
   }
 }
 
-export default CombinedProvider;
+export default ContextInfoProvider;

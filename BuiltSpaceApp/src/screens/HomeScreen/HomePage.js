@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import {ContextInfo} from '../../combinedProvider';
+import {ContextInfo} from '../../ContextInfoProvider';
 import {fetchOrgs} from '../../storage/fetchAPI';
 import {
   insertNewAccount,
