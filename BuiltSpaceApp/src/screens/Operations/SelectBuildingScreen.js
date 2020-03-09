@@ -46,7 +46,20 @@ export class SelectBuildingScreen extends Component {
             var addHour = result[0].lastUpdated
             addHour.setHours(addHour.getHours() + 1 )
             
-            if (currentDate < addHour) {
+            if (this.context.isConnected){
+              if (currentDate < addHour) {
+                console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
+                this.setState({
+                  orglastUpdated: result[0].lastUpdated.toLocaleString(),
+                  org_data: result[0],
+                  isLoading: false
+                })
+              }
+    
+              if (currentDate >= addHour) {
+                this.updateOrganizations()
+              }
+            }else{
               console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
               this.setState({
                 orglastUpdated: result[0].lastUpdated.toLocaleString(),
@@ -54,10 +67,7 @@ export class SelectBuildingScreen extends Component {
                 isLoading: false
               })
             }
-  
-            if (currentDate >= addHour) {
-              this.updateOrganizations()
-            }
+            
           } else {
             this.updateOrganizations()
           }

@@ -89,7 +89,23 @@ export class ExploreBuildingScreen extends Component {
             addHour.setHours(addHour.getHours() + 1 )
 
             // Check last updated timestamp is within 1 hour
-            if (currentDate < addHour) {
+            if (this.context.isConnected){
+              if (currentDate < addHour) {
+                console.log("ExploreBuildingScreen load from database: " + result[0].name)
+                this.setState({
+                  buildingLastUpdated: result[0].lastUpdated.toLocaleString(),
+                  spaces: result[0].spaces,
+                  assets: result[0].assets,
+                  checklists: orgData.checklists,
+                  dataLoaded: true
+                })
+              }
+      
+              // Check network before fetching API
+              if (currentDate >= addHour) {
+                this.updateBuildingData()
+              }
+            } else{
               console.log("ExploreBuildingScreen load from database: " + result[0].name)
               this.setState({
                 buildingLastUpdated: result[0].lastUpdated.toLocaleString(),
@@ -98,11 +114,6 @@ export class ExploreBuildingScreen extends Component {
                 checklists: orgData.checklists,
                 dataLoaded: true
               })
-            }
-    
-            // Check network before fetching API
-            if (currentDate >= addHour) {
-              this.updateBuildingData()
             }
 
           }else{

@@ -54,23 +54,33 @@ export class HomePage extends Component {
             addHour.setHours(addHour.getHours() + 1 )
 
     
+            if (this.context.isConnected){
+              // Check if org data last updated is past 1 hr
+              if (currentDate < addHour) {
+                console.log('Home load from database.')
+                var orgs = Array.from(result.organizations);
+                this.setState({
+                  accountlastUpdated: result.lastUpdated.toLocaleString(),
+                  organizations: orgs,
+                  isLoading: false,
+                });
+              }
             // Check if org data last updated is past 1 hr
-            if (currentDate < addHour) {
-              console.log('Home load from database.')
-              var orgs = Array.from(result.organizations);
-              this.setState({
-                accountlastUpdated: result.lastUpdated.toLocaleString(),
-                organizations: orgs,
-                isLoading: false,
-              });
-            }
-          // Check if org data last updated is past 1 hr
-          // Should check connection before refetching data from API
-            if (currentDate >= addHour && this.context.isConnected) {
+            // Should check connection before refetching data from API
+              if (currentDate >= addHour && this.context.isConnected) {
+                this.updateAccountData()
+              }
+            } else {
               this.updateAccountData()
             }
-          } else {
-            this.updateAccountData()
+          }else {
+            console.log('Home load from database.')
+            var orgs = Array.from(result.organizations);
+            this.setState({
+              accountlastUpdated: result.lastUpdated.toLocaleString(),
+              organizations: orgs,
+              isLoading: false,
+            });
           }
           
         }).catch(e => {console.log(e)});
