@@ -42,7 +42,7 @@ export class SelectBuildingScreen extends Component {
             var addHour = result[0].lastUpdated
             addHour.setHours(addHour.getHours() + 1 )
             
-            if (this.context.isConnected){
+            if (this.context.networkContext.isConnected){
               if (currentDate < addHour) {
                 console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
                 this.setState({
@@ -52,7 +52,7 @@ export class SelectBuildingScreen extends Component {
                 })
               }
     
-              if (currentDate >= addHour) {
+              if (currentDate >= addHour && this.context.networkContext.isConnected) {
                 this.updateOrganizations()
               }
             }else{

@@ -16,7 +16,6 @@ import {
   checkDBExists,
   getAccountOrgs,
   updateAccount,
-  delete_db
 } from '../../storage/schema/dbSchema';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -141,19 +140,6 @@ export class HomePage extends Component {
           </View>
           <View>
             <View style={styles.button_container}>
-            {/* <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => delete_db()}>
-                <Text style={styles.button_text}> Del DB </Text>
-              </TouchableOpacity> */}
-              <TouchableOpacity
-                style={styles.buttons}
-                onPress={() => { 
-                  this.context.accountContext.setAccount({})
-                  this.props.navigation.navigate('Auth')
-                  }}>
-                <Text style={styles.button_text}> Log Out </Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>

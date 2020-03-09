@@ -374,29 +374,29 @@ export const DBcheckBuildingData = async(accountDetails, organization, building)
   }
 }
 
-export const DBgetOrgData = async (accountDetails, organization) => {
-  var currentDate = new Date()
+// export const DBgetOrgData = async (accountDetails, organization) => {
+//   var currentDate = new Date()
 
-  var realm = await Realm.open(databaseOptions).catch(e => {console.log('failed to open realm in getBuilding()')})
-  var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
-  var org = account.organizations.filtered(`id = ${organization.id}`)
-  realm.write(() => {
-    org[0].lastLoaded = currentDate
-  })
-  return Array.from(org)
-}
+//   var realm = await Realm.open(databaseOptions).catch(e => {console.log('failed to open realm in getBuilding()')})
+//   var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+//   var org = account.organizations.filtered(`id = ${organization.id}`)
+//   realm.write(() => {
+//     org[0].lastLoaded = currentDate
+//   })
+//   return Array.from(org)
+// }
 
 // delete db for testing
-export const delete_db = async () => {
-  if (Realm.exists(databaseOptions)) {
-    try{
-      Realm.deleteFile(databaseOptions)
-      console.log("db deleted.")
-    }catch(e) {console.log('delete db',e)} 
-  }else{
-    console.log("Does not exist")
-  }
-}
+// export const delete_db = async () => {
+//   if (Realm.exists(databaseOptions)) {
+//     try{
+//       Realm.deleteFile(databaseOptions)
+//       console.log("db deleted.")
+//     }catch(e) {console.log('delete db',e)} 
+//   }else{
+//     console.log("Does not exist")
+//   }
+// }
 
 // export const delete_acc = async (accountInfo) => {
 
@@ -435,24 +435,6 @@ export const delete_db = async () => {
 //     console.log('delete account error: ', e)
 //   }
 // }
-
-export const dbGetInfo = async(accountInfo) => {
-  var organizations = []
-  try{
-    Realm.open(databaseOptions).then( realm => {
-      realm.write(()=> {
-        var acc = realm.objects('Accounts').filtered('id == $0', accountInfo.id)
-        var orgs = acc[0].organizations.filtered('id = 560')
-        orgs.forEach(org => organizations.push(org))
-      })
-      
-    }).catch((e) => console.log(e))
-    return organizations
-
-  }catch(e){
-    console.log('dbGetInfo error: ', e)
-  }
-}
 
 export const checkDBExists = () => {
   if (Realm.exists(databaseOptions)) {

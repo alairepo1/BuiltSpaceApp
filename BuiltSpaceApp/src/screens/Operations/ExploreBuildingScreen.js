@@ -85,7 +85,7 @@ export class ExploreBuildingScreen extends Component {
             addHour.setHours(addHour.getHours() + 1 )
 
             // Check last updated timestamp is within 1 hour
-            if (this.context.isConnected){
+            if (this.context.networkContext.isConnected){
               if (currentDate < addHour) {
                 console.log("ExploreBuildingScreen load from database: " + result[0].name)
                 this.setState({
@@ -98,7 +98,7 @@ export class ExploreBuildingScreen extends Component {
               }
       
               // Check network before fetching API
-              if (currentDate >= addHour) {
+              if (currentDate >= addHour && this.context.networkContext.isConnected) {
                 this.updateBuildingData()
               }
             } else{
