@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { NetworkContext } from '../../networkProvider';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
 import AssetsModal from './AssetsModal.js'
@@ -10,6 +10,7 @@ import MaterialsType from './MaterialsType.js'
 import LabourType from './LabourType.js'
 import GeneralType from './GeneralType.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button } from 'react-native-elements';
 
 export class ExploreBuildingScreen extends Component { 
   static contextType = NetworkContext;
@@ -124,23 +125,24 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
-  updateBuildingData = () => {
-    var orgData =  this.props.navigation.state.params.orgData
-    var buildingData = this.props.navigation.state.params.buildingData //realm object from props
-    var currentDate = new Date() // current datetime as object
-    get_building_data(orgData, buildingData, this.state.key).then(api_result => {
-      console.log("ExploreBulidingScreen update building data: " + api_result.name)
-      var building_data = api_result
-      updateBuilding(this.state.account, orgData.id, building_data, currentDate)
-      this.setState({
-        buildingLastUpdated: currentDate.toLocaleString(),
-        spaces: api_result.spaces,
-        assets: api_result.assets,
-        checklists: orgData.checklists,
-        dataLoaded: true,
-     })
-    })
-  }
+
+    updateBuildingData = () => {
+      var orgData =  this.props.navigation.state.params.orgData
+      var buildingData = this.props.navigation.state.params.buildingData //realm object from props
+      var currentDate = new Date() // current datetime as object
+      get_building_data(orgData, buildingData, this.state.key).then(api_result => {
+        console.log("ExploreBulidingScreen update building data: " + api_result.name)
+        var building_data = api_result
+        updateBuilding(this.state.account, orgData.id, building_data, currentDate)
+        this.setState({
+          buildingLastUpdated: currentDate.toLocaleString(),
+          spaces: api_result.spaces,
+          assets: api_result.assets,
+          checklists: orgData.checklists,
+          dataLoaded: true,
+      })
+      })
+    }
 
   render() {
     
@@ -200,22 +202,34 @@ export class ExploreBuildingScreen extends Component {
         }
         keyExtractor={item => item.id}
         />
-      <TouchableOpacity >
+        <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
+        <View style={{flex:1, margin: 5}}> 
+        <Button style={{flex:1, margin: 5}}
+        type="solid"
+        buttonStyle={{backgroundColor: '#47d66d'}}
+        title="Save to device"
+        titleStyle={{color: 'white'}}
+        onPress={()=> console.log("Not implemented")}
+        />
+        </View>  
+
+        <View style={{flex:1, margin: 5}}>
+        <Button 
+        type="solid"
+        title="Submit"
+        buttonStyle={{backgroundColor: '#47d66d'}}
+        titleStyle={{color: 'white'}}
+        onPress={()=> console.log("Not implemented")}
+        />
+        </View>
+        </View>
+    <TouchableOpacity >
       <View style={styles.row}>
           <Text style={styles.text}>Qr Code</Text>
       </View>  
     </TouchableOpacity>
       </View>
     
-  <FlatList style={styles.flatList}
-      data={[{qrcode: 'Scan Qr'}]}
-      renderItem={({item}) => 
-      <View>
-
-      </View>
-      }
-      keyExtractor={item => item.name}
-      />
   </View>
   </ScrollView>
     );
