@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { NetworkContext } from '../../networkProvider';
+import {ContextInfo} from '../../combinedProvider';
 import {fetchOrgs} from '../../storage/fetchAPI';
 import {
   insertNewAccount,
@@ -21,19 +21,14 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class HomePage extends Component {
-  static contextType = NetworkContext;
+  static contextType = ContextInfo
   constructor(props) {
     super(props);
     this.state = {
       // Store user api key for reuse here?
-      account: {
-        api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
-        email: 'bcitbuiltspace@gmail.com',
-        id: 400,
-      },
-      lastUpdated: '',
+      accountlastUpdated: '',
       organizations: [],
-      isLoading: true,      
+      isLoading: true,
     };
   }
 
@@ -43,9 +38,9 @@ export class HomePage extends Component {
     var currentDate = new Date() // current datetime as object.
 
     checkDBExists(); // check if database exists, if not creates one.
-    await checkAccountExists(this.state.account).then(response => {
+    await checkAccountExists(this.context.accountContext.account).then(response => {
       if (response){
-        getAccountOrgs(this.state.account).then(result => {
+        getAccountOrgs(this.context.accountContext.account).then(result => {
           if (result.lastUpdated !== undefined) {
     
             //get datetime of last updated organizations
@@ -53,8 +48,7 @@ export class HomePage extends Component {
             var addHour = result.lastUpdated
             addHour.setHours(addHour.getHours() + 1 )
 
-    
-            if (this.context.isConnected) {
+            if (this.context.networkContext.isConnected) {
 
               if (currentDate < addHour) {
                 console.log('Home load from database.')
@@ -67,7 +61,7 @@ export class HomePage extends Component {
               }
             // Check if org data last updated is past 1 hr
             // Should check connection before refetching data from API
-              if (currentDate >= addHour && this.context.isConnected) {
+              if (currentDate >= addHour && this.context.networkContext.isConnected) {
                 this.updateAccountData()
               }
             } else{
@@ -87,8 +81,8 @@ export class HomePage extends Component {
         }).catch(e => {console.log(e)});
       }
       if (!response){
-        fetchOrgs(this.state.account).then(orgs =>{
-          insertNewAccount(this.state.account, orgs, currentDate)
+        fetchOrgs(this.context.accountContext.account).then(orgs =>{
+          insertNewAccount(this.context.accountContext.account, orgs, currentDate)
           this.setState({
             accountlastUpdated: currentDate.toLocaleString(),
             organizations: orgs,
@@ -102,8 +96,8 @@ export class HomePage extends Component {
   updateAccountData = (currentDate) => {
     console.log("Home Screen update data data")
     var currentDate = new Date() // current datetime as object
-    fetchOrgs(this.state.account).then(result => {
-      updateAccount(this.state.account, result, currentDate)
+    fetchOrgs(this.context.accountContext.account).then(result => {
+      updateAccount(this.context.accountContext.account, result, currentDate)
       this.setState({
         accountlastUpdated: currentDate.toLocaleString(),
         organizations: result,
@@ -113,6 +107,7 @@ export class HomePage extends Component {
   }
 
   render() {
+    console.log("context Home ", this.context)
     const {navigate} = this.props.navigation;
     return this.state.isLoading ? (
       <View>
@@ -121,8 +116,8 @@ export class HomePage extends Component {
       </View>
     ) : (
       <View style={styles.container}>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
         <Icon  onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="white" />
 
@@ -153,7 +148,10 @@ export class HomePage extends Component {
               </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.buttons}
-                onPress={() => this.props.navigation.navigate('Auth')}>
+                onPress={() => { 
+                  this.context.accountContext.setAccount({})
+                  this.props.navigation.navigate('Auth')
+                  }}>
                 <Text style={styles.button_text}> Log Out </Text>
               </TouchableOpacity>
             </View>

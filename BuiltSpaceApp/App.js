@@ -20,15 +20,15 @@ import {
 import Navigator from './src/Navigator/Navigator.js';
 import SafeAreaView from 'react-native-safe-area-view';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import NetworkProvider from './src/networkProvider'
+import CombinedProvider from './src/combinedProvider'
 
 class App extends Component {
   render() {
     return (
       <SafeAreaProvider>
-        <NetworkProvider>
-        <Navigator />
-        </NetworkProvider>
+        <CombinedProvider>
+            <Navigator />
+        </CombinedProvider>
       </SafeAreaProvider>
     );
   }

@@ -1,18 +1,14 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import { NetworkContext } from '../../networkProvider';
+import {ContextInfo} from '../../combinedProvider';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class BuildingDetailsScreen extends Component {
-  static contextType = NetworkContext;
+  static contextType = ContextInfo
   constructor(props) {
     super(props);
     this.state = {
-      account: {
-        email: 'bcitbuiltspace@gmail.com',
-        id: 400
-      },
       building_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
@@ -31,8 +27,8 @@ export class BuildingDetailsScreen extends Component {
     return (
 
     <View style={styles.container}>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text style={styles.detailsTextContainer}>
           <Text style={styles.detailsTextBold}>City: <Text style={styles.detailsText}>{buildingCity} {'\n\n'}</Text></Text>
           <Text style={styles.detailsTextBold}>Address: <Text style={styles.detailsText}>{buildingAddress}, {buildingCity}, {buildingProvince} {'\n\n'}</Text></Text>

@@ -1,18 +1,14 @@
 import React, {Component} from 'react';
-import { NetworkContext } from '../../networkProvider';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {ContextInfo} from '../../combinedProvider';
 
 export class SelectOrgScreen extends Component {
-  static contextType = NetworkContext;
+  static contextType = ContextInfo
   constructor(props) {
     super(props);
     this.state = {
-      account:{
-        email: 'bcitbuiltspace@gmail.com',
-        id: 400
-      },
       org_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
@@ -29,8 +25,8 @@ export class SelectOrgScreen extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-      <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-      <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
       <FlatList 
         data={this.state.org_data}
         renderItem={({ item }) =>

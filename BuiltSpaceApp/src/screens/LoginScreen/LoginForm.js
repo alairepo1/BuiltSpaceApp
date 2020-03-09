@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, Keyboard, StatusBar, ScrollView } from 'react-native';
-
+import {ContextInfo} from '../../combinedProvider';
 
 export default class LoginForm extends Component {
+    static contextType = ContextInfo
+    constructor(props){
+        super(props)
+        this.state = {
+            account: {
+                api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+                email: 'bcitbuiltspace@gmail.com',
+                id: 400,
+              },
+        } 
+    }
     render() {
         return (
             <KeyboardAvoidingView behavior = "padding" style = {styles.container} >
@@ -27,8 +38,19 @@ export default class LoginForm extends Component {
                 ref = {(input) => this.passwordInput = input}
             />
             <TouchableOpacity style = {styles.buttonContainer}
-                    onPress={() => this.props.navigation('HomeStack')}>
+                    onPress={() => {{
+                        this.context.accountContext.setAccount(this.state.account)
+                        this.props.navigation('HomeStack')
+                        }
+                    }}>
                 <Text style = {styles.buttonText} > Login </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style = {styles.buttonContainer}
+                    onPress={() => {{
+                        console.log(this.context)
+                        }
+                    }}>
+                <Text style = {styles.buttonText} > log </Text>
             </TouchableOpacity>
             </KeyboardAvoidingView>
         );

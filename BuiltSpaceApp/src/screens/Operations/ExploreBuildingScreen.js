@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { NetworkContext } from '../../networkProvider';
+import {ContextInfo} from '../../combinedProvider';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
@@ -13,15 +13,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 
 export class ExploreBuildingScreen extends Component { 
-  static contextType = NetworkContext;
+  static contextType = ContextInfo
     constructor(props) {
         super(props);
         this.state = {
-          account: {
-            api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
-            email: 'bcitbuiltspace@gmail.com',
-            id: 400,
-          },
           building_data: [],
           key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
           spaces: [],
@@ -78,7 +73,7 @@ export class ExploreBuildingScreen extends Component {
       var buildingData = this.props.navigation.state.params.buildingData //realm object from props
       this.setState({checklists: orgData.checklists}) //sets checklists
 
-      DBcheckBuildingData(this.state.account, orgData, buildingData).then(result => {
+      DBcheckBuildingData(this.context.accountContext.account, orgData, buildingData).then(result => {
         if (!result){
           this.updateBuildingData()
         }else {
@@ -130,10 +125,10 @@ export class ExploreBuildingScreen extends Component {
       var orgData =  this.props.navigation.state.params.orgData
       var buildingData = this.props.navigation.state.params.buildingData //realm object from props
       var currentDate = new Date() // current datetime as object
-      get_building_data(orgData, buildingData, this.state.key).then(api_result => {
+      get_building_data(orgData, buildingData, this.context.accountContext.account.api_key).then(api_result => {
         console.log("ExploreBulidingScreen update building data: " + api_result.name)
         var building_data = api_result
-        updateBuilding(this.state.account, orgData.id, building_data, currentDate)
+        updateBuilding(this.context.accountContext.account, orgData.id, building_data, currentDate)
         this.setState({
           buildingLastUpdated: currentDate.toLocaleString(),
           spaces: api_result.spaces,
@@ -163,8 +158,8 @@ export class ExploreBuildingScreen extends Component {
     return (
       
       <ScrollView>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
         <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="white" />
 

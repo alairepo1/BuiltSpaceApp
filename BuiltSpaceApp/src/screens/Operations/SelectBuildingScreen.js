@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
-import { NetworkContext } from '../../networkProvider';
+import {ContextInfo} from '../../combinedProvider';
 import {get_org_data} from '../../storage/fetchAPI.js'
 import {insertOrgData, DBgetOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class SelectBuildingScreen extends Component { 
-  static contextType = NetworkContext;
+  static contextType = ContextInfo
   constructor(props) {
     super(props);
     this.state = {
-      account: {
-        email: 'bcitbuiltspace@gmail.com',
-        id: 400
-      },
       org_data: [],
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
       isLoading: true
@@ -25,13 +21,13 @@ export class SelectBuildingScreen extends Component {
     var currentDate = new Date() // current datetime as object
 
     //API call to get org_data and update the database
-    DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
+    DBcheckOrgData(this.context.accountContext.account,this.props.navigation.state.params.orgName).then(result => {
       // Error throws because it cannot find the object in DB due to deletion/updated in orgsupdate?
       if (!result){
         console.log("no data in org, fetching data...")
-        get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+        get_org_data(this.props.navigation.state.params.orgName, this.context.accountContext.account.api_key).then(result =>{
           console.log('no data in db, get_org_data')
-          insertOrgData(this.state.account, result, currentDate)
+          insertOrgData(this.context.accountContext.account, result, currentDate)
             this.setState({
               orglastUpdated: currentDate.toLocaleString(),
               org_data: result,
@@ -77,10 +73,10 @@ export class SelectBuildingScreen extends Component {
   };
 
   updateOrganizations = () => {
-    var currentDate = new Date() // current datetime as objectssssssssssssssssssssssssssssssssss
-    get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+    var currentDate = new Date() // current datetime as objects
+    get_org_data(this.props.navigation.state.params.orgName, this.context.accountContext.account.api_key).then(result =>{
       console.log("selectBuildingScreen fetch api and update", result.name)
-      updateOrgs(this.state.account, result, currentDate)
+      updateOrgs(this.context.accountContext.account, result, currentDate)
         this.setState({
           orglastUpdated: currentDate.toLocaleString(),
           org_data: result,
@@ -99,8 +95,8 @@ export class SelectBuildingScreen extends Component {
       </View>
       :
       <View style={styles.container}>
-        <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
         <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="white" />
 
