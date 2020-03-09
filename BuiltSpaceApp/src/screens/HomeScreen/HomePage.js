@@ -18,6 +18,7 @@ import {
   updateAccount,
   delete_db
 } from '../../storage/schema/dbSchema';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class HomePage extends Component {
   static contextType = NetworkContext;
@@ -37,8 +38,11 @@ export class HomePage extends Component {
   }
 
   componentDidMount = async() => {
-    // initialize the api here
-    checkDBExists();
+    // fetch data from api/db or update db
+
+    var currentDate = new Date() // current datetime as object.
+
+    checkDBExists(); // check if database exists, if not creates one.
     await checkAccountExists(this.state.account).then(response => {
       if (response){
         getAccountOrgs(this.state.account).then(result => {
@@ -48,9 +52,7 @@ export class HomePage extends Component {
             //and add 1 hour to last updated time
             var addHour = result.lastUpdated
             addHour.setHours(addHour.getHours() + 1 )
-    
-            //current datetime
-            var currentDate = new Date()
+
     
             // Check if org data last updated is past 1 hr
             if (currentDate < addHour) {
@@ -65,32 +67,19 @@ export class HomePage extends Component {
           // Check if org data last updated is past 1 hr
           // Should check connection before refetching data from API
             if (currentDate >= addHour && this.context.isConnected) {
-              fetchOrgs(this.state.account).then(result => {
-                console.log('Home: fetchorgs api call')
-                updateAccount(this.state.account, result)
-                this.setState({
-                  organizations: result,
-                  isLoading: false,
-                });
-              });
+              this.updateAccountData()
             }
           } else {
-            fetchOrgs(this.state.account).then(result => {
-              console.log('Home: no lastupdated fetchOrg call')
-              updateAccount(this.state.account, result)
-              this.setState({
-                organizations: result,
-                isLoading: false,
-              });
-            });
+            this.updateAccountData()
           }
           
         }).catch(e => {console.log(e)});
       }
       if (!response){
         fetchOrgs(this.state.account).then(orgs =>{
-          insertNewAccount(this.state.account, orgs)
+          insertNewAccount(this.state.account, orgs, currentDate)
           this.setState({
+            accountlastUpdated: currentDate.toLocaleString(),
             organizations: orgs,
             isLoading: false
           })
@@ -99,10 +88,13 @@ export class HomePage extends Component {
     });
   };
 
-  refreshData = () => {
+  updateAccountData = (currentDate) => {
+    console.log("Home Screen update data data")
+    var currentDate = new Date() // current datetime as object
     fetchOrgs(this.state.account).then(result => {
-      updateAccount(this.state.account, result)
+      updateAccount(this.state.account, result, currentDate)
       this.setState({
+        accountlastUpdated: currentDate.toLocaleString(),
         organizations: result,
         isLoading: false,
       });
@@ -120,7 +112,9 @@ export class HomePage extends Component {
       <View style={styles.container}>
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.state.account.email}</Text>
-        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>
+        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
+        <Icon onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="white" />
+
         <Text style={styles.homePageText}>
           To Start please select an organization
         </Text>

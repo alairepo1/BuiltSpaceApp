@@ -34,6 +34,11 @@ export const accountSchema = {
   },
 };
 
+export const inspectionChecklistSchema = {
+  name: 'inspectionChecklist',
+  
+}
+
 // organization schema, nested into accountSchema
 export const organizationSchema = {
   name: 'organizations',
@@ -169,6 +174,12 @@ export const questionsSchema = {
   }
 }
 
+export const qrCodeSchema = {
+  name: 'qrcode',
+  properties: {
+    id: 'int'
+  }
+}
 
 /**
  * Database Service/Functions
@@ -191,8 +202,7 @@ const databaseOptions = {
 }
 
 // create a new account in the db
-export const insertNewAccount = async (accountDetails, accountOrganizations) => {
-  var currentDate = new Date()
+export const insertNewAccount = async (accountDetails, accountOrganizations, currentDate) => {
     try{
       await Realm.open(databaseOptions).then(realm => {
         realm.write(() => {
@@ -215,9 +225,8 @@ export const insertNewAccount = async (accountDetails, accountOrganizations) => 
 }
 
 
-export const updateOrgs = (accountDetails, orgs) => {
+export const updateOrgs = (accountDetails, orgs, currentDate) => {
   // updates organizations after 1 hr or refreshed
-  var currentDate = new Date()
 
   Realm.open(databaseOptions).then(realm => {
     realm.write(() => {
@@ -234,9 +243,8 @@ export const updateOrgs = (accountDetails, orgs) => {
 
 }
 
-export const updateAccount = (accountDetails, orgs) => {
+export const updateAccount = (accountDetails, orgs, currentDate) => {
     // updates organizations after 1 hr or refreshed
-    var currentDate = new Date()
   
     Realm.open(databaseOptions).then(realm => {
       realm.beginTransaction()
@@ -264,8 +272,7 @@ export const updateAccount = (accountDetails, orgs) => {
     }).catch(e => {console.log('updateOrgs: ', e)}) 
 }
 
-export const updateBuilding = async (accountDetails, organization_id, buildingAPI) => {
-  var currentDate = new Date()
+export const updateBuilding = async (accountDetails, organization_id, buildingAPI, currentDate) => {
   try{
     await Realm.open(databaseOptions).then(realm => {
       realm.write(() => {
@@ -478,9 +485,8 @@ create_db =  () => {
  * 
  * inserts an organizations data into the account
  */
-export const insertOrgData = async (accountDetails, orgData) => {
-  console.log("What")
-  var currentDate = new Date()
+export const insertOrgData = async (accountDetails, orgData, currentDate) => {
+  // inserts organization data into the account, excluding assets, qrcode, spaces
   try{
     await Realm.open(databaseOptions).then(realm => {
       realm.write(()=>{

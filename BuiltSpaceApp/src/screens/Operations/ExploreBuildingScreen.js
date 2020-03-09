@@ -70,22 +70,16 @@ export class ExploreBuildingScreen extends Component {
     }
 
     componentDidMount = () => {
-      var orgData =  this.props.navigation.state.params.orgData // realm object
-      var buildingData = this.props.navigation.state.params.buildingData //realm object
+
+      var currentDate = new Date() // current datetime as object
+
+      var orgData =  this.props.navigation.state.params.orgData // realm object from props
+      var buildingData = this.props.navigation.state.params.buildingData //realm object from props
       this.setState({checklists: orgData.checklists}) //sets checklists
 
       DBcheckBuildingData(this.state.account, orgData, buildingData).then(result => {
         if (!result){
-          get_building_data(orgData, buildingData, this.state.key).then(result => {
-            console.log('get_building_data api call: ') 
-            var building_data = result
-            updateBuilding(this.state.account, orgData.id,building_data)
-            this.setState({
-              spaces: result.spaces,
-              assets: result.assets,
-              dataLoaded: true,
-            })
-          })
+          this.updateBuildingData()
         }else {
           if (result[0].lastUpdated !== undefined && result[0].lastUpdated !== null) {
 
@@ -93,10 +87,6 @@ export class ExploreBuildingScreen extends Component {
             //and add 1 hour to last updated time
             var addHour = result[0].lastUpdated
             addHour.setHours(addHour.getHours() + 1 )
-            
-            //current datetime
-            // var currentDateString = new Date().toISOString().replace('Z', '')
-            var currentDate = new Date()
 
             // Check last updated timestamp is within 1 hour
             if (currentDate < addHour) {
@@ -112,36 +102,34 @@ export class ExploreBuildingScreen extends Component {
     
             // Check network before fetching API
             if (currentDate >= addHour) {
-                get_building_data(orgData, buildingData, this.state.key).then(api_result => {
-                  console.log("ExploreBulidingScreen refetch data 1 after hour" + result[0].name)
-                  var building_data = api_result
-                  updateBuilding(this.state.account, orgData.id, building_data)
-                  this.setState({
-                    spaces: api_result.spaces,
-                    assets: api_result.assets,
-                    checklists: orgData.checklists,
-                    dataLoaded: true,
-                 })
-                })
+              this.updateBuildingData()
             }
 
           }else{
-            get_building_data(orgData, buildingData, this.state.key).then(api_result => {
-              console.log('get_building_data api call: ' + result[0].name) 
-              var building_data = api_result
-              updateBuilding(this.state.account, orgData.id, building_data)
-              this.setState({
-                spaces: api_result.spaces,
-                assets: api_result.assets,
-                checklists: orgData.checklists,
-                dataLoaded: true,
-              })
-            })
+            this.updateBuildingData()
           }
         }
 
       })
     }
+
+  updateBuildingData = () => {
+    var orgData =  this.props.navigation.state.params.orgData
+    var buildingData = this.props.navigation.state.params.buildingData //realm object from props
+    var currentDate = new Date() // current datetime as object
+    get_building_data(orgData, buildingData, this.state.key).then(api_result => {
+      console.log("ExploreBulidingScreen update building data: " + api_result.name)
+      var building_data = api_result
+      updateBuilding(this.state.account, orgData.id, building_data, currentDate)
+      this.setState({
+        buildingLastUpdated: currentDate.toLocaleString(),
+        spaces: api_result.spaces,
+        assets: api_result.assets,
+        checklists: orgData.checklists,
+        dataLoaded: true,
+     })
+    })
+  }
 
   render() {
     
@@ -164,7 +152,9 @@ export class ExploreBuildingScreen extends Component {
       <ScrollView>
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.state.account.email}</Text>
-        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>
+        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
+        <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="white" />
+
     <View>
       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>

@@ -22,6 +22,8 @@ export class SelectBuildingScreen extends Component {
 
   componentDidMount = () => {
 
+    var currentDate = new Date() // current datetime as object
+
     //API call to get org_data and update the database
     DBcheckOrgData(this.state.account,this.props.navigation.state.params.orgName).then(result => {
       // Error throws because it cannot find the object in DB due to deletion/updated in orgsupdate?
@@ -29,8 +31,9 @@ export class SelectBuildingScreen extends Component {
         console.log("no data in org, fetching data...")
         get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
           console.log('no data in db, get_org_data')
-          insertOrgData(this.state.account, result)
+          insertOrgData(this.state.account, result, currentDate)
             this.setState({
+              orglastUpdated: currentDate.toLocaleString(),
               org_data: result,
               isLoading: false
             })
@@ -43,9 +46,6 @@ export class SelectBuildingScreen extends Component {
             var addHour = result[0].lastUpdated
             addHour.setHours(addHour.getHours() + 1 )
             
-            //current datetime
-            var currentDate = new Date()
-            
             if (currentDate < addHour) {
               console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
               this.setState({
@@ -56,32 +56,28 @@ export class SelectBuildingScreen extends Component {
             }
   
             if (currentDate >= addHour) {
-              get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-                console.log("selectBuildingScreen fetch api and update by time", result.name)
-                updateOrgs(this.state.account, result)
-                  this.setState({
-                    // set date
-                    org_data: result,
-                    isLoading: false
-                  })
-                })
+              this.updateOrganizations()
             }
           } else {
-            get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
-              console.log("selectBuildingScreen fetch api and update")
-              updateOrgs(this.state.account, result)
-                this.setState({
-                  // set date
-                  org_data: result,
-                  isLoading: false
-                })
-              })
+            this.updateOrganizations()
           }
-        
       }
 
     }).catch(e => {console.log(e)})
   };
+
+  updateOrganizations = () => {
+    var currentDate = new Date() // current datetime as objectssssssssssssssssssssssssssssssssss
+    get_org_data(this.props.navigation.state.params.orgName, this.state.key).then(result =>{
+      console.log("selectBuildingScreen fetch api and update", result.name)
+      updateOrgs(this.state.account, result, currentDate)
+        this.setState({
+          orglastUpdated: currentDate.toLocaleString(),
+          org_data: result,
+          isLoading: false
+        })
+      })
+  }
 
   render() {
     const {building_data} = this.state;
@@ -95,6 +91,9 @@ export class SelectBuildingScreen extends Component {
       <View style={styles.container}>
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.state.account.email}</Text>
+        <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
+        <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="white" />
+
         <FlatList 
         data={this.state.org_data.buildings}
         renderItem={({item}) => 
