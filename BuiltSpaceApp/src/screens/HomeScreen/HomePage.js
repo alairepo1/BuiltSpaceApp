@@ -54,8 +54,8 @@ export class HomePage extends Component {
             addHour.setHours(addHour.getHours() + 1 )
 
     
-            if (this.context.isConnected){
-              // Check if org data last updated is past 1 hr
+            if (this.context.isConnected) {
+
               if (currentDate < addHour) {
                 console.log('Home load from database.')
                 var orgs = Array.from(result.organizations);
@@ -70,17 +70,18 @@ export class HomePage extends Component {
               if (currentDate >= addHour && this.context.isConnected) {
                 this.updateAccountData()
               }
-            } else {
-              this.updateAccountData()
-            }
-          }else {
-            console.log('Home load from database.')
-            var orgs = Array.from(result.organizations);
-            this.setState({
-              accountlastUpdated: result.lastUpdated.toLocaleString(),
-              organizations: orgs,
-              isLoading: false,
-            });
+            } else{
+              console.log('No network, Home load from database.')
+              var orgs = Array.from(result.organizations);
+              this.setState({
+                accountlastUpdated: result.lastUpdated.toLocaleString(),
+                organizations: orgs,
+                isLoading: false,
+              });
+            } 
+            // Check if org data last updated is past 1 hr
+          } else {
+            this.updateAccountData()
           }
           
         }).catch(e => {console.log(e)});
@@ -123,7 +124,7 @@ export class HomePage extends Component {
         <Text>Connection status: {this.context.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.state.account.email}</Text>
         <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
-        <Icon onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="white" />
+        <Icon  onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="white" />
 
         <Text style={styles.homePageText}>
           To Start please select an organization

@@ -60,7 +60,7 @@ export class SelectBuildingScreen extends Component {
                 this.updateOrganizations()
               }
             }else{
-              console.log('SelectBuildingScreeN: Fetch from database' + result[0].name)
+              console.log('No network, SelectBuildingScreeN: Fetch from database' + result[0].name)
               this.setState({
                 orglastUpdated: result[0].lastUpdated.toLocaleString(),
                 org_data: result[0],

@@ -106,7 +106,7 @@ export class ExploreBuildingScreen extends Component {
                 this.updateBuildingData()
               }
             } else{
-              console.log("ExploreBuildingScreen load from database: " + result[0].name)
+              console.log("No network, ExploreBuildingScreen load from database: " + result[0].name)
               this.setState({
                 buildingLastUpdated: result[0].lastUpdated.toLocaleString(),
                 spaces: result[0].spaces,
