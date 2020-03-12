@@ -15,7 +15,7 @@ export class LoadingScreen extends Component {
     this._getUser();
   }
 
-  _getUser = async () => {
+  _getUser = () => {
     try {
       // Check if there is an existing user
       let user = false; // let user = false is temporary until we get a auth listener working

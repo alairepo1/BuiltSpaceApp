@@ -47,7 +47,7 @@ export class ChecklistModal extends Component {
                       console.log(this.state.checklistSelection)
                     }}>
                     <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
+                  <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
                     </View>
                   </TouchableOpacity>
                 }

@@ -24,6 +24,7 @@ export class AssetsModal extends Component {
         const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
         return(
             <View style={{marginTop: 22}}>
+
             <Modal
               animationType="slide"
               transparent={false}
@@ -31,9 +32,12 @@ export class AssetsModal extends Component {
               onRequestClose={() => {
                 this.setModalVisible(!this.state.modalVisible)
               }}>
-              <View style={{marginTop: 22}}>
-                  <Text style={styles.headingTextBold}>Assets</Text>
-                <FlatList
+              <View style={styles.listContainer}>
+                <View style={styles.titleTop}>
+                  <Text style={styles.headingTextBold}>Select an Asset</Text>
+                </View>
+
+                <FlatList style={{marginTop:30}}
                 data={this.props.assets}
                 renderItem = {({item}) =>
                   <TouchableOpacity
@@ -42,27 +46,45 @@ export class AssetsModal extends Component {
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
                           isSelected: true,
-                          selection: item.name
+                          selection: item.name,
                       })
                     }}>
-                    <View>
-                        <Text style={{fontWeight: 'bold', fontSize: 22}}>Name: {item.name}</Text>
-                        <Text>Description: {item.description}</Text>
-                        <Text>Serial: {item.serial}</Text>
-                        <Text>Category: {item.categoryabbr}</Text>
-                        <Text>Model: {item.model}</Text>
-                        <Text>Make: {item.make}</Text>
+                    <View style={styles.assetListItems}>
+                      <View style={{flex:1}}>
+                        <Text style={styles.listTextLeft}>Name: {item.name}</Text>
+                        <Text style={styles.listTextLeft}>Serial: {item.serial}</Text>
+                        <Text style={styles.listTextLeft}>Model: {item.model}</Text>
+                      </View>
+
+                      <View style={{flex:1}}>
+                        <Text style={styles.listTextRight}>Make: {item.make}</Text>
+                        <Text style={styles.listTextRight}>Description: {item.categoryabbr}</Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 }
                 keyExtractor={item => item.id}
                 ></FlatList>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                 onPress={() => {
                     this.setModalVisible(!this.state.modalVisible);
                   }}>
                     <Text>Close</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                
+                {/* Bottom clos button container */}
+                <View style={styles.bottomContainer}> 
+                  <TouchableOpacity
+                  onPress={() => {
+                      this.setState({
+                          isSelected: false
+                      })
+                      this.setModalVisible(!this.state.modalVisible);
+                    }}>
+                      <Text style={styles.closeButton}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+
               </View>
             </Modal>
     
@@ -71,7 +93,7 @@ export class AssetsModal extends Component {
                 this.setModalVisible(true);
               }}>
             <View>
-              <Text style={styles.headingTextBold}> Asset</Text>
+              <Text style={styles.optionText}> Asset</Text>
               {this.state.isSelected ? selected : noneSelected}
             </View>
             </TouchableOpacity>
@@ -93,11 +115,21 @@ const styles = StyleSheet.create({
       borderRightColor: 'red',
       borderRightWidth: 50
     },
-    headingTextBold: {
+    optionText: {
       color: 'black',
       fontWeight: 'bold',
+      fontSize: 30
+    },
+    titleTop: {
+      backgroundColor: '#324679',
+      width: '100%',
+      height: 50
+    },
+    headingTextBold: {
+      color: 'white',
+      fontWeight: 'bold',
       fontSize: 30,
-      alignSelf: 'flex-start'
+      alignSelf: 'center'
       
     },
     detailsText: {
@@ -131,7 +163,39 @@ const styles = StyleSheet.create({
     },
     flatList: {
       backgroundColor: '#324679',
-    }
+    },
+    assetListItems :{
+      padding: 15,
+      flexDirection:"row",
+      borderBottomWidth: 2
+    },
+    listContainer: {
+      marginTop: 10,
+      flex: 1,
+    },
+    bottomContainer: {
+      width: '100%',
+      height: 50,
+      backgroundColor:'#324679',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'absolute', 
+      bottom: 0, 
+    },
+    listTextLeft: {
+      justifyContent: 'flex-start',
+      fontSize: 15,
+    },
+    listTextRight: {
+      justifyContent: 'flex-end',
+      fontSize: 15,
+      textAlign:'right',
+    },
+    closeButton:{
+      textAlign:"center",
+      color: 'white',
+      fontSize: 25,
+    },
   
     
   })

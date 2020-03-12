@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView} from 'react-native';
-import StatusBar from '../../statusComponent.js';
+import {ContextInfo} from '../../ContextInfoProvider';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
 import AssetsModal from './AssetsModal.js'
+import {updateBuilding, DBcheckBuildingData} from '../../storage/schema/dbSchema'
 import ChecklistModal from './ChecklistModal.js'
 import MaterialsType from './MaterialsType.js'
 import LabourType from './LabourType.js'
 import GeneralType from './GeneralType.js'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button } from 'react-native-elements';
 
 export class ExploreBuildingScreen extends Component { 
+  static contextType = ContextInfo
     constructor(props) {
         super(props);
         this.state = {
@@ -28,58 +32,115 @@ export class ExploreBuildingScreen extends Component {
           MaterialsQuestions: [],
           LabourQuestions: [],
           GeneralQuestions: [],
-          setQuestions: [],
+          setQuestions: []
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
+        this.loadQuestions = this.loadQuestions.bind(this)
       }
 
     spacesFilter = (spaceFloor) => {
-      console.log(spaceFloor)
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
-      console.log(this.state.filteredAssets)
+      // console.log(this.state.filteredAssets)
       this.setState({
         spaceSelected: true
       })
     }
-
     assetsFilter = (assetCategory) => {
-      console.log(assetCategory)
+      // console.log(assetCategory)
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
-      console.log(this.state.filteredChecklist[0].questions)
-      
+            // console.log(this.state.filteredChecklist[0].questions)
+
       this.setState({
         assetSelected: true
       })
     }
-   
+
     loadQuestions = (questions) => {
-      
-      this.setState({   
-        setQuestions: [], 
-        setQuestions: questions,    
-        checklistSelected: true    
-      })    
-      console.log("what is this",this.state.setQuestions.length)  
-    }
-    
-    componentDidMount = async() => {
-      console.log("Befor")
-      var orgData =  await this.props.navigation.state.params.orgData
-      var buildingData = await this.props.navigation.state.params.buildingData
-      var AssetsAndSpaces = await get_building_data(orgData, buildingData, this.state.key)
+      console.log("questions",questions.length)
       this.setState({
-        spaces: AssetsAndSpaces.spaces,
-        assets: AssetsAndSpaces.assets,
-        checklists: orgData.checklists,
-        dataLoaded: true,
+        setQuestions: Array.from(questions),
+        checklistSelected: true
+      })
+      console.log("setquestions ",this.state.setQuestions.length)
+    }
+
+    componentDidMount = () => {
+
+      var currentDate = new Date() // current datetime as object
+
+      var orgData =  this.props.navigation.state.params.orgData // realm object from props
+      var buildingData = this.props.navigation.state.params.buildingData //realm object from props
+      this.setState({checklists: orgData.checklists}) //sets checklists
+
+      DBcheckBuildingData(this.context.accountContext.account, orgData, buildingData).then(result => {
+        if (!result){
+          this.updateBuildingData()
+        }else {
+          if (result[0].lastUpdated !== undefined && result[0].lastUpdated !== null) {
+
+            //get datetime of last updated organizations
+            //and add 1 hour to last updated time
+            var addHour = result[0].lastUpdated
+            addHour.setHours(addHour.getHours() + 1 )
+
+            // Check last updated timestamp is within 1 hour
+            if (this.context.networkContext.isConnected){
+              if (currentDate < addHour) {
+                console.log("ExploreBuildingScreen load from database: " + result[0].name)
+                this.setState({
+                  buildingLastUpdated: result[0].lastUpdated.toLocaleString(),
+                  spaces: result[0].spaces,
+                  assets: result[0].assets,
+                  checklists: orgData.checklists,
+                  dataLoaded: true
+                })
+              }
+      
+              // Check network before fetching API
+              if (currentDate >= addHour && this.context.networkContext.isConnected) {
+                this.updateBuildingData()
+              }
+            } else{
+              console.log("No network, ExploreBuildingScreen load from database: " + result[0].name)
+              this.setState({
+                buildingLastUpdated: result[0].lastUpdated.toLocaleString(),
+                spaces: result[0].spaces,
+                assets: result[0].assets,
+                checklists: orgData.checklists,
+                dataLoaded: true
+              })
+            }
+
+          }else{
+            this.updateBuildingData()
+          }
+        }
+
       })
     }
+
+
+    updateBuildingData = () => {
+      var orgData =  this.props.navigation.state.params.orgData
+      var buildingData = this.props.navigation.state.params.buildingData //realm object from props
+      var currentDate = new Date() // current datetime as object
+      get_building_data(orgData, buildingData, this.context.accountContext.account.api_key).then(api_result => {
+        console.log("ExploreBulidingScreen update building data: " + api_result.name)
+        var building_data = api_result
+        updateBuilding(this.context.accountContext.account, orgData.id, building_data, currentDate)
+        this.setState({
+          buildingLastUpdated: currentDate.toLocaleString(),
+          spaces: api_result.spaces,
+          assets: api_result.assets,
+          checklists: orgData.checklists,
+          dataLoaded: true,
+      })
+      })
+    }
+
   render() {
-    const {navigation} = this.props;
     
-    // const buildingId = navigation.getParam('buildingId', 'None')
-    // const buildingName = navigation.getParam('buildingName', 'None');
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
     const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter}/>
     
@@ -102,6 +163,11 @@ export class ExploreBuildingScreen extends Component {
     return (
       
       <ScrollView>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
+        <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="white" />
+
     <View>
       <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
@@ -136,26 +202,34 @@ export class ExploreBuildingScreen extends Component {
         }
         keyExtractor={item => item.id}
         />
-      <TouchableOpacity >
+        <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
+        <View style={{flex:1, margin: 5}}> 
+        <Button style={{flex:1, margin: 5}}
+        type="solid"
+        buttonStyle={{backgroundColor: '#47d66d'}}
+        title="Save to device"
+        titleStyle={{color: 'white'}}
+        onPress={()=> console.log("Not implemented")}
+        />
+        </View>  
+
+        <View style={{flex:1, margin: 5}}>
+        <Button 
+        type="solid"
+        title="Submit"
+        buttonStyle={{backgroundColor: '#47d66d'}}
+        titleStyle={{color: 'white'}}
+        onPress={()=> console.log("Not implemented")}
+        />
+        </View>
+        </View>
+    <TouchableOpacity >
       <View style={styles.row}>
           <Text style={styles.text}>Qr Code</Text>
       </View>  
     </TouchableOpacity>
       </View>
     
-  <FlatList style={styles.flatList}
-      data={[{qrcode: 'Scan Qr'}]}
-      renderItem={({item}) => 
-      <View>
-    <TouchableOpacity >
-    <View style={styles.row}>
-        <Text style={styles.text}>{item.qrcode}</Text>
-    </View>  
-  </TouchableOpacity>
-      </View>
-      }
-      keyExtractor={item => item.name}
-      />
   </View>
   </ScrollView>
     );

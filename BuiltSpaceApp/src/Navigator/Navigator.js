@@ -10,14 +10,8 @@ import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
-import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
-import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
-import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
-import SpacesModal from '../screens/Operations/SpacesModal.js';
-
-import dbScreen from '../screens/dbScreen/dbScreen'
 
 const AuthStack = createStackNavigator(
   {
@@ -39,6 +33,7 @@ const AuthStack = createStackNavigator(
 );
 
 // add a new screen here
+
 const HomeStack = createStackNavigator(
   
   {
@@ -56,30 +51,9 @@ const HomeStack = createStackNavigator(
     BuildingDetails: {
       screen: BuildingDetailsScreen
     },
-    SelectLocation: {
-      screen: SelectLocationScreen
-    },
-    SelectAsset: {
-      screen: SelectAssetScreen
-    },
-    SpacesModal: {
-      screen: SpacesModal
-    },
-    // Add Operation screens above
-    //
-    // Isolated Checklist Screens below
-    Assets: {
-        screen: AssetScreen
-    },
-    dbScreen: {
-      screen: dbScreen
-  },
-
     ExploreBuilding: {
       screen: ExploreBuildingScreen
-
     }
-    // Add Isolated Checklist screens above
   },
   
   {

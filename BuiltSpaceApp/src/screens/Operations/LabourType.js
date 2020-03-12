@@ -1,62 +1,63 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ListItem, ShadowPropTypesIOS} from 'react-native';
-import {ButtonGroup} from 'react-native-elements';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ListItem, ShadowPropTypesIOS} from 'react-native';
+import { ButtonGroup } from 'react-native-elements';
 
-export class LabourType extends Component{
+
+export class LabourType extends Component {
     constructor(props) {
         super(props);
-        this.state= {
-            selectedIndex: 0,
-            questionsData: this.props.question.item
+        this.state={
+            selectedIndex: '',
+            format: this.props.question.item.format.split('|'),
+            colors: this.props.question.item.colorformat.split('|'),
         }
-        
-        this.updateIndex = this.updateIndex.bind(this)
+    this.updateIndex = this.updateIndex.bind(this)
+    this.buttonComponents = this.buttonComponents.bind(this)
+    }
+
+    buttonComponents = () => {
+        var buttons = []
+        this.state.format.forEach((button,index) => {
+            buttons.push({element:  () => <Text style={{width: '100%', height: '100%',color : this.state.colors[index]}}>{button}</Text>})
+        })
+        return buttons
     }
     
-    updateIndex (selectedIndex) {
+    updateIndex(selectedIndex) {
         this.setState({selectedIndex})
     }
 
-    
-
     render() {
-        const formatString = this.props.question.item.format.split("|")
-        const question = this.props.question.item
-        const buttons = formatString
+        const buttonArray = this.buttonComponents()
         const { selectedIndex } = this.state
-        console.log(this.props.question.item)
-        console.log(formatString)
+
         return (
-            <View>
-                <Text>{this.state.questionsData.checklisttitle}</Text>
-                <Text>{this.state.questionsData.question}</Text>
-                {/* {!question.measurementonly ? 
+            <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
+                <Text style={{fontWeight: "bold"}}>{this.props.question.item.question}</Text>
                 <ButtonGroup
+                buttonStyle={{padding: 10}}
+                selectMultiple={false}
+                buttons={buttonArray}
                 onPress={this.updateIndex}
                 selectedIndex={selectedIndex}
-                buttons={buttons}
-                containerStyle={styles.button}
+                underlayColor={'red'}
                 />
-                :(question.measurementlabel == '' ? 
-                <View>
-                   <Text style={{leftmargin: 5}}>Measurement</Text>
-                    <TextInput 
-                    style={{ flex:1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                    /><Text>{question.measurementunit}</Text> 
+
+                <View style={{flex: 2, flexDirection: "row"}}>
                 </View>
-                : (!question.measurementlabel == '' ?
-                <View>
-                   <Text style={{leftmargin: 5}}>{question.measurementlabel}</Text>
+                <View style={{flex:2}}>
+                    <Text>Details: </Text>
                     <TextInput 
-                    style={{ flex:1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                    /><Text>{question.measurementunit}</Text> 
+                    style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                    label="Details:"
+                    />
+
                 </View>
-                : <Text>No buttons</Text>
-                    )
-                )
-            } */}
-        </View>
+                <TouchableOpacity disabled={true} style={{ margin: 5, backgroundColor: 'white', width: 100, height: 20}}> 
+                    <Text>Add picture</Text>
+                </TouchableOpacity>
+            </View>
         )
     }
 }
