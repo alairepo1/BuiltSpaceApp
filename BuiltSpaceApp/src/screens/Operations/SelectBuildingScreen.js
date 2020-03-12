@@ -38,7 +38,7 @@ export class SelectBuildingScreen extends Component {
 
   componentDidMount = async() => {
     // this.fetch();
-    var org_info = await get_org_data(this.props.navigation.state.params.orgName)
+    var org_info = await get_org_data(this.props.navigation.state.params.orgName, this.state.key)
     this.setState({
       org_data: org_info
     })

@@ -67,7 +67,7 @@ export class ExploreBuildingScreen extends Component {
       console.log("Befor")
       var orgData =  await this.props.navigation.state.params.orgData
       var buildingData = await this.props.navigation.state.params.buildingData
-      var AssetsAndSpaces = await get_building_data(orgData, buildingData)
+      var AssetsAndSpaces = await get_building_data(orgData, buildingData, this.state.key)
       this.setState({
         spaces: AssetsAndSpaces.spaces,
         assets: AssetsAndSpaces.assets,
