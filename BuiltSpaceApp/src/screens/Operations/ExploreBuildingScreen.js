@@ -264,15 +264,15 @@ export class ExploreBuildingScreen extends Component {
         <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="white" />
 
     <View>
-      <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}>
+      {/* <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}> */}
             <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
-      </View>
-      <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}>
+      {/* </View> */}
+      {/* <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}> */}
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
-      </View>
-      <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}>
+      {/* </View> */}
+      {/* <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}> */}
         {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
-      </View>
+      {/* </View> */}
       <View>
       {this.state.checklistSelected ?  
       <View>
@@ -325,7 +325,7 @@ export class ExploreBuildingScreen extends Component {
         </View>
         <TouchableOpacity >
                 <View style={styles.row}>
-                  <Text style={styles.text}>{item.qrcode}</Text>
+                  <Text style={styles.text}>qrcode</Text>
                   <View>
                     <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
                   </View>
