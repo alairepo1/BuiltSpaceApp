@@ -42,7 +42,7 @@ export class AssetsModal extends Component {
                 renderItem = {({item}) =>
                   <TouchableOpacity
                     onPress={() => {
-                    this.props.assetsFilter(item.categoryabbr)
+                    this.props.assetsFilter(item)
                       this.setModalVisible(!this.state.modalVisible)
                       this.setState({
                           isSelected: true,

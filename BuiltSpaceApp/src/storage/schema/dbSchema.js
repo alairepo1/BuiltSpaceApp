@@ -34,10 +34,90 @@ export const accountSchema = {
   },
 };
 
+export const inspectionSchema = {
+  name: 'inspection',
+  properties: {
+    id: 'date?',
+    name: 'string?',
+    content: {type: 'list', objectType: 'checklist'},
+    buildingid: 'int?',
+    orgid: 'int?',
+    assetid: 'int?'
+  }
+}
+
 export const inspectionChecklistSchema = {
   name: 'inspectionChecklist',
-  
+  properties: {
+    demoUsername: 'string?',
+    demoUserEmail: 'string?',
+    date: 'date?',
+    startime: 'date?',
+    duratgion: 'string?',
+    time: 'date?',
+    fileName: 'string?',
+    address: 'string?',
+    generalComments: 'string?',
+    flagEdit: 'string?',
+    assetName: 'string?',
+    category: 'string?',
+    spaceId: 'string?',
+    spaceName: 'string?',
+    floor: 'string?',
+    spaceUsage: 'string?',
+    description: 'string?',
+    make: 'string?',
+    model: 'string?',
+    serial: 'string?',
+    building: 'int?', //id?
+    workOrderNumber: 'string',
+    checklistCategory: 'string?',
+    qrcodeURL: 'string?',
+    assetLocations: 'list?',
+    newSpaces: 'list?',
+    questions: {type: 'list', objectType: 'inspectionQuestions'},
+    parentTaskId: 'int?',  
+    task: 'string?', // Because there is no data in your app , leave it empty
+    checklistId: 'int?',
+    checklistTitle: 'string?',
+    emailReport: 'string?',
+    deviceGeolocation: {
+        Longitude: 'string?',
+        Latitude: 'string?',
+        Altitude: 'string?',
+        Accuracy: 'string?',
+        AltitudeAccuracy: 'string?',
+        Heading: 'string?',
+        Speed: 'string',
+        Timestamp: 'date?'
+    }
+  }
 }
+
+// export const inspectionQuestionSchema = {
+//   name: 'inspectionQuestions',
+//   properties: {
+//     questionId: 'int?',
+//     questionNumber: 'string?',
+//     TaskTitle: questionTitle,  
+//     TaskDetails: questionDetails,
+//     QuestionFormat: Allformats,
+//     Photos: photos, // an array of photo
+//     InspectionResult: questionResponse,
+//     MeasurementLabel: Measurementlabel,
+//     Measurement: measurement,
+//     MeasurementUnit: Measurementunit,
+//     tool: 'string?',
+//     supplier:,
+//     unitCost:,
+//     questionType:,
+//     salesTax:,
+//     markup:,
+//     allowMultiple: 'bool?',
+//     choices:,
+//     textOnly:
+//   }
+// }
 
 // organization schema, nested into accountSchema
 export const organizationSchema = {
@@ -77,7 +157,8 @@ export const buildingSchema = {
     lastLoaded: 'date',
     lastUpdated: 'date?',
     assets: {type: 'list', objectType: 'asset'},
-    spaces: {type: 'list', objectType: 'spaces'}
+    spaces: {type: 'list', objectType: 'spaces'},
+    // qrcodes: {type: 'list', objecType: 'qrcodes'}
   }
 }
 
@@ -154,6 +235,7 @@ export const questionsSchema = {
     checklistname: 'string?',
     allowmultiplechoices: 'bool',
     colorformat: 'string',
+    markupformat: 'string?',
     displayproperty:'bool',
     format:'string',
     measurementlabel: 'string',
@@ -166,7 +248,7 @@ export const questionsSchema = {
     questiontype:'string?',
     remarks: 'string?',
     salestaxformat:'string?',
-    showmeasurements:'bool?',
+    showmeasurement:'bool?',
     textonly: 'bool',
     updateproperty: 'bool',
     updatepropertyfromcurrent:'bool',
@@ -175,9 +257,14 @@ export const questionsSchema = {
 }
 
 export const qrCodeSchema = {
-  name: 'qrcode',
+  name: 'qrcodes',
   properties: {
-    id: 'int'
+    id: 'int',
+    assetid: 'int?',
+    buildingid: 'int?',
+    spaceid: 'int?',
+    contactperson: 'string?',
+    url: 'string?'
   }
 }
 
@@ -282,6 +369,7 @@ export const updateBuilding = async (accountDetails, organization_id, buildingAP
         // delete building data and pushes the new building into the organization
         realm.delete(building[0].assets)
         realm.delete(building[0].spaces)
+        // realm.delete(building[0].qrcodes)
         
         building[0]['assets'] = buildingAPI.assets
         building[0]['spaces'] = buildingAPI.spaces
@@ -511,3 +599,8 @@ export const insertOrgData = async (accountDetails, orgData, currentDate) => {
     console.log('insertOrgData: ', e)
   }
 }
+
+
+// export const saveToDevice = async (inspection) => {
+
+// }

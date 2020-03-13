@@ -17,8 +17,6 @@ export class ExploreBuildingScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          building_data: [],
-          key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
           spaces: [],
           spacesFetched: false,
           assets: [],
@@ -28,41 +26,64 @@ export class ExploreBuildingScreen extends Component {
           dataLoaded: false,
           spaceSelected: false,
           checklistSelected: false,
-          questions:[],
-          MaterialsQuestions: [],
-          LabourQuestions: [],
-          GeneralQuestions: [],
-          setQuestions: []
+          setQuestions: [],
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
+        this.updateInspectionResults = this.updateInspectionResults.bind(this)
+        this.updateMeasurement = this.updateMeasurement.bind(this)
       }
 
-    spacesFilter = (spaceFloor) => {
-      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === spaceFloor)
+    spacesFilter = (space) => {
+      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === space.spaceFloor)
       // console.log(this.state.filteredAssets)
       this.setState({
+        selectedSpaceId: space.id,
         spaceSelected: true
       })
     }
-    assetsFilter = (assetCategory) => {
+    assetsFilter = (asset) => {
       // console.log(assetCategory)
-      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === assetCategory || item.assetCategory === "")
+      this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === asset.assetCategory || item.assetCategory === "")
             // console.log(this.state.filteredChecklist[0].questions)
 
       this.setState({
+        selectedAssetId: asset.id,
         assetSelected: true
       })
     }
 
     loadQuestions = (questions) => {
-      console.log("questions",questions.length)
       this.setState({
         setQuestions: Array.from(questions),
         checklistSelected: true
       })
-      console.log("setquestions ",this.state.setQuestions.length)
+    }
+
+    updateInspectionResults = (index, result) => {
+      // updates the question with the selected button in a question.
+      // let setQuestions = [... this.state.setQuestions]
+      let question = this.state.setQuestions.slice(index); // copy's the question 
+      question[0]["InspectionResults"] = result;
+      // setQuestions[index] = question
+      // this.setState({setQuestions})
+      console.log(this.state.setQuestions[index])
+    }
+
+    updateMeasurement = (index, value, type, measurement_val = null) => {
+      // updates the question text input based on the type passed into the argument.
+      let question = this.state.setQuestions.slice(index); // copy's the question 
+
+      if (type == "measurement"){
+        question[0][measurement_val] = value
+      }
+      if (type == "TaskDetails"){
+        question[0][type] = value
+      }
+      if (type == "UnitCost"){
+        question[0][type] = value
+      }
     }
 
     componentDidMount = () => {
@@ -139,6 +160,85 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
+    saveToDevice = () => {
+      var datetimeString = new Date().toISOString()
+      var building = this.props.navigation.state.params.buildingData
+      var asset = building.assets.find(asset => asset.id == this.state.selectedAssetId)
+      var checklist = this.state.setQuestions[0]
+      var checklistTitle = ''
+      var orgData =  this.props.navigation.state.params.orgData
+
+      if (checklist.name == null){
+        checklistTitle = 'General Inspection'
+      }
+      //inspection for a space
+      // _filename = isoDateString + "-" + buildingname + "-" + assetProperty.spacename;
+      //inspection for an asset
+      var _filename =  datetimeString + "-" + building.name.split(' ').join('-') + "-" + asset.name;
+
+      var checklistObject = {
+        Id: datetimeString,
+        Name: _filename,
+        Content: {
+          checklist: {
+            MyFields: {
+              DemoUserName: 'demousername', // if the user comes fropm the button "try it out"
+              DemoUserEmail: 'demouseremail', // if the user comes fropm the button "try it out"
+              Date: datetimeString,
+              StartTime: datetimeString,
+              Duration: datetimeString,
+              Time: datetimeString,
+              FileName: _filename,
+              Address: building.address,
+              GeneralComments: 'generalComments',
+              flagedit: 'fl_edit',
+              Assetname: asset.name,
+              Category: asset.categoryabbr,
+              SpaceId: 'space.id', // if space is selected, space.id
+              SpaceName: 'space.floor', //if space is selected, space.name
+              Floor: 'space.floor', // if space is selected, space.floor
+              SpaceUsage: 'assetProperty.spaceusage', //if space selected, space.usage
+              Description: asset.escription,
+              Make: asset.make,
+              Model: asset.model,
+              Serial: asset.serial,
+              Building: asset.buildingId,
+              WorkOrderNumber: '_WorkOrderNumber',
+              ChecklistCategory: '_ChecklistCategory',
+              QRcodeURL: 'qrcodeMapping',
+              AssetLocations: {
+                AssetLocation: 'allspaces',
+              },
+              NewSpaces: {
+                Spaces: [], 
+              },
+              Questions: {
+                Question: [], // an array of question
+              },
+              ParentTaskId: '', // Because there is no data in your app , leave it empty
+              Task: '', // Because there is no data in your app , leave it empty
+              ChecklistId: checklist.id,
+              ChecklistTitle: checklistTitle,
+              EmailReport: '', // email report no implemented
+              DeviceGeolocation: {
+                Longitude: '',
+                Latitude: '',
+                Altitude: '',
+                Accuracy: '',
+                AltitudeAccuracy: '',
+                Heading: '',
+                Speed: '',
+                Timestamp: '',
+              },
+            },
+          },
+        },
+        buildingId: building.id,
+        orgId: orgData.id,
+        AssetId: asset.id,
+      };
+  }
+
   render() {
     
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
@@ -180,7 +280,7 @@ export class ExploreBuildingScreen extends Component {
       </View> : null }
       <FlatList style={styles.flatList}
         data={this.state.setQuestions}
-        renderItem={({item}) => {
+        renderItem={({item, index}) => {
 
           if (item.questiontype === '') {
             return <GeneralType question={{item}}/>
@@ -191,12 +291,17 @@ export class ExploreBuildingScreen extends Component {
           }
     
           if (item.questiontype === 'Materials') {
-          return <MaterialsType question={{item}}/>
+          return <MaterialsType question={{item, 
+            index, 
+            updateInspection: this.updateInspectionResults,
+            updateMeasurement: this.updateMeasurement
+          }}/>
           }
         }
         }
-        keyExtractor={item => item.id}
+        keyExtractor={item => this.state.setQuestions.indexOf(item)}
         />
+
         <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
         <View style={{flex:1, margin: 5}}> 
         <Button style={{flex:1, margin: 5}}
@@ -204,7 +309,7 @@ export class ExploreBuildingScreen extends Component {
         buttonStyle={{backgroundColor: '#47d66d'}}
         title="Save to device"
         titleStyle={{color: 'white'}}
-        onPress={()=> console.log("Not implemented")}
+        onPress={()=> this.saveToDevice()}
         />
         </View>  
 

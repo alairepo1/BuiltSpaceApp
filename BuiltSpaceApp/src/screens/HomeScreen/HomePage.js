@@ -136,6 +136,16 @@ export class HomePage extends Component {
                 }>
                 <Text style={styles.button_text}> Select organization</Text>
               </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.buttons}
+                onPress={() =>
+                  {
+                  this.context.accountContext.setAccount({})
+                  this.props.navigation.navigate('Auth')
+                }
+                }>
+                <Text style={styles.button_text}> Log Out</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View>
