@@ -20,6 +20,33 @@ export class SelectBuildingScreen extends Component {
 
     var currentDate = new Date() // current datetime as object
 
+
+//   render() {
+//     return (
+//       <FlatList style={styles.container}
+//         data={this.state.org_data.buildings}
+//         renderItem={({ item }) =>
+//           <TouchableOpacity onPress={() => this.props.navigation.navigate('BuildingDetails', {
+//             buildingAddress: item.address,
+//             buildingCity: item.city,
+//             buildingName: item.name,
+//             buildingProvince: item.provincestate,
+//             buildingPostalCode: item.postalcode,
+//             buildingId: item.id,
+//             orgData: this.state.org_data,
+//             buildingData: item
+//           })}>
+//             <View style={styles.row}>
+//               <Text style={styles.text}>{item.name}</Text>
+//               <View>
+//                 <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
+//               </View>
+//             </View>
+
+//           </TouchableOpacity>
+//         }
+//         keyExtractor={item => item.name}
+//       />
     //API call to get org_data and update the database
     DBcheckOrgData(this.context.accountContext.account,this.props.navigation.state.params.orgName).then(result => {
       // Error throws because it cannot find the object in DB due to deletion/updated in orgsupdate?
@@ -131,11 +158,11 @@ export class SelectBuildingScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-   flex: 1,
-   marginTop: 40,
-   marginLeft: 15,
-   marginRight: 15,
-   backgroundColor: '#324679',
+    flex: 1,
+    marginTop: 40,
+    marginLeft: 15,
+    marginRight: 15,
+    backgroundColor: '#324679',
   },
   row: {
     flexDirection: 'row',
@@ -153,9 +180,9 @@ const styles = StyleSheet.create({
   },
   listIcon: {
     justifyContent: 'flex-end',
-    textAlign:"right"
+    textAlign: "right"
   },
-  
+
 })
 
 export default SelectBuildingScreen;

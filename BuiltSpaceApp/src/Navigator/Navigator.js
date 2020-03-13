@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Platform} from 'react-native';
-import {StyleSheet, Text, View} from 'react-native';
-import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import React, { Component } from 'react';
+import { Platform } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 // import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
+import { createStackNavigator } from 'react-navigation-stack';
 
 import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
 import Login from '../screens/LoginScreen/Login.js';
@@ -25,7 +25,7 @@ const AuthStack = createStackNavigator(
       headerStyle: {
         backgroundColor: '#436FA1',
       },
-      cardStyle: {backgroundColor: '#324679'},
+      cardStyle: { backgroundColor: '#324679' },
       headerTintColor: 'white'
     }
   }
@@ -35,9 +35,9 @@ const AuthStack = createStackNavigator(
 // add a new screen here
 
 const HomeStack = createStackNavigator(
-  
+
   {
-    
+
     Home: {
       screen: HomeScreen
     },
@@ -55,17 +55,18 @@ const HomeStack = createStackNavigator(
       screen: ExploreBuildingScreen
     }
   },
-  
+
   {
     initialRouteName: 'Home',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#436FA1',
       },
-      cardStyle: {backgroundColor: '#324679'},
+      cardStyle: { backgroundColor: '#324679' },
       headerTintColor: 'white'
     }
   },
+  
 
 );
 

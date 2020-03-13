@@ -251,7 +251,7 @@ export class ExploreBuildingScreen extends Component {
     const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} ></ChecklistModal>
 
     if (!this.state.dataLoaded) {
-      return(
+      return (
         <Text>Loading</Text>
       )
     } else if (this.state.dataLoaded){
@@ -323,11 +323,14 @@ export class ExploreBuildingScreen extends Component {
         />
         </View>
         </View>
-    <TouchableOpacity >
-      <View style={styles.row}>
-          <Text style={styles.text}>Qr Code</Text>
-      </View>  
-    </TouchableOpacity>
+        <TouchableOpacity >
+                <View style={styles.row}>
+                  <Text style={styles.text}>{item.qrcode}</Text>
+                  <View>
+                    <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
+                  </View>
+                </View>
+              </TouchableOpacity>
       </View>
     
   </View>
@@ -363,7 +366,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
     alignSelf: 'flex-start'
-    
   },
   questionsHeader: {
     color: 'white',
@@ -375,10 +377,10 @@ const styles = StyleSheet.create({
   },
 
   detailsText: {
-      color: 'red',
-      fontWeight: 'normal',
-      fontSize: 16,
-      alignSelf: 'center'
+    color: 'red',
+    fontWeight: 'normal',
+    fontSize: 16,
+    alignSelf: 'center'
   },
   row: {
     flexDirection: 'row',
@@ -401,7 +403,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#324679',
   }
 
-  
+
 })
 
 export default ExploreBuildingScreen;
