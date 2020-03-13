@@ -19,17 +19,18 @@ import {
 // import BottomTabNavigator from './src/BottomTabNavigator.js';
 import Navigator from './src/Navigator/Navigator.js';
 import SafeAreaView from 'react-native-safe-area-view';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import ContextInfoProvider from './src/ContextInfoProvider'
 
 class App extends Component {
   render() {
     return (
       <SafeAreaProvider>
-        <Navigator />
-        {/* <RealmDb /> */}
+        <ContextInfoProvider>
+            <Navigator />
+        </ContextInfoProvider>
       </SafeAreaProvider>
     );
-    // <BottomTabNavigator />;
   }
 }
 export default App;

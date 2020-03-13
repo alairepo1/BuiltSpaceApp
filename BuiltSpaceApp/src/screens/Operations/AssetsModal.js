@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements';
-import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList } from 'react-native';
+import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export class AssetsModal extends Component {
@@ -48,6 +48,42 @@ export class AssetsModal extends Component {
       />
     );
   };
+//     render() {
+//         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
+//         const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
+//         return(
+//             <View style={{marginTop: 22}}>
+
+//             <Modal
+//               animationType="slide"
+//               transparent={false}
+//               visible={this.state.modalVisible}
+//               onRequestClose={() => {
+//                 this.setModalVisible(!this.state.modalVisible)
+//               }}>
+//               <View style={styles.listContainer}>
+//                 <View style={styles.titleTop}>
+//                   <Text style={styles.headingTextBold}>Select an Asset</Text>
+//                 </View>
+
+//                 <FlatList style={{marginTop:30}}
+//                 data={this.props.assets}
+//                 renderItem = {({item}) =>
+//                   <TouchableOpacity
+//                     onPress={() => {
+//                     this.props.assetsFilter(item)
+//                       this.setModalVisible(!this.state.modalVisible)
+//                       this.setState({
+//                           isSelected: true,
+//                           selection: item.name,
+//                       })
+//                     }}>
+//                     <View style={styles.assetListItems}>
+//                       <View style={{flex:1}}>
+//                         <Text style={styles.listTextLeft}>Name: {item.name}</Text>
+//                         <Text style={styles.listTextLeft}>Serial: {item.serial}</Text>
+//                         <Text style={styles.listTextLeft}>Model: {item.model}</Text>
+//                       </View>
 
   render() {
 
@@ -120,6 +156,40 @@ export class AssetsModal extends Component {
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
               </TouchableOpacity>
+//                   </TouchableOpacity>
+//                 }
+//                 keyExtractor={item => item.id}
+//                 ></FlatList>
+//                 {/* <TouchableOpacity
+//                 onPress={() => {
+//                     this.setModalVisible(!this.state.modalVisible);
+//                   }}>
+//                     <Text>Close</Text>
+//                 </TouchableOpacity> */}
+                
+//                 {/* Bottom clos button container */}
+//                 <View style={styles.bottomContainer}> 
+//                   <TouchableOpacity
+//                   onPress={() => {
+//                       this.setState({
+//                           isSelected: false
+//                       })
+//                       this.setModalVisible(!this.state.modalVisible);
+//                     }}>
+//                       <Text style={styles.closeButton}>Close</Text>
+//                   </TouchableOpacity>
+//                 </View>
+
+//               </View>
+//             </Modal>
+    
+//             <TouchableOpacity
+//               onPress={() => {
+//                 this.setModalVisible(true);
+//               }}>
+//             <View>
+//               <Text style={styles.optionText}> Asset</Text>
+//               {this.state.isSelected ? selected : noneSelected}
             </View>
 
           </View>

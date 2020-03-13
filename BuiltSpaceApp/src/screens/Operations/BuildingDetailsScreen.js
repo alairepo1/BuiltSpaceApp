@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import StatusBar from '../../statusComponent.js';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {ContextInfo} from '../../ContextInfoProvider';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class BuildingDetailsScreen extends Component {
+  static contextType = ContextInfo
   constructor(props) {
     super(props);
     this.state = {
@@ -11,22 +13,7 @@ export class BuildingDetailsScreen extends Component {
       key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
   }
-
-  // renderItem({item}) {
-  //   return(
-  //     <View style={styles.row}>
-  //       <Text style={styles.text}>{item.address}</Text>
-  //     </View>
-
-  //   )
-  // }
-
-  //   buildingAddress: item.name,
-  //         buildingCity: item.city,
-  //         buildingName: item.name,
-  //         buildingProvince: item.provincestate,
-  //         buildingPostalCode: item.postalcode
-
+  
   render() {
     const { navigation } = this.props;
     const buildingName = navigation.getParam('buildingName', 'None');
@@ -39,7 +26,9 @@ export class BuildingDetailsScreen extends Component {
     const buildingData = this.props.navigation.getParam('buildingData', 'None')
     return (
 
-      <View style={styles.container}>
+    <View style={styles.container}>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text style={styles.detailsTextContainer}>
           <Text style={styles.detailsTextBold}>City: <Text style={styles.detailsText}>{buildingCity} {'\n\n'}</Text></Text>
           <Text style={styles.detailsTextBold}>Address: <Text style={styles.detailsText}>{buildingAddress}, {buildingCity}, {buildingProvince} {'\n\n'}</Text></Text>

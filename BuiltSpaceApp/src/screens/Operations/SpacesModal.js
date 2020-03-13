@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList } from 'react-native';
+import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Location from 'react-native-vector-icons/SimpleLineIcons'
 import { SearchBar } from 'react-native-elements';
 import { set } from 'react-native-reanimated';
+
 
 
 export class SpacesModal extends Component {
@@ -129,6 +130,72 @@ export class SpacesModal extends Component {
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
               </TouchableOpacity>
+//     render() {
+//         const {navigation} = this.props;
+//         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
+//         const selected = <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
+
+//         return(
+//             <View style={{marginTop: 22}}>
+
+//             <Modal
+//               animationType="slide"
+//               transparent={false}
+//               visible={this.state.modalVisible}
+//               onRequestClose={() => {
+//                 this.setModalVisible(!this.state.modalVisible)
+//               }}>
+
+//               <View style={styles.listContainer}>
+//                 <View style={styles.titleTop}>
+//                   <Text style={styles.headingTextBold}>Select a Space</Text>
+//                 </View>
+
+//                 <FlatList style={{marginTop:30}}
+//                 data={this.props.spaces}
+//                 renderItem = {({item}) =>
+//                   <TouchableOpacity
+//                     onPress={() => {
+//                     this.props.spacesFilter(item)
+//                       this.setModalVisible(!this.state.modalVisible)
+//                       this.setState({
+//                           isSelected: true,
+//                           selection: item.floor
+
+//                       })
+//                     }}>
+//                     <View style={styles.assetListItems}>
+//                       <View style={{flex:1}}>
+//                         <Text style={styles.listText}>{item.floor}</Text>
+//                       </View>
+
+//                       <View style={{flex:1}}>
+//                         <Icon style={styles.listIcon}name="angle-right" size={30} color="black" />
+//                       </View>
+//                     </View>
+//                   </TouchableOpacity>
+//                 }
+//                 keyExtractor={item => item.id}
+//                 ></FlatList>
+//                 <View style={styles.bottomContainer}>
+//                   <TouchableOpacity
+//                   onPress={() => {
+
+//                       this.setModalVisible(!this.state.modalVisible);
+//                     }}>
+//                       <Text style={styles.closeButton}>Close</Text>
+//                   </TouchableOpacity>
+//                 </View>
+//               </View>
+//             </Modal>
+    
+//             <TouchableOpacity
+//               onPress={() => {
+//                 this.setModalVisible(true);
+//               }}>
+//             <View>
+//               <Text style={styles.optionText}> Space</Text>
+//               {this.state.isSelected ? selected : noneSelected}
             </View>
           </View>
         </Modal>
