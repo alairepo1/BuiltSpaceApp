@@ -156,40 +156,29 @@ export class AssetsModal extends Component {
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
               </TouchableOpacity>
-//                   </TouchableOpacity>
-//                 }
-//                 keyExtractor={item => item.id}
-//                 ></FlatList>
-//                 {/* <TouchableOpacity
-//                 onPress={() => {
-//                     this.setModalVisible(!this.state.modalVisible);
-//                   }}>
-//                     <Text>Close</Text>
-//                 </TouchableOpacity> */}
-                
-//                 {/* Bottom clos button container */}
-//                 <View style={styles.bottomContainer}> 
-//                   <TouchableOpacity
-//                   onPress={() => {
-//                       this.setState({
-//                           isSelected: false
-//                       })
-//                       this.setModalVisible(!this.state.modalVisible);
-//                     }}>
-//                       <Text style={styles.closeButton}>Close</Text>
-//                   </TouchableOpacity>
-//                 </View>
 
-//               </View>
-//             </Modal>
+                 {/* <View style={styles.bottomContainer}> 
+                   <TouchableOpacity
+                  onPress={() => {
+                      this.setState({
+                          isSelected: false
+                      })
+                      this.setModalVisible(!this.state.modalVisible);
+                    }}>
+                      <Text style={styles.closeButton}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+            </Modal>
     
-//             <TouchableOpacity
-//               onPress={() => {
-//                 this.setModalVisible(true);
-//               }}>
-//             <View>
-//               <Text style={styles.optionText}> Asset</Text>
-//               {this.state.isSelected ? selected : noneSelected}
+            <TouchableOpacity
+              onPress={() => {
+                this.setModalVisible(true);
+              }}>
+            <View>
+              <Text style={styles.optionText}> Asset</Text>
+              {this.state.isSelected ? selected : noneSelected} */}
             </View>
 
           </View>

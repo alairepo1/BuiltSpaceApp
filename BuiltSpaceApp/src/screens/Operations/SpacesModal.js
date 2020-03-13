@@ -130,7 +130,7 @@ export class SpacesModal extends Component {
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
               </TouchableOpacity>
-//     render() {
+{/* //     render() {
 //         const {navigation} = this.props;
 //         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
 //         const selected = <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
@@ -195,7 +195,7 @@ export class SpacesModal extends Component {
 //               }}>
 //             <View>
 //               <Text style={styles.optionText}> Space</Text>
-//               {this.state.isSelected ? selected : noneSelected}
+//               {this.state.isSelected ? selected : noneSelected} */}
             </View>
           </View>
         </Modal>
