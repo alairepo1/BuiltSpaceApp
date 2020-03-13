@@ -19,6 +19,11 @@ export class ChecklistModal extends Component {
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
     }
+    componentWillReceiveProps() {
+      this.setState({
+        checklistIsSelected: this.props.checklistSelected
+      })
+    }
     render() {
         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
         const selected = <Text style={styles.detailsTextSelected}>{this.state.checklistSelection}</Text>
@@ -44,6 +49,10 @@ export class ChecklistModal extends Component {
                           checklistIsSelected: true,
                           checklistSelection: item.title
                       })
+                      console.log("on the modal", this.state.checklistIsSelected)
+                      if (this.state.checklistIsSelected) {
+                        this.props.onChecklistChange(this.state.checklistIsSelected, item.title)
+                      }
                       console.log(this.state.checklistSelection)
                     }}>
                     <View>

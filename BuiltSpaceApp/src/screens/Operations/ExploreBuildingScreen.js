@@ -32,11 +32,13 @@ export class ExploreBuildingScreen extends Component {
           MaterialsQuestions: [],
           LabourQuestions: [],
           GeneralQuestions: [],
-          setQuestions: []
+          setQuestions: [],
+          emptyChecklistSelectionProp: ""
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
+        this.onChange = this.onChange.bind(this)
       }
 
     spacesFilter = (spaceFloor) => {
@@ -52,7 +54,8 @@ export class ExploreBuildingScreen extends Component {
             // console.log(this.state.filteredChecklist[0].questions)
 
       this.setState({
-        assetSelected: true
+        assetSelected: true,
+        checklistSelected: false
       })
     }
 
@@ -64,6 +67,11 @@ export class ExploreBuildingScreen extends Component {
       })
       console.log("setquestions ",this.state.setQuestions.length)
     }
+
+    onChange = (newState, text) => { 
+      console.log(newState)
+      this.setState({ 
+        checklistSelected: newState})}
 
     componentDidMount = () => {
 
@@ -139,6 +147,7 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
+
   render() {
     
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
@@ -147,19 +156,17 @@ export class ExploreBuildingScreen extends Component {
     const noItemSelected = styles.TextContainer
     const yesItemSelected = styles.TextContainerSelected
     
-    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions}  ></ChecklistModal>
-    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} ></ChecklistModal>
-
-    const Materials = <MaterialsType questionsData = {this.state.MaterialsQuestions}></MaterialsType>
-    const Labour = <LabourType questionsData = {this.state.LabourQuestions}></LabourType>
-    const General = <GeneralType questionsData = {this.state.GeneralQuestions}></GeneralType>
-
+    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} ></ChecklistModal>
+    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange}></ChecklistModal>
 
     if (!this.state.dataLoaded) {
       return(
         <Text>Loading</Text>
       )
     } else if (this.state.dataLoaded){
+      const materialQ = this.state.setQuestions.filter(function(question)  {
+        return question.questiontype === "Materials"
+      })
     return (
       
       <ScrollView>
@@ -183,6 +190,7 @@ export class ExploreBuildingScreen extends Component {
       <View>
           <Text style={styles.questionsHeader}>Questions</Text>
       </View> : null }
+      {this.state.checklistSelected ?
       <FlatList style={styles.flatList}
         data={this.state.setQuestions}
         renderItem={({item}) => {
@@ -200,8 +208,9 @@ export class ExploreBuildingScreen extends Component {
           }
         }
         }
-        keyExtractor={item => item.id}
-        />
+        keyExtractor={item => this.state.setQuestions.indexOf(item)}
+        ></FlatList>
+         : null }
         <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
         <View style={{flex:1, margin: 5}}> 
         <Button style={{flex:1, margin: 5}}

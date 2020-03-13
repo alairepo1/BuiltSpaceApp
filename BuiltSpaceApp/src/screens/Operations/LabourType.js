@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, ListItem, ShadowPropTypesIOS} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Listquestion, ShadowPropTypesIOS} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
 
@@ -8,7 +8,7 @@ export class LabourType extends Component {
     constructor(props) {
         super(props);
         this.state={
-            selectedIndex: '',
+            selectedIndex: 0,
             format: this.props.question.item.format.split('|'),
             colors: this.props.question.item.colorformat.split('|'),
         }
@@ -19,9 +19,18 @@ export class LabourType extends Component {
     buttonComponents = () => {
         var buttons = []
         this.state.format.forEach((button,index) => {
-            buttons.push({element:  () => <Text style={{width: '100%', height: '100%',color : this.state.colors[index]}}>{button}</Text>})
+            buttons.push({element:  () => <Text style={this.changeColor(index)}>{button}</Text>})
         })
         return buttons
+    }
+
+    changeColor = (index) => {
+        if (this.state.selectedIndex == index) {
+            return { borderColor: this.state.colors[index], color : 'white'}
+        } else {
+            return { borderColor: this.state.colors[index], color : this.state.colors[index]}
+        }
+        
     }
     
     updateIndex(selectedIndex) {
@@ -31,19 +40,50 @@ export class LabourType extends Component {
     render() {
         const buttonArray = this.buttonComponents()
         const { selectedIndex } = this.state
-
+        const question = this.props.question.item
         return (
+            
             <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
-                <Text style={{fontWeight: "bold"}}>{this.props.question.item.question}</Text>
-                <ButtonGroup
-                buttonStyle={{padding: 10}}
-                selectMultiple={false}
-                buttons={buttonArray}
-                onPress={this.updateIndex}
-                selectedIndex={selectedIndex}
-                underlayColor={'red'}
-                />
+                <Text style={{fontWeight: "bold"}}>{question.question}</Text>
+                {question.remarks !== "" ?
+                <Text style={{fontStyle: "italic"}}>{question.remarks}</Text>
+                : 
+                null}
+                {!question.measurementonly ?
+                    (!question.textonly ? 
+                        <ButtonGroup
+                        selectedButtonStyle={{backgroundColor: this.state.colors[this.state.selectedIndex]}}
+                        buttonStyle={{padding: 10}}
+                        selectMultiple={question.allowmultiplechoices ? true : false}
+                        buttons={buttonArray}
+                        onPress={this.updateIndex}
+                        selectedIndex={selectedIndex}
+                        underlayColor={'red'}
+                        />
+                        :
+                        <TextInput 
+                        style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                        label="test"
+                        />)
+                    :null}
+                {question.showmeasurement 
+                || question.measurementonly
+                || question.questiontype === "Labour" ?
+                    <View style={{flex:2}}>
+                        {question.measurementlabel !== "" ?
+                            <Text>{question.measurementlabel}</Text>
+                            :
+                            <Text>Measurement</Text>}
 
+                        <View style={{flex: 2, flexDirection: 'row'}}>
+                            <TextInput 
+                            style={{ width: 200,height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                            label="Details:"
+                            />
+                            <Text style={{marginTop: 10, marginLeft: 4}}>{question.measurementunit}</Text>
+                        </View>
+                    </View>
+                    :null}
                 <View style={{flex: 2, flexDirection: "row"}}>
                 </View>
                 <View style={{flex:2}}>
