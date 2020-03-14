@@ -1,23 +1,17 @@
-import React, {Component} from 'react';
-import {Platform} from 'react-native';
-import {StyleSheet, Text, View} from 'react-native';
-import {createSwitchNavigator, createAppContainer} from 'react-navigation';
+import React, { Component } from 'react';
+import { Platform } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 // import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
+import { createStackNavigator } from 'react-navigation-stack';
 
 import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
 import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
-import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
-import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
-import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
-import SpacesModal from '../screens/Operations/SpacesModal.js';
-
-import dbScreen from '../screens/dbScreen/dbScreen'
 
 const AuthStack = createStackNavigator(
   {
@@ -31,7 +25,7 @@ const AuthStack = createStackNavigator(
       headerStyle: {
         backgroundColor: '#436FA1',
       },
-      cardStyle: {backgroundColor: '#324679'},
+      cardStyle: { backgroundColor: '#324679' },
       headerTintColor: 'white'
     }
   }
@@ -39,10 +33,11 @@ const AuthStack = createStackNavigator(
 );
 
 // add a new screen here
+
 const HomeStack = createStackNavigator(
-  
+
   {
-    
+
     Home: {
       screen: HomeScreen
     },
@@ -56,42 +51,22 @@ const HomeStack = createStackNavigator(
     BuildingDetails: {
       screen: BuildingDetailsScreen
     },
-    SelectLocation: {
-      screen: SelectLocationScreen
-    },
-    SelectAsset: {
-      screen: SelectAssetScreen
-    },
-    SpacesModal: {
-      screen: SpacesModal
-    },
-    // Add Operation screens above
-    //
-    // Isolated Checklist Screens below
-    Assets: {
-        screen: AssetScreen
-    },
-    dbScreen: {
-      screen: dbScreen
-  },
-
     ExploreBuilding: {
       screen: ExploreBuildingScreen
-
     }
-    // Add Isolated Checklist screens above
   },
-  
+
   {
     initialRouteName: 'Home',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: '#436FA1',
       },
-      cardStyle: {backgroundColor: '#324679'},
+      cardStyle: { backgroundColor: '#324679' },
       headerTintColor: 'white'
     }
   },
+  
 
 );
 

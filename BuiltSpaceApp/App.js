@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -20,16 +20,17 @@ import {
 import Navigator from './src/Navigator/Navigator.js';
 import SafeAreaView from 'react-native-safe-area-view';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import ContextInfoProvider from './src/ContextInfoProvider'
 
 class App extends Component {
   render() {
     return (
       <SafeAreaProvider>
-        <Navigator />
-        {/* <RealmDb /> */}
+        <ContextInfoProvider>
+            <Navigator />
+        </ContextInfoProvider>
       </SafeAreaProvider>
     );
-    // <BottomTabNavigator />;
   }
 }
 export default App;
@@ -42,5 +43,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
 });
