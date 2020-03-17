@@ -31,8 +31,7 @@ export class ExploreBuildingScreen extends Component {
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
-        this.updateInspectionResults = this.updateInspectionResults.bind(this)
-        this.updateMeasurement = this.updateMeasurement.bind(this)
+        this.updateQuestion = this.updateQuestion.bind(this)
       }
 
     spacesFilter = (space) => {
@@ -61,28 +60,25 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
-    updateInspectionResults = (index, result) => {
-      // updates the question with the selected button in a question.
-      // let setQuestions = [... this.state.setQuestions]
-      let question = this.state.setQuestions.slice(index); // copy's the question 
-      question[0]["InspectionResults"] = result;
-      // setQuestions[index] = question
-      // this.setState({setQuestions})
-      console.log(this.state.setQuestions[index])
-    }
-
-    updateMeasurement = (index, value, type, measurement_val = null) => {
+    updateQuestion = (index, value, type, measurement_val = null) => {
       // updates the question text input based on the type passed into the argument.
       let question = this.state.setQuestions.slice(index); // copy's the question 
 
       if (type == "measurement"){
+        console.log("measurement")
         question[0][measurement_val] = value
       }
       if (type == "TaskDetails"){
+        console.log("TaskDetails")
         question[0][type] = value
       }
       if (type == "UnitCost"){
+        console.log("UnitCost")
         question[0][type] = value
+      }
+      if (type == "InspectionResults"){
+        console.log("InspectionResults")
+        question[0]["InspectionResults"] = value;
       }
     }
 
@@ -219,7 +215,7 @@ export class ExploreBuildingScreen extends Component {
               Task: '', // Because there is no data in your app , leave it empty
               ChecklistId: checklist.id,
               ChecklistTitle: checklistTitle,
-              EmailReport: '', // email report no implemented
+              EmailReport: '', // email report not implemented
               DeviceGeolocation: {
                 Longitude: '',
                 Latitude: '',
@@ -283,18 +279,28 @@ export class ExploreBuildingScreen extends Component {
         renderItem={({item, index}) => {
 
           if (item.questiontype === '') {
-            return <GeneralType question={{item}}/>
+            return <GeneralType question={{
+              item,
+              index, 
+              updateInspection: this.updateInspectionResults,
+              updateQuestion: this.updateQuestion
+            }}/>
           }
     
           if (item.questiontype === 'Labour') {
-            return <LabourType question={{item}}/>
+            return <LabourType question={{
+              item,
+              index, 
+              updateInspection: this.updateInspectionResults,
+              updateQuestion: this.updateQuestion
+            }}/>
           }
     
           if (item.questiontype === 'Materials') {
           return <MaterialsType question={{item, 
             index, 
             updateInspection: this.updateInspectionResults,
-            updateMeasurement: this.updateMeasurement
+            updateQuestion: this.updateQuestion
           }}/>
           }
         }
