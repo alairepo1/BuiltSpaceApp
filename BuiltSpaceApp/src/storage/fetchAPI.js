@@ -209,15 +209,18 @@ export const get_building_data = async(org_info, building, key) => {
     lastLoaded: building.lastLoaded,
     lastUpdated: building.lastUpdated,
     assets: [],
-    spaces: []
+    spaces: [],
+    // qrcodes: []
   }
   
   var assetGroupList = await org_info.assetGroup;
   var allAssetId = await assetGroupList.filter(asset => asset.name == 'All Assets');
   var assets = await get_assets(org_name, allAssetId[0], building, header);
   var spaces = await get_spaces(org_name, building, header);
+  // var qrcodes = await get_qrcode(org_name, building, header)
   building_info.assets = await assets;
   building_info.spaces = await spaces;
+  // building_info.qrcodes = await qrcodes
   building_info['lastLoaded'] = currentDate;
   return building_info;
 };
@@ -266,3 +269,18 @@ get_spaces = async (org_name, buildingInfo, header) => {
     .catch(e => console.log(e));
   return spaces;
 };
+
+// get_qrcode = async (org_name, buildinginfo, header) => {
+//   // takes organization name, building info as arguments
+//   // gets the list of qr codes that belong to the building
+//   var buildingid = buildinginfo.id
+//   var qrcodemapping = [];
+//   await fetch(
+//     `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/v2/`qrcode`?buildingId=${Buildingid}`,
+//     header
+//   )
+//   .then(rsponse => response.json())
+//   .then(result => {
+//     qrcodemapping = result
+//   }).catch(e => console.log('get_qrcode error:', e))
+// }

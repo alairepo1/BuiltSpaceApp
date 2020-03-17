@@ -31,9 +31,10 @@ export class MaterialsType extends Component {
         }
         
     }
-    
+
     updateIndex(selectedIndex) {
         this.setState({selectedIndex})
+        this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
     }
 
     render() {
@@ -71,14 +72,20 @@ export class MaterialsType extends Component {
                 || question.measurementonly
                 || question.questiontype === "Labour" ?
                 <View style={{flex:2}}>
+
                 {question.measurementlabel !== "" ?
                         <Text>{question.measurementlabel}</Text>
                         :
                         <Text>Measurement</Text>}
                         <TextInput 
-                            style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                            // value={} // use a value from the parent.
-                            />
+                        style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
+                        onChangeText={text => this.props.question.updateQuestion(
+                            this.props.question.index, // index of the question
+                            text, // text input
+                            "measurement", // type 
+                            this.props.question.item.measurementlabel // measurement label
+                            )}
+                        />
                 </View>
                 :
                 null}
@@ -86,8 +93,11 @@ export class MaterialsType extends Component {
                     <Text style={{leftmargin: 5}}>Unit Cost</Text>
                     <TextInput 
                     style={{ flex:1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                    label="Unit Cost"
-                    // value={} // use a value from the parent.
+                    onChangeText={text => this.props.question.updateQuestion(
+                        this.props.question.index, // index of the question
+                        text, // text input
+                        "UnitCost", // type 
+                        )}
                     />
                 </View>
                 </View>
@@ -95,7 +105,11 @@ export class MaterialsType extends Component {
                     <Text>Details: </Text>
                     <TextInput 
                     style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
-                    label="Details:"
+                    onChangeText={text => this.props.question.updateQuestion(
+                        this.props.question.index, // index of the question
+                        text, // text input
+                        "TaskDetails", // type 
+                        )}
                     />
 
                 </View>
@@ -106,5 +120,14 @@ export class MaterialsType extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    button: {
+        width: '100%', 
+        height: '100%', 
+        padding: 2, 
+        borderWidth: 1, 
+    }
+})
 
 export default MaterialsType

@@ -45,13 +45,6 @@ export default class LoginForm extends Component {
                     }}>
                 <Text style = {styles.buttonText} > Login </Text>
             </TouchableOpacity>
-            <TouchableOpacity style = {styles.buttonContainer}
-                    onPress={() => {{
-                        console.log(this.context)
-                        }
-                    }}>
-                <Text style = {styles.buttonText} > log </Text>
-            </TouchableOpacity>
             </KeyboardAvoidingView>
         );
     }
