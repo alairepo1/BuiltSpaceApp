@@ -48,6 +48,7 @@ export class ExploreBuildingScreen extends Component {
             // console.log(this.state.filteredChecklist[0].questions)
 
       this.setState({
+        checklistSelected: false,
         selectedAssetId: asset.id,
         assetSelected: true
       })
@@ -81,6 +82,11 @@ export class ExploreBuildingScreen extends Component {
         question[0]["InspectionResults"] = value;
       }
     }
+
+    onChange = (newState, text) => { 
+      console.log(newState)
+      this.setState({ 
+        checklistSelected: newState})}
 
     componentDidMount = () => {
 
@@ -243,14 +249,17 @@ export class ExploreBuildingScreen extends Component {
     const noItemSelected = styles.TextContainer
     const yesItemSelected = styles.TextContainerSelected
     
-    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions}  ></ChecklistModal>
-    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} ></ChecklistModal>
+    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} ></ChecklistModal>
+    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange}></ChecklistModal>
 
     if (!this.state.dataLoaded) {
       return (
         <Text>Loading</Text>
       )
     } else if (this.state.dataLoaded){
+      const materialQ = this.state.setQuestions.filter(function(question)  {
+        return question.questiontype === "Materials"
+      })
     return (
       
       <ScrollView>
@@ -274,6 +283,7 @@ export class ExploreBuildingScreen extends Component {
       <View>
           <Text style={styles.questionsHeader}>Questions</Text>
       </View> : null }
+      {this.state.checklistSelected ?
       <FlatList style={styles.flatList}
         data={this.state.setQuestions}
         renderItem={({item, index}) => {
@@ -307,7 +317,8 @@ export class ExploreBuildingScreen extends Component {
         }
         keyExtractor={item => this.state.setQuestions.indexOf(item)}
         />
-
+         : null }
+         
         <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
         <View style={{flex:1, margin: 5}}> 
         <Button style={{flex:1, margin: 5}}

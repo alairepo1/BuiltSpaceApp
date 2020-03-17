@@ -5,120 +5,200 @@ import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatLis
 import  ChecklistIcon from 'react-native-vector-icons/Foundation'
 
 export class ChecklistModal extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			checklists: [],
-			checklistsFetched: false,
-			key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
-			modalVisible: false,
-			checklistIsSelected: false,
-			checklistSelection: "",
+    constructor(props) {
+        super(props);
+        this.state = {
+            checklists: [],
+            checklistsFetched: false,
+            key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+            modalVisible: false,
+            checklistIsSelected: false,
+            checklistSelection: ""
+            
+        }
+    this.setModalVisible = this.setModalVisible.bind(this)
+    }
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
+    componentWillReceiveProps() {
+      this.setState({
+        checklistIsSelected: this.props.checklistSelected
+      })
+    }
+    render() {
+        const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
+        const selected = <Text style={styles.detailsTextSelected}>{this.state.checklistSelection}</Text>
+        return(
+            <View style={{marginTop: 22}}>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {
+                this.setModalVisible(!this.state.modalVisible)
+              }}>
+              <View style={{marginTop: 22}}>
+                  <Text style={styles.headingTextBold}>Checklists</Text>
+                <FlatList
+                data={this.props.checklists}
+                renderItem = {({item}) =>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.loadQuestions(item.questions)
+                      this.setModalVisible(!this.state.modalVisible)
+                      this.setState({
+                          checklistIsSelected: true,
+                          checklistSelection: item.title
+                      })
+                      console.log("on the modal", this.state.checklistIsSelected)
+                      if (this.state.checklistIsSelected) {
+                        this.props.onChecklistChange(this.state.checklistIsSelected, item.title)
+                      }
+                      console.log(this.state.checklistSelection)
+                    }}>
+                    <View>
+                  <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
+                    </View>
+                  </TouchableOpacity>
+                }
+                keyExtractor={item => item.id}
+                ></FlatList>
+                <TouchableOpacity
+                onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}>
+                    <Text>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </Modal>
+    
+            <TouchableOpacity
+              onPress={() => {
+                this.setModalVisible(true);
+              }}>
+            <View>
+              <Text style={styles.headingTextBold}> Checklist</Text>
+              {this.state.checklistIsSelected ? selected : noneSelected}
+            </View>
+            </TouchableOpacity>
+          </View>
+        )
+    }
+// 	constructor(props) {
+// 		super(props);
+// 		this.state = {
+// 			checklists: [],
+// 			checklistsFetched: false,
+// 			key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
+// 			modalVisible: false,
+// 			checklistIsSelected: false,
+// 			checklistSelection: "",
 
-		}
-		this.setModalVisible = this.setModalVisible.bind(this)
-		this.arrayholder = [];
-	}
-	setModalVisible(visible) {
-		this.setState({ modalVisible: visible });
-  }
+// 		}
+// 		this.setModalVisible = this.setModalVisible.bind(this)
+// 		this.arrayholder = [];
+// 	}
+// 	setModalVisible(visible) {
+// 		this.setState({ modalVisible: visible });
+//   }
 
-  searchFilterFunction = text => {
-		this.setState({
-			value: text,
-		});
-		const newData = this.arrayholder.filter(item => {
-			const itemData = `${this.floor.toUpperCase()}`;
-			const textData = text.toUpperCase();
+//   searchFilterFunction = text => {
+// 		this.setState({
+// 			value: text,
+// 		});
+// 		const newData = this.arrayholder.filter(item => {
+// 			const itemData = `${this.floor.toUpperCase()}`;
+// 			const textData = text.toUpperCase();
 
-			return itemData.indexOf(textData) > -1;
-		});
-		this.setState({
-			checklists: newData,
-		});
+// 			return itemData.indexOf(textData) > -1;
+// 		});
+// 		this.setState({
+// 			checklists: newData,
+// 		});
 
-  };
+//   };
   
-	renderHeader = () => {
-		return (
-			<SearchBar
-				placeholder="Search"
-				lightTheme
-				round
-				onChangeText={text => this.searchFilterFunction(text)}
-				autoCorrect={false}
-				value={this.state.value}
-			/>
-		);
-	};
+// 	renderHeader = () => {
+// 		return (
+// 			<SearchBar
+// 				placeholder="Search"
+// 				lightTheme
+// 				round
+// 				onChangeText={text => this.searchFilterFunction(text)}
+// 				autoCorrect={false}
+// 				value={this.state.value}
+// 			/>
+// 		);
+// 	};
 
-	render() {
+// 	render() {
 
-		const selected = <View style={styles.textContainerSelected}>
-			<View>
-				<Text style={styles.optionText}> Checklist</Text>
-				<Text style={styles.detailsTextSelected}>{this.state.checklistSelection} </Text>
-			</View>
-		</View>
+// 		const selected = <View style={styles.textContainerSelected}>
+// 			<View>
+// 				<Text style={styles.optionText}> Checklist</Text>
+// 				<Text style={styles.detailsTextSelected}>{this.state.checklistSelection} </Text>
+// 			</View>
+// 		</View>
 
-		const noneSelected = <View style={styles.textContainer}>
-			<View>
-				<Text style={styles.optionText}> Checklist</Text>
-				<Text style={styles.detailsText}>None Selected </Text>
-			</View>
-		</View>
+// 		const noneSelected = <View style={styles.textContainer}>
+// 			<View>
+// 				<Text style={styles.optionText}> Checklist</Text>
+// 				<Text style={styles.detailsText}>None Selected </Text>
+// 			</View>
+// 		</View>
 
-		return (
-			<View style={{ marginTop: 22 }}>
-				<Modal
-					animationType="slide"
-					transparent={false}
-					visible={this.state.modalVisible}
-					onRequestClose={() => {
-						this.setModalVisible(!this.state.modalVisible)
-					}}>
-					<View style={{ marginTop: 22 }}>
-						<FlatList
-							data={this.props.checklists}
-							renderItem={({ item }) =>
-								<TouchableOpacity
-									onPress={() => {
-										this.props.loadQuestions(item.questions)
-										this.setModalVisible(!this.state.modalVisible)
-										this.setState({
-											checklistIsSelected: true,
-											checklistSelection: item.title
-										})
-										console.log(this.state.checklistSelection)
-									}}>
-									<View>
-										<Text style={{ fontWeight: 'bold', fontSize: 22 }}>{item.title}</Text>
-									</View>
-								</TouchableOpacity>
-							}
-							keyExtractor={item => item.id}
-							ListHeaderComponent={this.renderHeader}
-						></FlatList>
-						<TouchableOpacity
-							onPress={() => {
-								this.setModalVisible(!this.state.modalVisible);
-							}}>
-							<Text>Close</Text>
-						</TouchableOpacity>
-					</View>
-				</Modal>
+// 		return (
+// 			<View style={{ marginTop: 22 }}>
+// 				<Modal
+// 					animationType="slide"
+// 					transparent={false}
+// 					visible={this.state.modalVisible}
+// 					onRequestClose={() => {
+// 						this.setModalVisible(!this.state.modalVisible)
+// 					}}>
+// 					<View style={{ marginTop: 22 }}>
+// 						<FlatList
+// 							data={this.props.checklists}
+// 							renderItem={({ item }) =>
+// 								<TouchableOpacity
+// 									onPress={() => {
+// 										this.props.loadQuestions(item.questions)
+// 										this.setModalVisible(!this.state.modalVisible)
+// 										this.setState({
+// 											checklistIsSelected: true,
+// 											checklistSelection: item.title
+// 										})
+// 										console.log(this.state.checklistSelection)
+// 									}}>
+// 									<View>
+// 										<Text style={{ fontWeight: 'bold', fontSize: 22 }}>{item.title}</Text>
+// 									</View>
+// 								</TouchableOpacity>
+// 							}
+// 							keyExtractor={item => item.id}
+// 							ListHeaderComponent={this.renderHeader}
+// 						></FlatList>
+// 						<TouchableOpacity
+// 							onPress={() => {
+// 								this.setModalVisible(!this.state.modalVisible);
+// 							}}>
+// 							<Text>Close</Text>
+// 						</TouchableOpacity>
+// 					</View>
+// 				</Modal>
 
-				<TouchableOpacity
-					onPress={() => {
-						this.setModalVisible(true);
-					}}>
+// 				<TouchableOpacity
+// 					onPress={() => {
+// 						this.setModalVisible(true);
+// 					}}>
 
-					{this.state.checklistIsSelected ? selected : noneSelected}
+// 					{this.state.checklistIsSelected ? selected : noneSelected}
 
-				</TouchableOpacity>
-			</View>
-		)
-	}
+// 				</TouchableOpacity>
+// 			</View>
+// 		)
+// 	}
 }
 
 const styles = StyleSheet.create({

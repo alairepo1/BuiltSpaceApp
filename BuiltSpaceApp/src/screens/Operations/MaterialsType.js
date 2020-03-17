@@ -40,31 +40,55 @@ export class MaterialsType extends Component {
     render() {
         const buttonArray = this.buttonComponents()
         const { selectedIndex } = this.state
+        const question = this.props.question.item
         return (
             <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
-                <Text style={{fontWeight: "bold"}}>{this.props.question.item.question}</Text>
-                <ButtonGroup
-                selectMultiple={this.props.question.item.selectMultiple ? true : false}
-                buttons={buttonArray}
-                onPress={this.updateIndex}
-                selectedIndex={selectedIndex}
-                selectedButtonStyle={{backgroundColor: this.state.colors[this.state.selectedIndex]}}
-                />
+                <Text style={{fontWeight: "bold"}}>{question.question}</Text>
+                {question.remarks !== "" ?
+                <Text style={{fontStyle: "italic"}}>{question.remarks}</Text>
+                : 
+                null}
+                {!question.measurementonly ?
+                    (!question.textonly ? 
+                        <ButtonGroup
+                        selectedButtonStyle={{backgroundColor: this.state.colors[this.state.selectedIndex]}}
+                        buttonStyle={{padding: 10}}
+                        selectMultiple={question.allowmultiplechoices ? true : false}
+                        buttons={buttonArray}
+                        onPress={this.updateIndex}
+                        selectedIndex={selectedIndex}
+                        underlayColor={'red'}
+                        />
+                        :
+                        <TextInput 
+                        style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                        label="test"
+                        />)
+                    :
+                    null}
 
                 <View style={{flex: 2, flexDirection: "row"}}>
+                {question.showmeasurement 
+                || question.measurementonly
+                || question.questiontype === "Labour" ?
                 <View style={{flex:2}}>
-                    <Text style={{leftmargin: 5}}>{this.props.question.item.measurementlabel}</Text>
-                    <TextInput 
-                    style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                    onChangeText={text => this.props.question.updateQuestion(
-                        this.props.question.index, // index of the question
-                        text, // text input
-                        "measurement", // type 
-                        this.props.question.item.measurementlabel // measurement label
-                        )}
-                    />
-                </View>
 
+                {question.measurementlabel !== "" ?
+                        <Text>{question.measurementlabel}</Text>
+                        :
+                        <Text>Measurement</Text>}
+                        <TextInput 
+                        style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
+                        onChangeText={text => this.props.question.updateQuestion(
+                            this.props.question.index, // index of the question
+                            text, // text input
+                            "measurement", // type 
+                            this.props.question.item.measurementlabel // measurement label
+                            )}
+                        />
+                </View>
+                :
+                null}
                 <View style={{flex:2}}>
                     <Text style={{leftmargin: 5}}>Unit Cost</Text>
                     <TextInput 
