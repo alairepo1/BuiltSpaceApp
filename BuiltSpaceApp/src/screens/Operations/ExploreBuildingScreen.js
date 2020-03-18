@@ -11,6 +11,7 @@ import LabourType from './LabourType.js'
 import GeneralType from './GeneralType.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
+import {getStartTime} from '../../functions/functions.js'
 
 export class ExploreBuildingScreen extends Component { 
   static contextType = ContextInfo
@@ -48,10 +49,7 @@ export class ExploreBuildingScreen extends Component {
     assetsFilter = (asset) => {
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === asset.assetCategory || item.assetCategory === "")
       this.setState({
-        checklistSelected: false,
         selectedAssetId: asset.id,
-        assetSelected: true,
-        setQuestions: []
       })
     }
 
@@ -92,7 +90,8 @@ export class ExploreBuildingScreen extends Component {
       if (type == 'checklist'){
         this.setState({ 
           checklistSelected: newState,
-          checklistTitle: text
+          checklistTitle: text,
+          StartTime: getStartTime()
         })
       }
 
@@ -100,6 +99,9 @@ export class ExploreBuildingScreen extends Component {
         this.setState({
           assetSelected: newState,
           assetTitle: text,
+          checklistSelected: false,
+          StartTime: '',
+          setQuestions: []
         })
       }
 
@@ -317,7 +319,7 @@ export class ExploreBuildingScreen extends Component {
 
     <View>
       {/* <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}> */}
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onChangeSpace={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
+            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
       {/* </View> */}
       {/* <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}> */}
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}

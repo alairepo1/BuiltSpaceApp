@@ -56,7 +56,7 @@ export class SpacesModal extends Component {
           value={this.state.value}
         />
         <TouchableOpacity  style={styles.assetListItems} onPress={() => {
-          this.props.onSpaceChange(false, '', 'asset')
+          this.props.onSpaceChange(false, '', 'space')
           this.setModalVisible(!this.state.modalVisible)
           }}>
           <Text style={styles.listText}>Select None</Text>
@@ -105,7 +105,7 @@ export class SpacesModal extends Component {
                   onPress={() => {
                     this.props.spacesFilter(item.floor)
                     this.setModalVisible(!this.state.modalVisible)
-                    this.props.onChangeSpace('true', item.floor, 'space')
+                    this.props.onSpaceChange('true', item.floor, 'space')
                   }}>
                   <View style={styles.assetListItems}>
                     <View style={styles.listIconContainer}>
