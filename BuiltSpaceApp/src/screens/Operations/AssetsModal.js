@@ -50,8 +50,7 @@ export class AssetsModal extends Component {
         <TouchableOpacity  style={styles.assetListItems} onPress={() => {
           this.props.onAssetChange(false, '', 'asset')
           this.setModalVisible(!this.state.modalVisible)
-
-      }}>
+          }}>
           <Text style={styles.listText}>Select None</Text>
         </TouchableOpacity>
       </View>
@@ -132,10 +131,6 @@ export class AssetsModal extends Component {
                     this.props.assetsFilter(item)
                     this.props.onAssetChange(true, item.name, 'asset')
                     this.setModalVisible(!this.state.modalVisible)
-                    // this.setState({
-                    //   isSelected: true,
-                    //   selection: item.name,
-                    // })
                   }}>
                   <View style={styles.assetListItems}>
                     <View style={styles.listIconContainer}>
