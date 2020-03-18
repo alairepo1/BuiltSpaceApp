@@ -46,14 +46,22 @@ export class SpacesModal extends Component {
 
   renderHeader = () => {
     return (
-      <SearchBar
-        placeholder="Search"
-        lightTheme
-        round
-        onChangeText={text => this.searchFilterFunction(text)}
-        autoCorrect={false}
-        value={this.state.value}
-      />
+      <View>
+        <SearchBar
+          placeholder="Search"
+          lightTheme
+          round
+          onChangeText={text => this.searchFilterFunction(text)}
+          autoCorrect={false}
+          value={this.state.value}
+        />
+        <TouchableOpacity  style={styles.assetListItems} onPress={() => {
+          this.props.onSpaceChange(false, '', 'asset')
+          this.setModalVisible(!this.state.modalVisible)
+          }}>
+          <Text style={styles.listText}>Select None</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -63,7 +71,7 @@ export class SpacesModal extends Component {
     const selected = <View style={styles.textContainerSelected}>
       <View>
         <Text style={styles.optionText}> Space</Text>
-        <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
+        <Text style={styles.detailsTextSelected}>{this.props.spaceName} </Text>
       </View>
     </View>
 
@@ -97,11 +105,7 @@ export class SpacesModal extends Component {
                   onPress={() => {
                     this.props.spacesFilter(item.floor)
                     this.setModalVisible(!this.state.modalVisible)
-                    this.setState({
-                      isSelected: true,
-                      selection: item.floor
-
-                    })
+                    this.props.onChangeSpace('true', item.floor, 'space')
                   }}>
                   <View style={styles.assetListItems}>
                     <View style={styles.listIconContainer}>
@@ -123,79 +127,10 @@ export class SpacesModal extends Component {
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({
-                    isSelected: false
-                  })
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
               </TouchableOpacity>
-{/* //     render() {
-//         const {navigation} = this.props;
-//         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-//         const selected = <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
-
-//         return(
-//             <View style={{marginTop: 22}}>
-
-//             <Modal
-//               animationType="slide"
-//               transparent={false}
-//               visible={this.state.modalVisible}
-//               onRequestClose={() => {
-//                 this.setModalVisible(!this.state.modalVisible)
-//               }}>
-
-//               <View style={styles.listContainer}>
-//                 <View style={styles.titleTop}>
-//                   <Text style={styles.headingTextBold}>Select a Space</Text>
-//                 </View>
-
-//                 <FlatList style={{marginTop:30}}
-//                 data={this.props.spaces}
-//                 renderItem = {({item}) =>
-//                   <TouchableOpacity
-//                     onPress={() => {
-//                     this.props.spacesFilter(item)
-//                       this.setModalVisible(!this.state.modalVisible)
-//                       this.setState({
-//                           isSelected: true,
-//                           selection: item.floor
-
-//                       })
-//                     }}>
-//                     <View style={styles.assetListItems}>
-//                       <View style={{flex:1}}>
-//                         <Text style={styles.listText}>{item.floor}</Text>
-//                       </View>
-
-//                       <View style={{flex:1}}>
-//                         <Icon style={styles.listIcon}name="angle-right" size={30} color="black" />
-//                       </View>
-//                     </View>
-//                   </TouchableOpacity>
-//                 }
-//                 keyExtractor={item => item.id}
-//                 ></FlatList>
-//                 <View style={styles.bottomContainer}>
-//                   <TouchableOpacity
-//                   onPress={() => {
-
-//                       this.setModalVisible(!this.state.modalVisible);
-//                     }}>
-//                       <Text style={styles.closeButton}>Close</Text>
-//                   </TouchableOpacity>
-//                 </View>
-//               </View>
-//             </Modal>
-    
-//             <TouchableOpacity
-//               onPress={() => {
-//                 this.setModalVisible(true);
-//               }}>
-//             <View>
-//               <Text style={styles.optionText}> Space</Text>
-//               {this.state.isSelected ? selected : noneSelected} */}
             </View>
           </View>
         </Modal>
@@ -204,7 +139,7 @@ export class SpacesModal extends Component {
           onPress={() => {
             this.setModalVisible(true);
           }}>
-          {this.state.isSelected ? selected : noneSelected}
+          {this.props.spaceSelected ? selected : noneSelected}
         </TouchableOpacity>
       </View>
     )

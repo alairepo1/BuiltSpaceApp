@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {ContextInfo} from '../../ContextInfoProvider';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
 import AssetsModal from './AssetsModal.js'
@@ -25,64 +25,89 @@ export class ExploreBuildingScreen extends Component {
           filteredChecklist: [],
           dataLoaded: false,
           spaceSelected: false,
+          spaceName: '',
           checklistSelected: false,
-          setQuestions: [],
+          checklistTitle: '',
+          assetSelected: false,
+          assetTitle: '',
+          setQuestions: [], // set of questions based on the selected checklist.
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
-        this.updateInspectionResults = this.updateInspectionResults.bind(this)
-        this.updateMeasurement = this.updateMeasurement.bind(this)
+        this.updateQuestion = this.updateQuestion.bind(this)
       }
 
     spacesFilter = (space) => {
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === space.spaceFloor)
-      // console.log(this.state.filteredAssets)
       this.setState({
         selectedSpaceId: space.id,
         spaceSelected: true
       })
     }
     assetsFilter = (asset) => {
-      // console.log(assetCategory)
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === asset.assetCategory || item.assetCategory === "")
-            // console.log(this.state.filteredChecklist[0].questions)
-
       this.setState({
+        checklistSelected: false,
         selectedAssetId: asset.id,
-        assetSelected: true
+        assetSelected: true,
+        setQuestions: []
       })
     }
 
-    loadQuestions = (questions) => {
+    loadQuestions = (questions, questionTitle) => {
       this.setState({
         setQuestions: Array.from(questions),
         checklistSelected: true
       })
     }
 
-    updateInspectionResults = (index, result) => {
-      // updates the question with the selected button in a question.
-      // let setQuestions = [... this.state.setQuestions]
-      let question = this.state.setQuestions.slice(index); // copy's the question 
-      question[0]["InspectionResults"] = result;
-      // setQuestions[index] = question
-      // this.setState({setQuestions})
-      console.log(this.state.setQuestions[index])
-    }
-
-    updateMeasurement = (index, value, type, measurement_val = null) => {
+    updateQuestion = (index, value, type, measurement_label = '', measurement_unit = '') => {
       // updates the question text input based on the type passed into the argument.
-      let question = this.state.setQuestions.slice(index); // copy's the question 
-
+      let question = this.state.setQuestions.slice(index, index + 1); // shallow copy the question from setQuestions
       if (type == "measurement"){
-        question[0][measurement_val] = value
+        console.log("measurement")
+        question[0][measurement_label] = value
+        question[0][measurement_unit] = measurement_unit
       }
       if (type == "TaskDetails"){
+        console.log("TaskDetails")
         question[0][type] = value
       }
       if (type == "UnitCost"){
+        console.log("UnitCost")
         question[0][type] = value
+      }
+      if (type == "InspectionResults"){
+        console.log("InspectionResults")
+        question[0]["InspectionResults"] = value;
+      }
+      if (type == "TextOnly"){
+        console.log("TextOnly")
+        question[0]["TextOnlyForm"] = value;
+      }
+    }
+
+    onChange = (newState, text, type) => {
+      if (type == 'checklist'){
+        this.setState({ 
+          checklistSelected: newState,
+          checklistTitle: text
+        })
+      }
+
+      if (type == 'asset') {
+        this.setState({
+          assetSelected: newState,
+          assetTitle: text,
+        })
+      }
+
+      if (type == 'space'){
+        this.setState({
+          spaceSelected: newState,
+          spaceName: text
+        })
       }
     }
 
@@ -168,14 +193,11 @@ export class ExploreBuildingScreen extends Component {
       var checklistTitle = ''
       var orgData =  this.props.navigation.state.params.orgData
 
-      if (checklist.name == null){
-        checklistTitle = 'General Inspection'
-      }
+
       //inspection for a space
       // _filename = isoDateString + "-" + buildingname + "-" + assetProperty.spacename;
       //inspection for an asset
       var _filename =  datetimeString + "-" + building.name.split(' ').join('-') + "-" + asset.name;
-
       var checklistObject = {
         Id: datetimeString,
         Name: _filename,
@@ -191,19 +213,19 @@ export class ExploreBuildingScreen extends Component {
               FileName: _filename,
               Address: building.address,
               GeneralComments: 'generalComments',
-              flagedit: 'fl_edit',
+              flagedit: 'fl_edit', // flagedit not implemented
               Assetname: asset.name,
               Category: asset.categoryabbr,
               SpaceId: 'space.id', // if space is selected, space.id
               SpaceName: 'space.floor', //if space is selected, space.name
               Floor: 'space.floor', // if space is selected, space.floor
               SpaceUsage: 'assetProperty.spaceusage', //if space selected, space.usage
-              Description: asset.escription,
+              Description: asset.description,
               Make: asset.make,
               Model: asset.model,
               Serial: asset.serial,
               Building: asset.buildingId,
-              WorkOrderNumber: '_WorkOrderNumber',
+              WorkOrderNumber: '_WorkOrderNumber', // WorOrderNumber not implemented
               ChecklistCategory: '_ChecklistCategory',
               QRcodeURL: 'qrcodeMapping',
               AssetLocations: {
@@ -217,10 +239,10 @@ export class ExploreBuildingScreen extends Component {
               },
               ParentTaskId: '', // Because there is no data in your app , leave it empty
               Task: '', // Because there is no data in your app , leave it empty
-              ChecklistId: checklist.id,
+              ChecklistId: '', //checklist.id
               ChecklistTitle: checklistTitle,
-              EmailReport: '', // email report no implemented
-              DeviceGeolocation: {
+              EmailReport: '', // email report not implemented
+              DeviceGeolocation: { // Geolocation not implemented 
                 Longitude: '',
                 Latitude: '',
                 Altitude: '',
@@ -237,24 +259,54 @@ export class ExploreBuildingScreen extends Component {
         orgId: orgData.id,
         AssetId: asset.id,
       };
+      this.state.setQuestions.forEach(question => {
+        var formatQuestion = {
+            QuestionId: question.id,
+            QuestionNumber: question.number,
+            TaskTitle: question.question,  
+            TaskDetails: question.TaskDetails || "",
+            QuestionFormat: question.format,
+            Photos: 'photos', // an array of photo
+            InspectionResult: question.InspectionResults || "",
+            MeasurementLabel: question.Measurementlabel || "",
+            Measurement: question.measurement || "",
+            MeasurementUnit: question.Measurementunit || "",
+            Tool: '',
+            Supplier:'',
+            UnitCost: question.UnitCost || "",
+            QuestionType: question.questiontype || "",
+            SalesTax: question.salexaxformat || "",
+            Markup: '',
+            AllowMultiple: question.allowmultiplechoices,
+            Choices: '',
+            TextOnly: question.TextOnlyForm || ""
+          }
+          console.log(formatQuestion)
+        // checklistObject.Content.checklist.MyFields.Questions.Question.push()
+      })
+      // console.log(JSON.stringify(checklistObject,null,1))
+
   }
 
   render() {
     
-    const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter = {this.assetsFilter}/>
-    const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter}/>
+    const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
+    const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
     
     const noItemSelected = styles.TextContainer
     const yesItemSelected = styles.TextContainerSelected
     
-    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions}  ></ChecklistModal>
-    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} ></ChecklistModal>
+    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle} ></ChecklistModal>
+    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle}></ChecklistModal>
 
     if (!this.state.dataLoaded) {
       return (
         <Text>Loading</Text>
       )
     } else if (this.state.dataLoaded){
+      const materialQ = this.state.setQuestions.filter(function(question)  {
+        return question.questiontype === "Materials"
+      })
     return (
       
       <ScrollView>
@@ -265,7 +317,7 @@ export class ExploreBuildingScreen extends Component {
 
     <View>
       {/* <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}> */}
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter}/>
+            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onChangeSpace={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
       {/* </View> */}
       {/* <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}> */}
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
@@ -278,30 +330,66 @@ export class ExploreBuildingScreen extends Component {
       <View>
           <Text style={styles.questionsHeader}>Questions</Text>
       </View> : null }
-      <FlatList style={styles.flatList}
-        data={this.state.setQuestions}
-        renderItem={({item, index}) => {
-
-          if (item.questiontype === '') {
-            return <GeneralType question={{item}}/>
+      {this.state.checklistSelected ?
+      <View>
+        <FlatList style={styles.flatList}
+          data={this.state.setQuestions}
+          renderItem={({item, index}) => {
+  
+            if (item.questiontype === '') {
+              return <GeneralType question={{
+                item,
+                index, 
+                updateInspection: this.updateInspectionResults,
+                updateQuestion: this.updateQuestion
+              }}/>
+            }
+      
+            if (item.questiontype === 'Labour') {
+              return <LabourType question={{
+                item,
+                index, 
+                updateInspection: this.updateInspectionResults,
+                updateQuestion: this.updateQuestion
+              }}/>
+            }
+      
+            if (item.questiontype === 'Materials') {
+            return <MaterialsType question={{item, 
+              index, 
+              updateInspection: this.updateInspectionResults,
+              updateQuestion: this.updateQuestion
+            }}/>
+            }
           }
-    
-          if (item.questiontype === 'Labour') {
-            return <LabourType question={{item}}/>
           }
-    
-          if (item.questiontype === 'Materials') {
-          return <MaterialsType question={{item, 
-            index, 
-            updateInspection: this.updateInspectionResults,
-            updateMeasurement: this.updateMeasurement
-          }}/>
-          }
-        }
-        }
-        keyExtractor={item => this.state.setQuestions.indexOf(item)}
-        />
-
+          keyExtractor={item => this.state.setQuestions.indexOf(item)}
+          />
+         <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
+           <View style={{flex: 1}}>
+             <View style={{flex: 3, flexDirection: 'row'}}>
+               <View style={{flex: 1}}>
+                 <Text>Add labour</Text>
+               </View>
+               <View style={{flex: 1}}>
+                <Text>Add materials</Text>
+               </View>
+               <View style={{flex: 1}}>
+                <Text>Add issue</Text>
+               </View>
+             </View>
+           </View>
+           <View style={{flex: 1}}>
+            <Text>Additional Comments</Text>
+            <TextInput 
+              style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'lightgrey'}}
+              multiline
+              numberOfLines={4}
+              textAlignVertical={"top"}
+              onChangeText={text => this.setState({GeneralComments: text})}
+            />
+           </View>
+         </View>
         <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
         <View style={{flex:1, margin: 5}}> 
         <Button style={{flex:1, margin: 5}}
@@ -323,6 +411,8 @@ export class ExploreBuildingScreen extends Component {
         />
         </View>
         </View>
+      </View>
+         : null }
         <TouchableOpacity >
                 <View style={styles.row}>
                   <Text style={styles.text}>qrcode</Text>
