@@ -57,13 +57,17 @@ export class MaterialsType extends Component {
                         buttons={buttonArray}
                         onPress={this.updateIndex}
                         selectedIndex={selectedIndex}
-                        underlayColor={'red'}
                         />
                         :
                         <TextInput 
                         style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
-                        label="test"
-                        />)
+                        onChangeText={text => this.props.question.updateQuestion(
+                            this.props.question.index, // index of the question
+                            text, // text input
+                            "TextOnly", // type 
+                            )}
+                        />
+                        )
                     :
                     null}
 
@@ -83,7 +87,7 @@ export class MaterialsType extends Component {
                             this.props.question.index, // index of the question
                             text, // text input
                             "measurement", // type 
-                            this.props.question.item.measurementlabel // measurement label
+                            this.props.question.item.measurementlabel, // measurement label
                             )}
                         />
                 </View>

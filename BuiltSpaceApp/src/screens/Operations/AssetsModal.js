@@ -38,14 +38,23 @@ export class AssetsModal extends Component {
   };
   renderHeader = () => {
     return (
-      <SearchBar
-        placeholder="Search"
-        lightTheme
-        round
-        onChangeText={text => this.searchFilterFunction(text)}
-        autoCorrect={false}
-        value={this.state.value}
-      />
+      <View>
+        <SearchBar
+          placeholder="Search"
+          lightTheme
+          round
+          onChangeText={text => this.searchFilterFunction(text)}
+          autoCorrect={false}
+          value={this.state.value}
+        />
+        <TouchableOpacity  style={styles.assetListItems} onPress={() => {
+          this.props.onAssetChange(false, '', 'asset')
+          this.setModalVisible(!this.state.modalVisible)
+
+      }}>
+          <Text style={styles.listText}>Select None</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 //     render() {
@@ -90,7 +99,7 @@ export class AssetsModal extends Component {
     const selected = <View style={styles.textContainerSelected}>
       <View>
         <Text style={styles.optionText}> Assets</Text>
-        <Text style={styles.detailsTextSelected}>{this.state.selection} </Text>
+        <Text style={styles.detailsTextSelected}>{this.props.assetTitle} </Text>
       </View>
     </View>
 
@@ -115,18 +124,18 @@ export class AssetsModal extends Component {
             <View style={styles.titleTop}>
               <Text style={styles.headingTextBold}>Select an Asset</Text>
             </View>
-
             <FlatList style={{ marginTop: 20, marginBottom: 75 }}
               data={this.state.assets}
               renderItem={({ item }) =>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.assetsFilter(item.categoryabbr)
+                    this.props.assetsFilter(item)
+                    this.props.onAssetChange(true, item.name, 'asset')
                     this.setModalVisible(!this.state.modalVisible)
-                    this.setState({
-                      isSelected: true,
-                      selection: item.name,
-                    })
+                    // this.setState({
+                    //   isSelected: true,
+                    //   selection: item.name,
+                    // })
                   }}>
                   <View style={styles.assetListItems}>
                     <View style={styles.listIconContainer}>
@@ -149,9 +158,6 @@ export class AssetsModal extends Component {
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  this.setState({
-                    isSelected: false
-                  })
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
@@ -189,7 +195,7 @@ export class AssetsModal extends Component {
             this.setModalVisible(true);
           }}>
 
-          {this.state.isSelected ? selected : noneSelected}
+          {this.props.assetSelected ? selected : noneSelected}
 
         </TouchableOpacity>
       </View>

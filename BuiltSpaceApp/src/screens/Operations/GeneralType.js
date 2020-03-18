@@ -35,13 +35,13 @@ export class GeneralType extends Component {
     
     updateIndex(selectedIndex) {
         this.setState({selectedIndex})
+        this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
     }
 
     render() {
         const buttonArray = this.buttonComponents()
         const { selectedIndex } = this.state
         const question = this.props.question.item
-        console.log(this.props.question.item)
         return (
             <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
                 <Text style={{fontWeight: "bold"}}>{question.number}. {question.question}</Text>
@@ -77,8 +77,13 @@ export class GeneralType extends Component {
                         <Text>Measurement</Text>}
                         <View style={{flex: 2, flexDirection: 'row'}}>
                             <TextInput 
-                            style={{ width: 200,height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
-                            label="Details:"
+                            style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                            onChangeText={text => this.props.question.updateQuestion(
+                                this.props.question.index, // index of the question
+                                text, // text input
+                                "TextOnly", // type 
+                                this.props.question.measurementunit
+                                )}
                             />
                             <Text style={{marginTop: 10, marginLeft: 4}}>{question.measurementunit}</Text>
                         </View>
@@ -90,7 +95,11 @@ export class GeneralType extends Component {
                     <Text>Details: </Text>
                     <TextInput 
                     style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
-                    label="Details:"
+                    onChangeText={text => this.props.question.updateQuestion(
+                        this.props.question.index, // index of the question
+                        text, // text input
+                        "TaskDetails", // type 
+                        )}
                     />
 
                 </View>
