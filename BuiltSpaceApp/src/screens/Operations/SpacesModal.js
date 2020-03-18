@@ -103,7 +103,7 @@ export class SpacesModal extends Component {
               renderItem={({ item }) =>
                 <TouchableOpacity
                   onPress={() => {
-                    this.props.spacesFilter(item.floor)
+                    this.props.spacesFilter(item)
                     this.setModalVisible(!this.state.modalVisible)
                     this.props.onSpaceChange('true', item.floor, 'space')
                   }}>

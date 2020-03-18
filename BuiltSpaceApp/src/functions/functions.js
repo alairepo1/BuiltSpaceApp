@@ -6,4 +6,9 @@ function getStartTime() {
     return localDate.toISOString();
 }
 
-export {getStartTime}
+function calculateDurationInspection(starttime, endtime) {
+    var duration = ((Date.parse(endtime) - Date.parse(starttime)) / (1000 * 60)).toFixed(2);
+    return duration;
+}
+
+export {getStartTime, calculateDurationInspection}

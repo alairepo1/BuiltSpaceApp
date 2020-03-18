@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {ContextInfo} from '../../ContextInfoProvider';
@@ -16,6 +17,7 @@ import {
   checkDBExists,
   getAccountOrgs,
   updateAccount,
+  getInspections
 } from '../../storage/schema/dbSchema';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -28,6 +30,7 @@ export class HomePage extends Component {
       accountlastUpdated: '',
       organizations: [],
       isLoading: true,
+      inspectionsList: []
     };
   }
 
@@ -89,6 +92,11 @@ export class HomePage extends Component {
           })
         })
       }
+      getInspections(this.context.accountContext.account).then(inspectionsList => {
+        console.log(inspectionsList)
+        this.setState({inspectionsList})
+      })
+
     });
   };
 
@@ -136,6 +144,23 @@ export class HomePage extends Component {
                 }>
                 <Text style={styles.button_text}> Select organization</Text>
               </TouchableOpacity>
+              <View>
+              <Text>Saved inspections</Text>
+              {this.state.inspectionsList.length > 0 ? 
+              <FlatList style={{width: 5,backgroundColor: 'lightgrey'}}
+              data={this.state.inspectionsList}
+              renderItem={({item, index}) => {
+                <View>
+                  <Text>asefsaefsdf</Text>
+
+                </View>
+              }}
+              keyExtractor={item => this.state.inspectionsList.indexOf(item)}
+              />
+              :
+              <Text>No unsubmitted work</Text>
+              }
+              </View>
             <TouchableOpacity
                 style={styles.buttons}
                 onPress={() =>
