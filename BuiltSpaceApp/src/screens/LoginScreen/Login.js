@@ -4,6 +4,7 @@ import LoginForm from './LoginForm';
 
 export default class Login extends Component {
     render() {
+        const {navigate} = this.props.navigation;
         return ( 
             <View style = {styles.container}>
                 <View style = {styles.logoContainer}>
@@ -12,7 +13,7 @@ export default class Login extends Component {
                         source = {require('../../images/logo.png')}/> 
                 </View>
                 <View style = {styles.formContainer}>
-                <LoginForm / >
+                <LoginForm navigation={navigate} / >
                 </View>
             </View>
         );
@@ -21,7 +22,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF
+        backgroundColor: '#FFFFFF'
     },
     logoContainer: {
         alignItems: 'center',

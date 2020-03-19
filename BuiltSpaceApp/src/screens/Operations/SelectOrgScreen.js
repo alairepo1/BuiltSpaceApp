@@ -1,44 +1,88 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import StatusBar from '../../statusComponent.js';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export class SelectOrgScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       org_data: [],
+      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
   }
 
   componentDidMount = () => {
-    this.fetch();
+    this.setState({
+      org_data: this.props.navigation.state.params,
+    })
   };
 
-  fetch = () => {};
+  // renderItem({item}) {
+  //   return(
+  //     <ScrollView>
+  //     <View style={styles.row}>
+  //       <TouchableOpacity
+  //         onPress={() => this.props.navigation.navigate('SelectBuilding')}>
+  //       <Text style={styles.text}>{item.name}</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //     </ScrollView>
+      
+  //   )
+  // }
 
   render() {
+    const {org_data} = this.state;
+    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <Text>
-          When creating new screen, add the screen into
-          ../../Navigator/navigator.js HomeStack
-        </Text>
-        <Text>
-          Load Org data with a flat list, flat list will have a button to select
-          building and goto next screen.
-        </Text>
+        <StatusBar/>
+        <FlatList 
+        data={this.state.org_data}
+        renderItem={({item}) => 
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('SelectBuilding', {
+          orgName: item
+        })}>
+        <View style={styles.row}>
+          <Text style={styles.text}>{item.name}</Text>
+        </View>  
+        </TouchableOpacity>
+        }
+        keyExtractor={item => item.name}
+        />
       </View>
+      
+     
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+   flex: 1,
+   marginTop: 40,
+   marginLeft: 15,
+   marginRight: 15,
+   backgroundColor: '#324679'
   },
-});
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    padding: 16,
+    marginBottom: 3,
+    borderBottomColor: 'white',
+    borderBottomWidth: 2,
+  
+  },
+  text: {
+    flex: 1,
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 30
+  },
+  
+})
+
 
 export default SelectOrgScreen;

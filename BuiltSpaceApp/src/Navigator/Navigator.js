@@ -6,56 +6,95 @@ import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 
 import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
-import LoginScreen from '../screens/LoginScreen/LoginScreen.js';
 import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
 import SelectAssetScreen from '../screens/Operations/SelectAssetScreen.js';
 import SelectLocationScreen from '../screens/Operations/SelectLocationScreen.js';
+import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
+import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 import AssetScreen from '../screens/IsolatedChecklist/AssetScreen.js';
+import SpacesModal from '../screens/Operations/SpacesModal.js';
+
+import dbScreen from '../screens/dbScreen/dbScreen'
 
 const AuthStack = createStackNavigator(
-  // Login Screen
   {
     Login: {
-      screen: Login,
+      screen: Login
     },
   },
-  {initialRouteName: 'Login'},
+  {
+    initialRouteName: 'Login',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#436FA1',
+      },
+      cardStyle: {backgroundColor: '#324679'},
+      headerTintColor: 'white'
+    }
+  }
+
 );
 
 // add a new screen here
 const HomeStack = createStackNavigator(
+  
   {
+    
     Home: {
-      screen: HomeScreen,
+      screen: HomeScreen
     },
     // Operation Screens below
-    SelectOrg: {
+    Organization: {
       screen: SelectOrgScreen,
     },
     SelectBuilding: {
-      screen: SelectBuildingScreen,
+      screen: SelectBuildingScreen
+    },
+    BuildingDetails: {
+      screen: BuildingDetailsScreen
     },
     SelectLocation: {
-      screen: SelectLocationScreen,
+      screen: SelectLocationScreen
     },
     SelectAsset: {
-      screen: SelectAssetScreen,
+      screen: SelectAssetScreen
+    },
+    SpacesModal: {
+      screen: SpacesModal
     },
     // Add Operation screens above
     //
     // Isolated Checklist Screens below
     Assets: {
-      screen: AssetScreen,
+        screen: AssetScreen
     },
+    dbScreen: {
+      screen: dbScreen
+  },
+
+    ExploreBuilding: {
+      screen: ExploreBuildingScreen
+
+    }
     // Add Isolated Checklist screens above
   },
+  
   {
     initialRouteName: 'Home',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: '#436FA1',
+      },
+      cardStyle: {backgroundColor: '#324679'},
+      headerTintColor: 'white'
+    }
   },
+
 );
+
 
 // const SelectBuildingStack = createStackNavigator({
 //   SelectBuilding: {
