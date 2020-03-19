@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  FlatList,
+  FlatList, 
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {ContextInfo} from '../../ContextInfoProvider';
@@ -17,9 +17,11 @@ import {
   checkDBExists,
   getAccountOrgs,
   updateAccount,
-  getInspections
+  getInspections,
+  delInspections
 } from '../../storage/schema/dbSchema';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { CheckBox } from 'react-native-elements'
 
 export class HomePage extends Component {
   static contextType = ContextInfo
@@ -30,75 +32,90 @@ export class HomePage extends Component {
       accountlastUpdated: '',
       organizations: [],
       isLoading: true,
-      inspectionsList: []
+      inspectionsList: [],
+      checked: []
     };
   }
 
-  componentDidMount = async() => {
-    // fetch data from api/db or update db
+  componentDidMount = () => {
+    this.loadData()
+  };
 
-    var currentDate = new Date() // current datetime as object.
+  loadData = async() => {
+        // fetch data from api/db or update db
 
-    checkDBExists(); // check if database exists, if not creates one.
-    await checkAccountExists(this.context.accountContext.account).then(response => {
-      if (response){
-        getAccountOrgs(this.context.accountContext.account).then(result => {
-          if (result.lastUpdated !== undefined) {
+        var currentDate = new Date() // current datetime as object.
+
+        checkDBExists(); // check if database exists, if not creates one.
+        await checkAccountExists(this.context.accountContext.account).then(response => {
+          if (response){
+            getAccountOrgs(this.context.accountContext.account).then(result => {
+              if (result.lastUpdated !== undefined) {
+        
+                //get datetime of last updated organizations
+                //and add 1 hour to last updated time
+                var addHour = result.lastUpdated
+                addHour.setHours(addHour.getHours() + 1 )
     
-            //get datetime of last updated organizations
-            //and add 1 hour to last updated time
-            var addHour = result.lastUpdated
-            addHour.setHours(addHour.getHours() + 1 )
-
-            if (this.context.networkContext.isConnected) {
-
-              if (currentDate < addHour) {
-                console.log('Home load from database.')
-                var orgs = Array.from(result.organizations);
-                this.setState({
-                  accountlastUpdated: result.lastUpdated.toLocaleString(),
-                  organizations: orgs,
-                  isLoading: false,
-                });
-              }
-            // Check if org data last updated is past 1 hr
-            // Should check connection before refetching data from API
-              if (currentDate >= addHour && this.context.networkContext.isConnected) {
+                if (this.context.networkContext.isConnected) {
+    
+                  if (currentDate < addHour) {
+                    console.log('Home load from database.')
+                    var orgs = Array.from(result.organizations);
+                    this.setState({
+                      accountlastUpdated: result.lastUpdated.toLocaleString(),
+                      organizations: orgs,
+                      isLoading: false,
+                    });
+                  }
+                // Check if org data last updated is past 1 hr
+                // Should check connection before refetching data from API
+                  if (currentDate >= addHour && this.context.networkContext.isConnected) {
+                    this.updateAccountData()
+                  }
+                } else{
+                  console.log('No network, Home load from database.')
+                  var orgs = Array.from(result.organizations);
+                  this.setState({
+                    accountlastUpdated: result.lastUpdated.toLocaleString(),
+                    organizations: orgs,
+                    isLoading: false,
+                  });
+                } 
+                // Check if org data last updated is past 1 hr
+              } else {
                 this.updateAccountData()
               }
-            } else{
-              console.log('No network, Home load from database.')
-              var orgs = Array.from(result.organizations);
-              this.setState({
-                accountlastUpdated: result.lastUpdated.toLocaleString(),
-                organizations: orgs,
-                isLoading: false,
-              });
-            } 
-            // Check if org data last updated is past 1 hr
-          } else {
-            this.updateAccountData()
+              
+            }).catch(e => {console.log(e)});
           }
-          
-        }).catch(e => {console.log(e)});
-      }
-      if (!response){
-        fetchOrgs(this.context.accountContext.account).then(orgs =>{
-          insertNewAccount(this.context.accountContext.account, orgs, currentDate)
-          this.setState({
-            accountlastUpdated: currentDate.toLocaleString(),
-            organizations: orgs,
-            isLoading: false
-          })
-        })
-      }
-      getInspections(this.context.accountContext.account).then(inspectionsList => {
-        console.log(inspectionsList)
-        this.setState({inspectionsList})
-      })
+          if (!response){
+            fetchOrgs(this.context.accountContext.account).then(orgs =>{
+              insertNewAccount(this.context.accountContext.account, orgs, currentDate)
+              this.setState({
+                accountlastUpdated: currentDate.toLocaleString(),
+                organizations: orgs,
+                isLoading: false
+              })
+            })
+          }
+          this.loadInspections()    
+        });
+  }
 
-    });
-  };
+  loadInspections = () => {
+    getInspections(this.context.accountContext.account).then(inspectionsList => {
+      const toArray = Array.from(inspectionsList)
+      const mappedObj = []
+      toArray.forEach(inspection => {
+        const insp = inspection
+        insp['checked'] = false
+        mappedObj.push(insp)
+      }
+        )
+      this.setState({inspectionsList: mappedObj})
+    })
+  }
 
   updateAccountData = (currentDate) => {
     console.log("Home Screen update data data")
@@ -113,8 +130,22 @@ export class HomePage extends Component {
     });
   }
 
+  setCheckBox = (index) => {
+      let data = [...this.state.inspectionsList];
+      data[index].checked = !data[index].checked;
+      this.setState({ data });
+  }
+
+  submitInspection = (accountDetails, inspections) => {
+    this.deleteInspection(accountDetails, inspections) //delete submitted inspections
+  }
+
+  deleteInspection = (accountDetails, inspections) => {
+    delInspections(accountDetails, inspections)
+    this.loadInspections()
+  }
+  
   render() {
-    console.log("context Home ", this.context)
     const {navigate} = this.props.navigation;
     return this.state.isLoading ? (
       <View>
@@ -144,23 +175,6 @@ export class HomePage extends Component {
                 }>
                 <Text style={styles.button_text}> Select organization</Text>
               </TouchableOpacity>
-              <View>
-              <Text>Saved inspections</Text>
-              {this.state.inspectionsList.length > 0 ? 
-              <FlatList style={{width: 5,backgroundColor: 'lightgrey'}}
-              data={this.state.inspectionsList}
-              renderItem={({item, index}) => {
-                <View>
-                  <Text>asefsaefsdf</Text>
-
-                </View>
-              }}
-              keyExtractor={item => this.state.inspectionsList.indexOf(item)}
-              />
-              :
-              <Text>No unsubmitted work</Text>
-              }
-              </View>
             <TouchableOpacity
                 style={styles.buttons}
                 onPress={() =>
@@ -174,9 +188,42 @@ export class HomePage extends Component {
             </View>
           </View>
           <View>
-            <View style={styles.button_container}>
+            <View style={styles.inspectionContainer}>
+              <Text>Saved inspections</Text>
+              {this.state.inspectionsList.length > 0 ? 
+                <FlatList 
+                data={this.state.inspectionsList}
+                extraData={this.state}
+                renderItem={({ item, index }) =>
+                      <CheckBox 
+                        style={styles.checkbox}
+                        title={item.Name}
+                        checked={this.state.inspectionsList[index].checked}
+                        onPress={() => {this.setCheckBox(index)}
+                        }
+                        />
+                }
+                keyExtractor={item => item.Id}
+                />
+              :
+              <Text>No unsubmitted work</Text>
+              }
+              <View style={styles.inspectionButtonContainer}>
+              <TouchableOpacity 
+              onPress={() => { this.submitInspection(this.context.accountContext.account, this.state.inspectionsList) }}
+              style={styles.submit}>
+                <Text>Submit</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+              onPress={() => { this.deleteInspection(this.context.accountContext.account, this.state.inspectionsList) }}
+              style={styles.delete}>
+                <Text>Delete</Text>
+              </TouchableOpacity>
+              </View>
             </View>
           </View>
+          
         </View>
       </View>
     );
@@ -220,6 +267,41 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 13,
   },
+  inspectionContainer: {
+    alignSelf: 'center',
+    width: '100%',
+    margin: 5
+  },
+  inspectionRow: {
+    flex: 2,
+    flexDirection: 'row',
+  },
+  checkbox: {
+    flex: 1
+  },
+  inspectionButtonContainer: {
+    flexDirection: 'row',
+    marginLeft: 15
+  },
+  inspectionName: {
+    flex: 1,
+    fontSize: 15
+  },
+  submit:{
+    width: 100,
+    height: 40,
+    padding: 10,
+    margin: 5,
+    backgroundColor: '#47d66d',
+  },
+  delete:{
+    width: 100,
+    height: 40,
+    padding: 10,
+    margin: 5,
+    backgroundColor: 'red',
+  },
+
 });
 
 export default HomePage;

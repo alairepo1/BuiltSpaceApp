@@ -218,7 +218,7 @@ export const MyFieldsSchema = {
     flagddit: 'string?',
     Assetname: 'string?',
     Category: 'string?',
-    SpaceId: 'string?',
+    SpaceId: 'int?',
     SpaceName: 'string?',
     Floor: 'string?',
     SpaceUsage: 'string?',
@@ -673,6 +673,37 @@ export const getInspections = async (accountDetails) => {
     var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
     var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
     var inspections = account.savedInspections
-    return Promise.resolve(Array.from(inspections))
+    return Promise.resolve(inspections)
   }catch(e){console.log('getInspections error: ',e)}
+}
+
+export const delInspections = async(accountDetails, selectedInspections) => {
+  // Deletes the array of inspections
+  try{
+    await Realm.open(databaseOptions).then(realm => {
+      realm.write(() => {
+        var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+        var inspections = account.savedInspections
+
+        // start delete
+        selectedInspections.forEach(item => {
+          if (item.checked){
+            Array.from(inspections).forEach(dbitem => {
+              // for each item that is checked do this.
+              if (dbitem.Name === item.Name){
+                // console.log('id match: ', dbitem.Content.MyFields.Questions.Question.Id)
+
+                // delete inspection bottom up
+                realm.delete(dbitem.Content.MyFields.Questions.Question)
+                realm.delete(dbitem.Content.MyFields.Questions)
+                realm.delete(dbitem.Content.MyFields)
+                realm.delete(dbitem.Content)
+                realm.delete(dbitem)
+              }
+            })
+          }
+        })
+      })
+    })
+  }catch(e){console.log("delInspections: ", e)}
 }

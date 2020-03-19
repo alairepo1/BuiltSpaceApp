@@ -40,17 +40,14 @@ export class ExploreBuildingScreen extends Component {
       }
 
     spacesFilter = (space) => {
-      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === space.spaceFloor)
+      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === space.floor)
       this.setState({
         selectedSpaceId: space.id,
         spaceSelected: true
       })
     }
     assetsFilter = (asset) => {
-      console.log(asset)
-      console.log()
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === asset.categoryabbr || item.assetCategory === "")
-      console.log(this.state.filteredChecklist.length)
       this.setState({
         selectedAssetId: asset.id,
       })
@@ -89,7 +86,7 @@ export class ExploreBuildingScreen extends Component {
       }
     }
 
-    onChange = (newState, text, type) => {
+    onChange = (newState, text = '', type) => {
       if (type == 'checklist'){
         let StartTime = getStartTime()
         this.setState({ 
@@ -110,6 +107,7 @@ export class ExploreBuildingScreen extends Component {
       }
 
       if (type == 'space'){
+        console.log(newState)
         this.setState({
           spaceSelected: newState,
           spaceName: text
@@ -118,7 +116,10 @@ export class ExploreBuildingScreen extends Component {
     }
 
     componentDidMount = () => {
+      this.loadData()
+    }
 
+    loadData = () => {
       var currentDate = new Date() // current datetime as object
 
       var orgData =  this.props.navigation.state.params.orgData // realm object from props
@@ -171,7 +172,6 @@ export class ExploreBuildingScreen extends Component {
 
       })
     }
-
 
     updateBuildingData = () => {
       var orgData =  this.props.navigation.state.params.orgData
@@ -234,7 +234,7 @@ export class ExploreBuildingScreen extends Component {
             flagedit: 'fl_edit', // flagedit not implemented
             Assetname: asset.name,
             Category: asset.categoryabbr,
-            SpaceId:  "", // if space is selected, space.id
+            SpaceId:  null, // if space is selected, space.id
             SpaceName:  "", //if space is selected, space.name
             Floor: "", // if space is selected, space.floor
             SpaceUsage: "", //if space selected, space.usage
@@ -274,7 +274,10 @@ export class ExploreBuildingScreen extends Component {
         }
   
         if (this.state.spaceSelected){
-          const space = building.spaces.filter(space => space.id == this.state.selectedSpaceId)
+          const spaces = Array.from(this.state.spaces)
+          console.log(this.state.selectedSpaceId)
+          const space = spaces.filter(space => space.id == this.state.selectedSpaceId)
+          console.log(space)
           checklist.MyFields.SpaceId = space[0].id
           checklist.MyFields.SpaceName = space[0].suitenumber //if space is selected, space.name
           checklist.MyFields.Floor = space[0].floor // if space is selected, space.floor
@@ -318,6 +321,7 @@ export class ExploreBuildingScreen extends Component {
         };
         saveInspection(this.context.accountContext.account, checklistObject)
       }catch(e){console.log(e)}
+      console.log("save to device")
   }
 
   render() {
@@ -348,15 +352,9 @@ export class ExploreBuildingScreen extends Component {
         <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="white" />
 
     <View>
-      {/* <View style={this.state.spaceSelected ? yesItemSelected : noItemSelected}> */}
-            <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
-      {/* </View> */}
-      {/* <View style={this.state.assetSelected ? yesItemSelected : noItemSelected}> */}
+        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
-      {/* </View> */}
-      {/* <View style={this.state.checklistSelected ? yesItemSelected : noItemSelected}> */}
         {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
-      {/* </View> */}
       <View>
       {this.state.checklistSelected ?  
       <View>
@@ -429,10 +427,7 @@ export class ExploreBuildingScreen extends Component {
         buttonStyle={{backgroundColor: '#47d66d'}}
         title="Save to device"
         titleStyle={{color: 'white'}}
-        onPress={()=> 
-          {
-            this.saveAlert()
-          }
+        onPress={() =>  { this.saveAlert() }
         }
         />
         </View>  
@@ -443,9 +438,7 @@ export class ExploreBuildingScreen extends Component {
         title="Submit"
         buttonStyle={{backgroundColor: '#47d66d'}}
         titleStyle={{color: 'white'}}
-        onPress={()=> getInspections(this.context.accountContext.account).then(inspections => {
-          console.log('results: ',JSON.stringify(inspections[0].Content.MyFields.Questions,null,1))
-        })}
+        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(result)})}}
         />
         </View>
         </View>
