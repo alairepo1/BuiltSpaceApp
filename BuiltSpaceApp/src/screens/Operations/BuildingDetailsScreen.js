@@ -39,7 +39,7 @@ export class BuildingDetailsScreen extends Component {
           renderItem={({ item }) =>
             <View>
 
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('ExploreBuilding')}>
+              <TouchableOpacity onPress={() => console.log('not implemented yet')}>
                 <View style={styles.row}>
                   <Text style={styles.text}>{item.title}</Text>
                   <View>

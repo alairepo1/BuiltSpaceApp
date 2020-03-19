@@ -8,9 +8,8 @@ export class AssetsModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      assets: this.props.assets,
+      assets: [],
       assetsFetched: false,
-      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
       modalVisible: false,
       isSelected: false,
       selection: ""
@@ -18,6 +17,7 @@ export class AssetsModal extends Component {
     }
     this.setModalVisible = this.setModalVisible.bind(this)
   }
+
   setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
@@ -25,7 +25,7 @@ export class AssetsModal extends Component {
     this.setState({
       value: text,
     });
-    const newData = this.props.assets.filter(item => {
+      const newData = this.props.assets.filter(item => {
       const itemData = `${item.name.toUpperCase()}`;
       const textData = text.toUpperCase();
 
@@ -56,45 +56,8 @@ export class AssetsModal extends Component {
       </View>
     );
   };
-//     render() {
-//         const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-//         const selected = <Text style={styles.detailsTextSelected}>{this.state.selection}</Text>
-//         return(
-//             <View style={{marginTop: 22}}>
-
-//             <Modal
-//               animationType="slide"
-//               transparent={false}
-//               visible={this.state.modalVisible}
-//               onRequestClose={() => {
-//                 this.setModalVisible(!this.state.modalVisible)
-//               }}>
-//               <View style={styles.listContainer}>
-//                 <View style={styles.titleTop}>
-//                   <Text style={styles.headingTextBold}>Select an Asset</Text>
-//                 </View>
-
-//                 <FlatList style={{marginTop:30}}
-//                 data={this.props.assets}
-//                 renderItem = {({item}) =>
-//                   <TouchableOpacity
-//                     onPress={() => {
-//                     this.props.assetsFilter(item)
-//                       this.setModalVisible(!this.state.modalVisible)
-//                       this.setState({
-//                           isSelected: true,
-//                           selection: item.name,
-//                       })
-//                     }}>
-//                     <View style={styles.assetListItems}>
-//                       <View style={{flex:1}}>
-//                         <Text style={styles.listTextLeft}>Name: {item.name}</Text>
-//                         <Text style={styles.listTextLeft}>Serial: {item.serial}</Text>
-//                         <Text style={styles.listTextLeft}>Model: {item.model}</Text>
-//                       </View>
 
   render() {
-
     const selected = <View style={styles.textContainerSelected}>
       <View>
         <Text style={styles.optionText}> Assets</Text>
@@ -124,7 +87,7 @@ export class AssetsModal extends Component {
               <Text style={styles.headingTextBold}>Select an Asset</Text>
             </View>
             <FlatList style={{ marginTop: 20, marginBottom: 75 }}
-              data={this.state.assets}
+              data={this.props.assets}
               renderItem={({ item }) =>
                 <TouchableOpacity
                   onPress={() => {
@@ -157,29 +120,6 @@ export class AssetsModal extends Component {
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
               </TouchableOpacity>
-
-                 {/* <View style={styles.bottomContainer}> 
-                   <TouchableOpacity
-                  onPress={() => {
-                      this.setState({
-                          isSelected: false
-                      })
-                      this.setModalVisible(!this.state.modalVisible);
-                    }}>
-                      <Text style={styles.closeButton}>Close</Text>
-                  </TouchableOpacity>
-                </View>
-
-              </View>
-            </Modal>
-    
-            <TouchableOpacity
-              onPress={() => {
-                this.setModalVisible(true);
-              }}>
-            <View>
-              <Text style={styles.optionText}> Asset</Text>
-              {this.state.isSelected ? selected : noneSelected} */}
             </View>
 
           </View>

@@ -31,93 +31,9 @@ export const accountSchema = {
     api_key: 'string',
     lastUpdated: 'date?',
     organizations: {type: 'list', objectType: 'organizations'},
+    savedInspections : {type: 'list', objectType: 'inspections'}
   },
 };
-
-export const inspectionSchema = {
-  name: 'inspection',
-  properties: {
-    id: 'date?',
-    name: 'string?',
-    content: {type: 'list', objectType: 'checklist'},
-    buildingid: 'int?',
-    orgid: 'int?',
-    assetid: 'int?'
-  }
-}
-
-export const inspectionChecklistSchema = {
-  name: 'inspectionChecklist',
-  properties: {
-    demoUsername: 'string?',
-    demoUserEmail: 'string?',
-    date: 'date?',
-    startime: 'date?',
-    duratgion: 'string?',
-    time: 'date?',
-    fileName: 'string?',
-    address: 'string?',
-    generalComments: 'string?',
-    flagEdit: 'string?',
-    assetName: 'string?',
-    category: 'string?',
-    spaceId: 'string?',
-    spaceName: 'string?',
-    floor: 'string?',
-    spaceUsage: 'string?',
-    description: 'string?',
-    make: 'string?',
-    model: 'string?',
-    serial: 'string?',
-    building: 'int?', //id?
-    workOrderNumber: 'string',
-    checklistCategory: 'string?',
-    qrcodeURL: 'string?',
-    assetLocations: 'list?',
-    newSpaces: 'list?',
-    questions: {type: 'list', objectType: 'inspectionQuestions'},
-    parentTaskId: 'int?',  
-    task: 'string?', // Because there is no data in your app , leave it empty
-    checklistId: 'int?',
-    checklistTitle: 'string?',
-    emailReport: 'string?',
-    deviceGeolocation: {
-        Longitude: 'string?',
-        Latitude: 'string?',
-        Altitude: 'string?',
-        Accuracy: 'string?',
-        AltitudeAccuracy: 'string?',
-        Heading: 'string?',
-        Speed: 'string',
-        Timestamp: 'date?'
-    }
-  }
-}
-
-// export const inspectionQuestionSchema = {
-//   name: 'inspectionQuestions',
-//   properties: {
-//     questionId: 'int?',
-//     questionNumber: 'string?',
-//     TaskTitle: questionTitle,  
-//     TaskDetails: questionDetails,
-//     QuestionFormat: Allformats,
-//     Photos: photos, // an array of photo
-//     InspectionResult: questionResponse,
-//     MeasurementLabel: Measurementlabel,
-//     Measurement: measurement,
-//     MeasurementUnit: Measurementunit,
-//     tool: 'string?',
-//     supplier:,
-//     unitCost:,
-//     questionType:,
-//     salesTax:,
-//     markup:,
-//     allowMultiple: 'bool?',
-//     choices:,
-//     textOnly:
-//   }
-// }
 
 // organization schema, nested into accountSchema
 export const organizationSchema = {
@@ -268,6 +184,138 @@ export const qrCodeSchema = {
   }
 }
 
+export const inspectionSchema = {
+  name: 'inspections',
+  properties: {
+    Id: 'date?',
+    Name: 'string?',
+    Content: {type: 'object', objectType: 'MyFieldsContainer'},
+    buildingId: 'int?',
+    orgId: 'int?',
+    AssetId: 'int?'
+  }
+}
+
+export const MyFieldsContainerSchema = {
+  name: 'MyFieldsContainer',
+  properties: {
+    MyFields: {type: 'object', objectType: 'MyFields'}
+  }
+}
+
+export const MyFieldsSchema = {
+  name: 'MyFields',
+  properties: {
+    DemoUsername: 'string?',
+    DemoUserEmail: 'string?',
+    Date: 'string?',
+    StartTime: 'date?',
+    Duration: 'string?',
+    Time: 'int?',
+    FileName: 'string?',
+    Address: 'string?',
+    GeneralComments: 'string?',
+    flagddit: 'string?',
+    Assetname: 'string?',
+    Category: 'string?',
+    SpaceId: 'int?',
+    SpaceName: 'string?',
+    Floor: 'string?',
+    SpaceUsage: 'string?',
+    Description: 'string?',
+    Make: 'string?',
+    Model: 'string?',
+    Serial: 'string?',
+    Building: 'int?', //id?
+    WorkOrderNumber: 'string?',
+    ChecklistCategory: 'string?',
+    QRcodeURL: 'string?',
+    // AssetLocations: 'list?',
+    // NewSpaces: 'list?',
+    Questions: {type: 'object', objectType: 'questionsContainer'},
+    ParentTaskId: 'string?',  
+    Task: 'string?', // Because there is no data in your app , leave it empty
+    ChecklistId: 'string?',
+    ChecklistTitle: 'string?',
+    EmailReport: 'string?',
+    // DeviceGeolocation: {type: 'object', objectType: 'geoLocation'}
+  }
+}
+
+export const questionsContainerSchema = {
+  name: 'questionsContainer',
+  properties: {
+    Question: {type: 'list', objectType: 'inspectionQuestions'},
+  }
+}
+
+export const inspectionQuestionSchema = {
+  name: 'inspectionQuestions',
+  properties: {
+    QuestionId: 'int?',
+    QuestionNumber: 'string?',
+    TaskTitle: 'string?',  
+    TaskDetails: 'string?',
+    QuestionFormat: 'string?',
+    Photos: 'string?', // an array of photo
+    InspectionResult: 'string?',
+    MeasurementLabel: 'string?',
+    Measurement: 'string?',
+    MeasurementUnit: 'string?',
+    Tool: 'string?',
+    Supplier: 'string?',
+    UnitCost: 'string?',
+    QuestionType: 'string?',
+    SalesTax: 'string?',
+    Markup: 'string?',
+    AllowMultiple: 'bool?',
+    Choices: 'string',
+    TextOnly: 'string?'
+  }
+}
+
+// export const newSpacesContainerSchema = {
+//   name: 'newSpacesContainerSchema',
+//   properties: {
+//     Spaces: {type: 'list', objectType: 'newSpaces'}
+//   }
+// }
+
+// export const newSpacesSchema = {
+//   name: 'newSpaces',
+//   properties: {
+//     name: 'string?' // placeholder property, change/add to specifications
+//   }
+// }
+
+// export const assetLocationContainerSchema = {
+//   name: 'assetLocationContainerSchema',
+//   properties: {
+//     Spaces: {type: 'list', objectType: 'newSpaces'}
+//   }
+// }
+
+// export const assetLocationsSchema = {
+//   name: 'assetLocationsSchema',
+//   properties: {
+//     name: 'string?' // placeholder property, change/add to specifications
+//   }
+// }
+
+// export const geoLocationSchema = {
+//   name: 'geoLocation',
+//   properties: {
+//     Longitude: 'string?',
+//     Latitude: 'string?',
+//     Altitude: 'string?',
+//     Accuracy: 'string?',
+//     AltitudeAccuracy: 'string?',
+//     Heading: 'string?',
+//     Speed: 'string',
+//     Timestamp: 'date?'
+//   }
+// }
+
 /**
  * Database Service/Functions
  */
@@ -284,7 +332,13 @@ const databaseOptions = {
     assetGroupSchema,
     questionsSchema,
     assetSchema,
-    spaceSchema
+    spaceSchema,
+    // qrCodeSchema,
+    inspectionSchema,
+    MyFieldsContainerSchema,
+    MyFieldsSchema,
+    questionsContainerSchema,
+    inspectionQuestionSchema,
   ],
 }
 
@@ -601,6 +655,55 @@ export const insertOrgData = async (accountDetails, orgData, currentDate) => {
 }
 
 
-// export const saveToDevice = async (inspection) => {
+export const saveInspection = async (accountDetails, inspection) => {
+  // saves the inspection data into realm
+  try{
+    await Realm.open(databaseOptions).then(realm => {
+      realm.write(() => {
+        var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+        account.savedInspections.push(inspection)
+      })
+    })
+  }catch(e){console.log('saveInspection error: ',e)}
+}
 
-// }
+export const getInspections = async (accountDetails) => {
+  // gets a list of saved inspections from an account
+  try{
+    var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
+    var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+    var inspections = account.savedInspections
+    return Promise.resolve(inspections)
+  }catch(e){console.log('getInspections error: ',e)}
+}
+
+export const delInspections = async(accountDetails, selectedInspections) => {
+  // Deletes the array of inspections
+  try{
+    await Realm.open(databaseOptions).then(realm => {
+      realm.write(() => {
+        var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+        var inspections = account.savedInspections
+
+        // start delete
+        selectedInspections.forEach(item => {
+          if (item.checked){
+            Array.from(inspections).forEach(dbitem => {
+              // for each item that is checked do this.
+              if (dbitem.Name === item.Name){
+                // console.log('id match: ', dbitem.Content.MyFields.Questions.Question.Id)
+
+                // delete inspection bottom up
+                realm.delete(dbitem.Content.MyFields.Questions.Question)
+                realm.delete(dbitem.Content.MyFields.Questions)
+                realm.delete(dbitem.Content.MyFields)
+                realm.delete(dbitem.Content)
+                realm.delete(dbitem)
+              }
+            })
+          }
+        })
+      })
+    })
+  }catch(e){console.log("delInspections: ", e)}
+}

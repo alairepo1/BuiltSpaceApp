@@ -50,7 +50,7 @@ export class ChecklistModal extends Component {
           value={this.state.value}
         />
         <TouchableOpacity  style={styles.assetListItems} onPress={() => {
-          this.props.onChecklistChange(false, '', 'asset')
+          this.props.onChecklistChange(false, '', 'checklist')
           this.setModalVisible(!this.state.modalVisible)
           }}>
           <Text style={styles.listText}>Select None</Text>
