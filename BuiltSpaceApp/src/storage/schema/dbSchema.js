@@ -672,8 +672,8 @@ export const getInspections = async (accountDetails) => {
     var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
     var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
     var inspections = account.savedInspections
-
-    if (inspections.hasOwnProperty('Id')){ //checks if the object has any properties || returns emtpy array
+    console.log(inspections)
+    if (inspections != {}){ //checks if the object has any properties || returns emtpy array
       return Promise.resolve(inspections)
     }else{ return [] }
   }catch(e){console.log('getInspections error: ',e)}
@@ -685,24 +685,17 @@ export const delInspections = async(accountDetails, selectedInspections) => {
     await Realm.open(databaseOptions).then(realm => {
       realm.write(() => {
         var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
-        var inspections = account.savedInspections
+        var inspections = Array.from(account.savedInspections)
 
         // start delete
-        selectedInspections.forEach(item => {
+        selectedInspections.forEach((item,index) => {
           if (item.checked){
-            Array.from(inspections).forEach(dbitem => {
-              // for each item that is checked do this.
-              if (dbitem.Name === item.Name){
-                // console.log('id match: ', dbitem.Content.MyFields.Questions.Question.Id)
-
-                // delete inspection bottom up
-                realm.delete(dbitem.Content.MyFields.Questions.Question)
-                realm.delete(dbitem.Content.MyFields.Questions)
-                realm.delete(dbitem.Content.MyFields)
-                realm.delete(dbitem.Content)
-                realm.delete(dbitem)
-              }
-            })
+              // delete inspection's index from the bottom up
+              realm.delete(inspections[index].Content.MyFields.Questions.Question)
+              realm.delete(inspections[index].Content.MyFields.Questions)
+              realm.delete(inspections[index].Content.MyFields)
+              realm.delete(inspections[index].Content)
+              realm.delete(inspections[index])
           }
         })
       })

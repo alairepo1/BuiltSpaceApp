@@ -8,7 +8,7 @@ export class GeneralType extends Component {
     constructor(props) {
         super(props);
         this.state={
-            selectedIndex: 0,
+            selectedIndex: '',
             format: this.props.question.item.format.split('|'),
             colors: this.props.question.item.colorformat.split('|'),
         }

@@ -15,7 +15,6 @@ export class SpacesModal extends Component {
     this.state = {
       spaces: this.props.spaces,
       spacesFetched: false,
-      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
       modalVisible: false,
       isSelected: false,
       selection: "",

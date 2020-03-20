@@ -11,7 +11,6 @@ export class SelectBuildingScreen extends Component {
     super(props);
     this.state = {
       org_data: [],
-      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
       isLoading: true
     };
   }
