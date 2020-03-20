@@ -144,6 +144,16 @@ export class ExploreBuildingScreen extends Component {
       )
     } else {
     return (
+<<<<<<< Updated upstream
+=======
+      
+      <ScrollView>
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
+        <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="black" />
+
+>>>>>>> Stashed changes
     <View>
       <StatusBar/>
       <View style={styles.TextContainer}>
@@ -173,6 +183,81 @@ export class ExploreBuildingScreen extends Component {
     </View>
       
       
+<<<<<<< Updated upstream
+=======
+            if (item.questiontype === 'Materials') {
+            return <MaterialsType question={{item, 
+              index, 
+              updateInspection: this.updateInspectionResults,
+              updateQuestion: this.updateQuestion
+            }}/>
+            }
+          }
+          }
+          keyExtractor={item => this.state.setQuestions.indexOf(item)}
+          />
+         <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
+           <View style={{flex: 1}}>
+             <View style={{flex: 3, flexDirection: 'row'}}>
+               <View style={{flex: 1}}>
+                 <Text>Add labour</Text>
+               </View>
+               <View style={{flex: 1}}>
+                <Text>Add materials</Text>
+               </View>
+               <View style={{flex: 1}}>
+                <Text>Add issue</Text>
+               </View>
+             </View>
+           </View>
+           <View style={{flex: 1}}>
+            <Text>Additional Comments</Text>
+            <TextInput 
+              style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'lightgrey'}}
+              multiline
+              numberOfLines={4}
+              textAlignVertical={"top"}
+              onChangeText={text => this.setState({GeneralComments: text})}
+            />
+           </View>
+         </View>
+        <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
+        <View style={{flex:1, margin: 5}}> 
+        <Button style={{flex:1, margin: 5}}
+        type="solid"
+        buttonStyle={{backgroundColor: '#47d66d'}}
+        title="Save to device"
+        titleStyle={{color: 'white'}}
+        onPress={() =>  { this.saveAlert() }
+        }
+        />
+        </View>  
+
+        <View style={{flex:1, margin: 5}}>
+        <Button 
+        type="solid"
+        title="Submit"
+        buttonStyle={{backgroundColor: '#47d66d'}}
+        titleStyle={{color: 'white'}}
+        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(result)})}}
+        />
+        </View>
+        </View>
+      </View>
+         : null }
+        <TouchableOpacity >
+                <View style={styles.row}>
+                  <Text style={styles.text}>qrcode</Text>
+                  <View>
+                    <Icon style={styles.listIcon} name="angle-right" size={30} color="black" />
+                  </View>
+                </View>
+              </TouchableOpacity>
+      </View>
+    
+  </View>
+  </ScrollView>
+>>>>>>> Stashed changes
     );
   }
 }
@@ -222,7 +307,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   flatList: {
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
   }
 
   

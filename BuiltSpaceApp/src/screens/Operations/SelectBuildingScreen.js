@@ -119,7 +119,15 @@ export class SelectBuildingScreen extends Component {
       </View>
       :
       <View style={styles.container}>
+<<<<<<< Updated upstream
         <StatusBar/>
+=======
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
+        <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="black" />
+
+>>>>>>> Stashed changes
         <FlatList 
         data={this.state.org_data.buildings}
         renderItem={({item}) => 
@@ -135,7 +143,14 @@ export class SelectBuildingScreen extends Component {
           buildingData: item
         })}>
         <View style={styles.row}>
+<<<<<<< Updated upstream
           <Text style={styles.text}>{item.name} </Text>
+=======
+          <Text style={styles.text}>{item.name}</Text>
+          <View>
+          <Icon style={styles.listIcon}name="angle-right" size={30} color="black" />
+        </View>
+>>>>>>> Stashed changes
         </View>  
         </TouchableOpacity>
         }
@@ -150,6 +165,7 @@ const styles = StyleSheet.create({
   container: {
 <<<<<<< HEAD
     flex: 1,
+<<<<<<< Updated upstream
     backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -160,18 +176,24 @@ const styles = StyleSheet.create({
    marginRight: 15,
    backgroundColor: '#324679',
 >>>>>>> origin/merge-w-realm
+=======
+    marginTop: 40,
+    marginLeft: 15,
+    marginRight: 15,
+    backgroundColor: '#FAF9ED',
+>>>>>>> Stashed changes
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     padding: 16,
     marginBottom: 3,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderBottomWidth: 2,
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 25
   }

@@ -133,7 +133,15 @@ export class HomePage extends Component {
       </View>
     ) : (
       <View style={styles.container}>
+<<<<<<< Updated upstream
         <StatusBar />
+=======
+        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
+        <Icon  onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="black" />
+
+>>>>>>> Stashed changes
         <Text style={styles.homePageText}>
           To Start please select an organization
         </Text>
@@ -188,13 +196,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: 'white',
+    color: 'black',
   },
   button_view: {
     // flex: 2,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
     marginTop: 15,
   },
   button_container: {
@@ -203,7 +211,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttons: {
-    backgroundColor: 'grey',
+    backgroundColor: '#ABA9A9',
     margin: 5,
     color: 'black',
     height: 50,
@@ -214,6 +222,44 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 13,
   },
+<<<<<<< Updated upstream
+=======
+  inspectionContainer: {
+    alignSelf: 'center',
+    width: '100%',
+    margin: 5
+  },
+  inspectionRow: {
+    flex: 2,
+    flexDirection: 'row',
+  },
+  checkbox: {
+    flex: 1
+  },
+  inspectionButtonContainer: {
+    flexDirection: 'row',
+    marginLeft: 15
+  },
+  inspectionName: {
+    flex: 1,
+    fontSize: 15
+  },
+  submit:{
+    width: 100,
+    height: 40,
+    padding: 10,
+    margin: 5,
+    backgroundColor: '#6CD938',
+  },
+  delete:{
+    width: 100,
+    height: 40,
+    padding: 10,
+    margin: 5,
+    backgroundColor: 'red',
+  },
+
+>>>>>>> Stashed changes
 });
 
 export default HomePage;

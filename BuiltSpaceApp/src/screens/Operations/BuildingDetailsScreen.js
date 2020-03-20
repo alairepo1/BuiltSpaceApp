@@ -81,9 +81,15 @@ export class BuildingDetailsScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
+<<<<<<< Updated upstream
    flex: 1,
    marginTop: 20,
    backgroundColor: 'white',
+=======
+    flex: 1,
+    marginTop: 20,
+    backgroundColor: '#FAF9ED',
+>>>>>>> Stashed changes
   },
   row: {
     flexDirection: 'row',
@@ -93,12 +99,12 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 15,
     marginRight: 15,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderBottomWidth: 2,
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 25,
     
@@ -121,7 +127,11 @@ const styles = StyleSheet.create({
       
   },
   flatList: {
+<<<<<<< Updated upstream
       backgroundColor: '#324679',
+=======
+    backgroundColor: '#FAF9ED',
+>>>>>>> Stashed changes
   }
   
 })
