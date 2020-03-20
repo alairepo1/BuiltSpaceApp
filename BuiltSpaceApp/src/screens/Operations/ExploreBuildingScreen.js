@@ -383,11 +383,11 @@ export class ExploreBuildingScreen extends Component {
     const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle} ></ChecklistModal>
     const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle}></ChecklistModal>
 
-    if (!this.state.dataLoaded && !this.state.startScanner) {
+    if (!this.state.dataLoaded ) {
       return (
         <Text>Loading</Text>
       )
-    } else if (this.state.dataLoaded){
+    } else if (this.state.dataLoaded && !this.state.startScanner){
       const materialQ = this.state.setQuestions.filter(function(question)  {
         return question.questiontype === "Materials"
       })
