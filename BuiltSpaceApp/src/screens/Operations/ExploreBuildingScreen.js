@@ -631,7 +631,7 @@ export class ExploreBuildingScreen extends Component {
     );
     }
 
-
+  }
     return (
       <View style={{ flex: 1 }}>
  
