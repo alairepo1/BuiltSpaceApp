@@ -32,8 +32,13 @@ const AuthStack = createStackNavigator(
         backgroundColor: '#4CBB17',
       },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       cardStyle: {backgroundColor: '#324679'},
       headerTintColor: 'white'
+=======
+      cardStyle: { backgroundColor: '#324679' },
+      headerTintColor: 'black'
+>>>>>>> Stashed changes
 =======
       cardStyle: { backgroundColor: '#324679' },
       headerTintColor: 'black'
@@ -94,8 +99,13 @@ const HomeStack = createStackNavigator(
         backgroundColor: '#4CBB17',
       },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       cardStyle: {backgroundColor: '#324679'},
       headerTintColor: 'white'
+=======
+      cardStyle: { backgroundColor: '#FAF9ED' },
+      headerTintColor: 'black'
+>>>>>>> Stashed changes
 =======
       cardStyle: { backgroundColor: '#FAF9ED' },
       headerTintColor: 'black'

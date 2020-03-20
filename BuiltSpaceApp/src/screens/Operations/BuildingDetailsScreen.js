@@ -89,6 +89,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 20,
     backgroundColor: '#FAF9ED',
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   },
   row: {
@@ -128,7 +131,11 @@ const styles = StyleSheet.create({
   },
   flatList: {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       backgroundColor: '#324679',
+=======
+    backgroundColor: '#FAF9ED',
+>>>>>>> Stashed changes
 =======
     backgroundColor: '#FAF9ED',
 >>>>>>> Stashed changes

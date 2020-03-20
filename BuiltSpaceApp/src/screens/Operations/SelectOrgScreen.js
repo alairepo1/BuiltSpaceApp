@@ -86,6 +86,9 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     backgroundColor: '#FAF9ED'
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   },
   row: {
