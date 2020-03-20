@@ -121,11 +121,7 @@ export class MaterialsType extends Component {
                         "TaskDetails", // type 
                         )}
                     />
-
                 </View>
-                <TouchableOpacity disabled={true} style={{ margin: 5, backgroundColor: 'white', width: 100, height: 20}}> 
-                    <Text>Add picture</Text>
-                </TouchableOpacity>
             </View>
         )
     }

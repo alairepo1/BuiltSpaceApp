@@ -73,8 +73,8 @@ export class ExploreBuildingScreen extends Component {
       let question = this.state.setQuestions.slice(index, index + 1); // shallow copy the question from setQuestions
       if (type == "measurement"){
         console.log("measurement")
-        question[0][measurement_label] = value
-        question[0][measurement_unit] = measurement_unit
+        question[0]["measurement_label"] = value
+        question[0]["measurement_unit"] = measurement_unit
       }
       if (type == "TaskDetails"){
         console.log("TaskDetails")
@@ -82,7 +82,7 @@ export class ExploreBuildingScreen extends Component {
       }
       if (type == "UnitCost"){
         console.log("UnitCost")
-        question[0][type] = value
+        question[0]["type"] = value
       }
       if (type == "InspectionResults"){
         console.log("InspectionResults")
@@ -220,6 +220,13 @@ export class ExploreBuildingScreen extends Component {
     }
    
     onQRCodeScanDone = (qrCode) => {
+
+      Alert.alert(
+        "QR Code details",
+        `Details: ${qrCode}`,
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        { cancelable: false }
+      );
    
       this.setState({ qrCodeValue: qrCode });
    
@@ -556,14 +563,14 @@ export class ExploreBuildingScreen extends Component {
           />
          <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
            <View style={{flex: 1}}>
-             <View style={{flex: 3, flexDirection: 'row'}}>
-               <View style={{flex: 1}}>
+             <View style={{flex: 3, flexDirection: 'row', alignSelf: 'center'}}>
+             <View style={styles.addQuestionButton}>
                  <Text>Add labour</Text>
                </View>
-               <View style={{flex: 1}}>
+               <View style={styles.addQuestionButton}>
                 <Text>Add materials</Text>
                </View>
-               <View style={{flex: 1}}>
+               <View style={styles.addQuestionButton}>
                 <Text>Add issue</Text>
                </View>
              </View>
@@ -579,7 +586,7 @@ export class ExploreBuildingScreen extends Component {
             />
            </View>
          </View>
-        <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
+        <View style={{flex:3, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
         <View style={{flex:1, margin: 5}}> 
         <Button style={{flex:1, margin: 5}}
         type="solid"
@@ -601,7 +608,7 @@ export class ExploreBuildingScreen extends Component {
         />
         </View>
 
-        <View>
+        <View style={{flex:1, margin: 5}}>
           <Button
           title="Upload picture"
           onPress={this.cameraOnPress}
@@ -677,7 +684,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
   },
   questionsHeader: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 30,
     alignSelf: 'flex-start',
@@ -704,14 +711,18 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 25,
   },
   flatList: {
     backgroundColor: '#FAF9ED',
+  },
+  addQuestionButton: {
+    padding: 10, 
+    margin: 10, 
+    backgroundColor: '#47d66d',
   }
-
 
 })
 
