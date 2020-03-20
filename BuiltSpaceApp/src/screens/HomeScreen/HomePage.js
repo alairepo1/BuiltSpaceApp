@@ -157,6 +157,25 @@ export class HomePage extends Component {
     this.loadInspections()
   }
   
+  confirmation = (buttonType) => {
+    Alert.alert(
+      'Confirmation',
+      `${buttonType} selected inspections?`,
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => {
+          if(buttonType == 'Delete'){
+            this.deleteInspection(this.context.accountContext.account, this.state.inspectionsList)
+          }
+          if(buttonType == "Submit"){
+            this.submitInspection(this.context.accountContext.account, this.state.inspectionsList)
+          }
+        } },
+      ],
+      { cancelable: true }
+    )
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return this.state.isLoading ? (
@@ -218,23 +237,24 @@ export class HomePage extends Component {
                 }
                 keyExtractor={item => item.Id}
                 />
-              </ScrollView>
-              :
-              <Text>No unsubmitted work</Text>
-              }
-              <View style={styles.inspectionButtonContainer}>
+                              <View style={styles.inspectionButtonContainer}>
               <TouchableOpacity 
-              onPress={() => { this.submitInspection(this.context.accountContext.account, this.state.inspectionsList) }}
+              onPress={() => { this.confirmation("Submit") }}
               style={styles.submit}>
                 <Text>Submit</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
-              onPress={() => { this.deleteInspection(this.context.accountContext.account, this.state.inspectionsList) }}
+              onPress={() => { this.confirmation("Delete") }}
               style={styles.delete}>
                 <Text>Delete</Text>
               </TouchableOpacity>
               </View>
+              </ScrollView>
+              :
+              <Text>No unsubmitted work</Text>
+              }
+
             </View>
           </View>
           
