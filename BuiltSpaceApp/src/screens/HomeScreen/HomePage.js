@@ -33,7 +33,7 @@ export class HomePage extends Component {
       organizations: [],
       isLoading: true,
       inspectionsList: [],
-      checked: []
+      checked: [],
     };
   }
 
@@ -128,6 +128,7 @@ export class HomePage extends Component {
         isLoading: false,
       });
     });
+    this.loadInspections()
   }
 
   setCheckBox = (index) => {

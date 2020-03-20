@@ -407,7 +407,6 @@ export const updateAccount = (accountDetails, orgs, currentDate) => {
           })
         })
         realm.commitTransaction()      
-        realm.close()
   
       console.log('updated Account')
     }).catch(e => {console.log('updateOrgs: ', e)}) 
@@ -673,7 +672,10 @@ export const getInspections = async (accountDetails) => {
     var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
     var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
     var inspections = account.savedInspections
-    return Promise.resolve(inspections)
+
+    if (inspections.hasOwnProperty('Id')){ //checks if the object has any properties || returns emtpy array
+      return Promise.resolve(inspections)
+    }else{ return [] }
   }catch(e){console.log('getInspections error: ',e)}
 }
 
