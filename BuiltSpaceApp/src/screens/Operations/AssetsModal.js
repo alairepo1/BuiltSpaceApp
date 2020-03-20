@@ -167,12 +167,12 @@ const styles = StyleSheet.create({
     fontSize: 30
   },
   titleTop: {
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
     width: '100%',
     height: 50
   },
   headingTextBold: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 30,
     alignSelf: 'center'
@@ -198,12 +198,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   flatList: {
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
   },
   assetListItems: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#CED0CE',
+    borderBottomColor: '#ABA9A9',
   },
   listContainer: {
     marginTop: 10,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     width: '100%',
     height: 50,
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',

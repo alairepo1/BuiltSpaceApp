@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#FAF9ED',
   },
   row: {
     flexDirection: 'row',
@@ -91,12 +91,12 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 15,
     marginRight: 15,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderBottomWidth: 2,
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 25,
 
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
 
   },
   flatList: {
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
   }
 
 })

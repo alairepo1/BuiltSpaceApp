@@ -349,7 +349,7 @@ export class ExploreBuildingScreen extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
-        <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="white" />
+        <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="black" />
 
     <View>
         <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
@@ -448,7 +448,7 @@ export class ExploreBuildingScreen extends Component {
                 <View style={styles.row}>
                   <Text style={styles.text}>qrcode</Text>
                   <View>
-                    <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
+                    <Icon style={styles.listIcon} name="angle-right" size={30} color="black" />
                   </View>
                 </View>
               </TouchableOpacity>
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   flatList: {
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
   }
 
 

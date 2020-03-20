@@ -36,7 +36,7 @@ export class SelectOrgScreen extends Component {
             <View style={styles.row}>
               <Text style={styles.text}>{item.name}</Text>
               <View>
-                <Icon style={styles.listIcon} name="angle-right" size={30} color="white" />
+                <Icon style={styles.listIcon} name="angle-right" size={30} color="black" />
               </View>
             </View>
           </TouchableOpacity>
@@ -55,20 +55,20 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginLeft: 15,
     marginRight: 15,
-    backgroundColor: '#324679'
+    backgroundColor: '#FAF9ED'
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     padding: 16,
     marginBottom: 3,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderBottomWidth: 2,
 
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 30
   },

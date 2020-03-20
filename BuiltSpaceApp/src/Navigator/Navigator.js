@@ -23,10 +23,10 @@ const AuthStack = createStackNavigator(
     initialRouteName: 'Login',
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#436FA1',
+        backgroundColor: '#4CBB17',
       },
       cardStyle: { backgroundColor: '#324679' },
-      headerTintColor: 'white'
+      headerTintColor: 'black'
     }
   }
 
@@ -60,10 +60,10 @@ const HomeStack = createStackNavigator(
     initialRouteName: 'Home',
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#436FA1',
+        backgroundColor: '#4CBB17',
       },
-      cardStyle: { backgroundColor: '#324679' },
-      headerTintColor: 'white'
+      cardStyle: { backgroundColor: '#FAF9ED' },
+      headerTintColor: 'black'
     }
   },
   

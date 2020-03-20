@@ -157,7 +157,7 @@ export class HomePage extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
-        <Icon  onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="white" />
+        <Icon  onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="black" />
 
         <Text style={styles.homePageText}>
           To Start please select an organization
@@ -241,13 +241,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: 'white',
+    color: 'black',
   },
   button_view: {
     // flex: 2,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
     marginTop: 15,
   },
   button_container: {
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttons: {
-    backgroundColor: 'grey',
+    backgroundColor: '#ABA9A9',
     margin: 5,
     color: 'black',
     height: 50,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     margin: 5,
-    backgroundColor: '#47d66d',
+    backgroundColor: '#6CD938',
   },
   delete:{
     width: 100,

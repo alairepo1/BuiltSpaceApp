@@ -97,7 +97,7 @@ export class SelectBuildingScreen extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
-        <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="white" />
+        <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="black" />
 
         <FlatList 
         data={this.state.org_data.buildings}
@@ -115,7 +115,7 @@ export class SelectBuildingScreen extends Component {
         <View style={styles.row}>
           <Text style={styles.text}>{item.name}</Text>
           <View>
-          <Icon style={styles.listIcon}name="angle-right" size={30} color="white" />
+          <Icon style={styles.listIcon}name="angle-right" size={30} color="black" />
         </View>
         </View>  
         
@@ -134,19 +134,19 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginLeft: 15,
     marginRight: 15,
-    backgroundColor: '#324679',
+    backgroundColor: '#FAF9ED',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     padding: 16,
     marginBottom: 3,
-    borderBottomColor: 'white',
+    borderBottomColor: 'black',
     borderBottomWidth: 2,
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 25
   },
