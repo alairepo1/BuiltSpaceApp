@@ -82,6 +82,7 @@ export class AssetsModal extends Component {
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
+            
           <View style={styles.listContainer}>
             <View style={styles.titleTop}>
               <Text style={styles.headingTextBold}>Select an Asset</Text>
@@ -190,6 +191,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: 'center'
   },
+  row: {
+		flexDirection: 'row',
+		justifyContent: 'flex-start',
+		padding: 16,
+		marginBottom: 3,
+		marginLeft: 15,
+		marginTop: 170,
+		marginRight: 15,
+		borderBottomColor: 'white',
+		borderBottomWidth: 2,
+	},
 
   text: {
     flex: 1,

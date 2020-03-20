@@ -67,7 +67,7 @@ export class SpacesModal extends Component {
 
   render() {
     const { navigation } = this.props;
-   
+  
     const selected = <View style={styles.textContainerSelected}>
       <View>
         <Text style={styles.optionText}> Space</Text>
