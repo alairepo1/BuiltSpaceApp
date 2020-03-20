@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {ContextInfo} from '../../ContextInfoProvider';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert, TextInput } from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert, TextInput, PermissionsAndroid, Platform } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './SpacesModal.js';
 import AssetsModal from './AssetsModal.js'
@@ -12,6 +12,7 @@ import GeneralType from './GeneralType.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 import {getStartTime, calculateDurationInspection} from '../../functions/functions.js'
+import { CameraKitCameraScreen } from 'react-native-camera-kit';
 
 export class ExploreBuildingScreen extends Component { 
   static contextType = ContextInfo
@@ -31,6 +32,8 @@ export class ExploreBuildingScreen extends Component {
           checklistTitle: '',
           assetSelected: false,
           assetTitle: '',
+          qrCodeValue: '',
+          startScanner: false,
           setQuestions: [], // set of questions based on the selected checklist.
         };
         this.spacesFilter = this.spacesFilter.bind(this)
@@ -205,6 +208,51 @@ export class ExploreBuildingScreen extends Component {
         { cancelable: true }
       )
     }
+    
+    openLink = () => {
+ 
+      Linking.openURL(this.state.qrCodeValue);
+   
+    }
+   
+    onQRCodeScanDone = (qrCode) => {
+   
+      this.setState({ qrCodeValue: qrCode });
+   
+      this.setState({ startScanner: false });
+    }
+   
+    openQRCodeScanner = () => {
+   
+      var that = this;
+   
+      if (Platform.OS === 'android') {
+        async function requestCameraPermission() {
+          try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.CAMERA, {
+                'title': 'BuiltSpace App Permission',
+                'message': 'Builtspace needs access to your camera '
+              }
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+   
+              that.setState({ qrCodeValue: '' });
+              that.setState({ startScanner: true });
+            } else {
+              alert("CAMERA permission denied");
+            }
+          } catch (err) {
+            alert("Camera permission err", err);
+            console.warn(err);
+          }
+        }
+        requestCameraPermission();
+      } else {
+        that.setState({ qrCodeValue: '' });
+        that.setState({ startScanner: true });
+      }
+    }
 
     saveToDevice = () => {
       const date = new Date()
@@ -335,11 +383,11 @@ export class ExploreBuildingScreen extends Component {
     const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle} ></ChecklistModal>
     const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle}></ChecklistModal>
 
-    if (!this.state.dataLoaded) {
+    if (!this.state.dataLoaded ) {
       return (
         <Text>Loading</Text>
       )
-    } else if (this.state.dataLoaded){
+    } else if (this.state.dataLoaded && !this.state.startScanner){
       const materialQ = this.state.setQuestions.filter(function(question)  {
         return question.questiontype === "Materials"
       })
@@ -444,9 +492,9 @@ export class ExploreBuildingScreen extends Component {
         </View>
       </View>
          : null }
-        <TouchableOpacity >
+        <TouchableOpacity onPress={this.openQRCodeScanner}>
                 <View style={styles.row}>
-                  <Text style={styles.text}>qrcode</Text>
+                  <Text style={styles.text}>Scan Qr</Text>
                   <View>
                     <Icon style={styles.listIcon} name="angle-right" size={30} color="black" />
                   </View>
@@ -458,6 +506,23 @@ export class ExploreBuildingScreen extends Component {
   </ScrollView>
     );
     }
+    return (
+      <View style={{ flex: 1 }}>
+ 
+        <CameraKitCameraScreen
+          showFrame={true}
+          scanBarcode={true}
+          laserColor={'#FF3D00'}
+          frameColor={'#00C853'}
+          colorForScannerFrame={'black'}
+          onReadCode={event =>
+            this.onQRCodeScanDone(event.nativeEvent.codeStringValue)
+          }
+        />
+ 
+      </View>
+    );
+
 }
 }
 
