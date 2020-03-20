@@ -205,6 +205,51 @@ export class ExploreBuildingScreen extends Component {
         { cancelable: true }
       )
     }
+    
+    openLink = () => {
+ 
+      Linking.openURL(this.state.qrCodeValue);
+   
+    }
+   
+    onQRCodeScanDone = (qrCode) => {
+   
+      this.setState({ qrCodeValue: qrCode });
+   
+      this.setState({ startScanner: false });
+    }
+   
+    openQRCodeScanner = () => {
+   
+      var that = this;
+   
+      if (Platform.OS === 'android') {
+        async function requestCameraPermission() {
+          try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.CAMERA, {
+                'title': 'BuiltSpace App Permission',
+                'message': 'Builtspace needs access to your camera '
+              }
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+   
+              that.setState({ qrCodeValue: '' });
+              that.setState({ startScanner: true });
+            } else {
+              alert("CAMERA permission denied");
+            }
+          } catch (err) {
+            alert("Camera permission err", err);
+            console.warn(err);
+          }
+        }
+        requestCameraPermission();
+      } else {
+        that.setState({ qrCodeValue: '' });
+        that.setState({ startScanner: true });
+      }
+    }
 
     saveToDevice = () => {
       const date = new Date()
