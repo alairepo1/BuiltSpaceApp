@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements';
 import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert } from 'react-native';
-import  ChecklistIcon from 'react-native-vector-icons/Foundation'
+import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+
 
 export class ChecklistModal extends Component {
     constructor(props) {
@@ -49,7 +50,7 @@ export class ChecklistModal extends Component {
           autoCorrect={false}
           value={this.state.value}
         />
-        <TouchableOpacity  style={styles.assetListItems} onPress={() => {
+        <TouchableOpacity  style={styles.checklistItems} onPress={() => {
           this.props.onChecklistChange(false, '', 'checklist')
           this.setModalVisible(!this.state.modalVisible)
           }}>
@@ -79,6 +80,7 @@ export class ChecklistModal extends Component {
 
         return(
             <View style={{marginTop: 22}}>
+
             <Modal
               animationType="slide"
               transparent={false}
@@ -86,31 +88,42 @@ export class ChecklistModal extends Component {
               onRequestClose={() => {
                 this.setModalVisible(!this.state.modalVisible)
               }}>
-              <View style={{marginTop: 22}}>
-                  <Text style={styles.headingTextBold}>Checklists</Text>
-                <FlatList
+
+
+              <View style={styles.listContainer}>
+                <View style={styles.titleTop}>
+                  <Text style={styles.headingTextBold}>Select a Checklist</Text>
+                </View>
+                <FlatList style={{ marginTop: 20, marginBottom: 75}}
                 data={this.props.checklists}
-                renderItem = {({item}) =>
+                renderItem = {({ item }) =>
                   <TouchableOpacity
                     onPress={() => {
                       this.props.loadQuestions(item.questions, item.title)
                       this.props.onChecklistChange(true, item.title, 'checklist')
                       this.setModalVisible(!this.state.modalVisible)
                     }}>
-                    <View>
-                  <Text style={{fontWeight: 'bold', fontSize: 22}}>{item.title}</Text>
+                    <View style={styles.checklistItems}>
+                      <View style={styles.listIconContainter}>
+                        <ChecklistIcon style={styles.listIcon} name="clipboard-text" size={50} color="black" />
+                        <Text style={styles.listText}>Title: {item.title}</Text>
+                      </View>
                     </View>
                   </TouchableOpacity>
                 }
                 keyExtractor={item => item.id}
                 ListHeaderComponent={this.renderHeader}
                 ></FlatList>
-                <TouchableOpacity
-                onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                  }}>
-                    <Text>Close</Text>
-                </TouchableOpacity>
+
+                {/* Bottom clos button container */}
+                <View style={styles.bottomContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setModalVisible(!this.state.modalVisible);
+                    }}>
+                    <Text style={styles.closeButton}>Close</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </Modal>
     
@@ -154,7 +167,19 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontWeight: 'bold',
 		fontSize: 30
-	},
+  },
+  titleTop: {
+    backgroundColor: '#FAF9ED',
+    width: '100%',
+    height: 50
+  },
+  headingTextBold: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 30,
+    alignSelf: 'center'
+
+  },
 	detailsText: {
 		color: 'red',
 		fontWeight: 'normal',
@@ -186,7 +211,45 @@ const styles = StyleSheet.create({
 	},
 	flatList: {
 		backgroundColor: '#FAF9ED',
-	}
+  },
+  checklistItems: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ABA9A9',
+  },
+  listContainer: {
+    marginTop: 10,
+    flex: 1,
+  },
+  listText: {
+    justifyContent: 'flex-start',
+    fontSize: 15,
+    padding: 2
+  },
+  bottomContainer: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#FAF9ED',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+  },
+  closeButton: {
+    textAlign: "center",
+    color: 'black',
+    fontSize: 25,
+  },
+  listIcon: {
+    paddingRight: 15,
+    paddingLeft: 10
+  },
+  listIconContainer: {
+    paddingVertical: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+    alignItems: "center"
+  }
 
 
 })
