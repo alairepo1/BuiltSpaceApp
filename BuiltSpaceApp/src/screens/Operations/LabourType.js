@@ -38,8 +38,8 @@ export class LabourType extends Component {
     }
     
     updateIndex(selectedIndex) {
-        this.setState({selectedIndex})
-        this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
+            this.setState({selectedIndex})
+            this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
     }
 
     render() {

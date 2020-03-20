@@ -7,7 +7,7 @@ export class MaterialsType extends Component {
     constructor(props) {
         super(props);
         this.state={
-            selectedIndex: '',
+            selectedIndex: null,
             format: this.props.question.item.format.split('|'),
             colors: this.props.question.item.colorformat.split('|'),
         }
@@ -23,7 +23,7 @@ export class MaterialsType extends Component {
         return buttons
     }
 
-    changeColor = (index = 0) => {
+    changeColor = (index) => {
         if (this.state.selectedIndex == index) {
             return { borderColor: this.state.colors[index], color : 'white'}
         } else {
@@ -33,8 +33,14 @@ export class MaterialsType extends Component {
     }
 
     updateIndex(selectedIndex) {
-        this.setState({selectedIndex})
-        this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
+        if (selectedIndex == this.state.selectedIndex){
+            this.setState({selectedIndex: null})
+            this.props.question.updateQuestion(this.props.question.index, "", "InspectionResults")
+
+        }else{
+            this.setState({selectedIndex})
+            this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
+        }
     }
 
     render() {
