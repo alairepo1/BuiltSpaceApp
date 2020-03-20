@@ -7,6 +7,7 @@ import {
   Alert,
   ActivityIndicator,
   FlatList, 
+  ScrollView
 } from 'react-native';
 import PropTypes from 'prop-types';
 import {ContextInfo} from '../../ContextInfoProvider';
@@ -22,6 +23,7 @@ import {
 } from '../../storage/schema/dbSchema';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { CheckBox } from 'react-native-elements'
+import { useFocusEffect } from 'react-navigation';
 
 export class HomePage extends Component {
   static contextType = ContextInfo
@@ -33,13 +35,22 @@ export class HomePage extends Component {
       organizations: [],
       isLoading: true,
       inspectionsList: [],
-      checked: []
+      checked: [],
     };
   }
 
   componentDidMount = () => {
     this.loadData()
+    const {navigation} = this.props
+    this._focusListener = navigation.addListener('didFocus', payload => {
+      //adds a listener check for transitions to the HomeScreen then reloads inspection data
+      this.loadInspections() 
+    })
   };
+
+  componentWillUnmount = () => {
+    this._focusListener //removes the listener
+  }
 
   loadData = async() => {
         // fetch data from api/db or update db
@@ -128,6 +139,7 @@ export class HomePage extends Component {
         isLoading: false,
       });
     });
+    this.loadInspections()
   }
 
   setCheckBox = (index) => {
@@ -191,6 +203,7 @@ export class HomePage extends Component {
             <View style={styles.inspectionContainer}>
               <Text>Saved inspections</Text>
               {this.state.inspectionsList.length > 0 ? 
+              <ScrollView>
                 <FlatList 
                 data={this.state.inspectionsList}
                 extraData={this.state}
@@ -205,6 +218,7 @@ export class HomePage extends Component {
                 }
                 keyExtractor={item => item.Id}
                 />
+              </ScrollView>
               :
               <Text>No unsubmitted work</Text>
               }

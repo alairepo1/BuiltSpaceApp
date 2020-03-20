@@ -10,7 +10,6 @@ export class BuildingDetailsScreen extends Component {
     super(props);
     this.state = {
       building_data: [],
-      key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U='
     };
   }
   

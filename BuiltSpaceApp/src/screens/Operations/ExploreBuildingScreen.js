@@ -115,7 +115,6 @@ export class ExploreBuildingScreen extends Component {
       }
 
       if (type == 'space'){
-        console.log(newState)
         this.setState({
           spaceSelected: newState,
           spaceName: text
@@ -328,9 +327,7 @@ export class ExploreBuildingScreen extends Component {
   
         if (this.state.spaceSelected){
           const spaces = Array.from(this.state.spaces)
-          console.log(this.state.selectedSpaceId)
           const space = spaces.filter(space => space.id == this.state.selectedSpaceId)
-          console.log(space)
           checklist.MyFields.SpaceId = space[0].id
           checklist.MyFields.SpaceName = space[0].suitenumber //if space is selected, space.name
           checklist.MyFields.Floor = space[0].floor // if space is selected, space.floor
