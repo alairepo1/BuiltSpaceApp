@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements';
-import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
+import {StyleSheet, Text, View, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export class AssetsModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      assets: [],
       assetsFetched: false,
       modalVisible: false,
       isSelected: false,
@@ -88,7 +86,7 @@ export class AssetsModal extends Component {
               <Text style={styles.headingTextBold}>Select an Asset</Text>
             </View>
             <FlatList style={{ marginTop: 20, marginBottom: 75 }}
-              data={this.props.assets}
+              data={ this.state.assets || this.props.assets} //checks if this.state.assets exists, or use this.props.assets
               renderItem={({ item }) =>
                 <TouchableOpacity
                   onPress={() => {
@@ -237,7 +235,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     textAlign: "center",
-    color: 'white',
+    color: 'black',
     fontSize: 25,
   },
   listIcon: {

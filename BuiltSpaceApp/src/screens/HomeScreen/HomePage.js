@@ -177,7 +177,6 @@ export class HomePage extends Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
     return this.state.isLoading ? (
       <View>
         <ActivityIndicator />

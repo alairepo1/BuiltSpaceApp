@@ -61,7 +61,7 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
-    loadQuestions = (questions, questionTitle) => {
+    loadQuestions = (questions) => {
       this.setState({
         setQuestions: Array.from(questions),
         checklistSelected: true
