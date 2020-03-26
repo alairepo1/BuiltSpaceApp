@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, FlatList, ShadowPropTypesIOS} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
 export class MaterialsType extends Component {
@@ -121,11 +120,7 @@ export class MaterialsType extends Component {
                         "TaskDetails", // type 
                         )}
                     />
-
                 </View>
-                <TouchableOpacity disabled={true} style={{ margin: 5, backgroundColor: 'white', width: 100, height: 20}}> 
-                    <Text>Add picture</Text>
-                </TouchableOpacity>
             </View>
         )
     }

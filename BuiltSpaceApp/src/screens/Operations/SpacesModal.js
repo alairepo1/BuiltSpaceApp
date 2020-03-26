@@ -64,6 +64,13 @@ export class SpacesModal extends Component {
     );
   };
 
+  resetModal = () => {
+    this.setState({ 
+      value: '',
+      modalIsOpen: false 
+    }
+  );
+}
   render() {
     const { navigation } = this.props;
   
@@ -88,8 +95,8 @@ export class SpacesModal extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-
+            this.resetModal()
+            this.setModalVisible(!this.state.modalVisible);
           }}>
 
           <View style={styles.listContainer}>
@@ -126,6 +133,7 @@ export class SpacesModal extends Component {
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => {
+                  this.resetModal()
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
