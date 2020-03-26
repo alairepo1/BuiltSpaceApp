@@ -3,13 +3,13 @@ import {ContextInfo} from '../../ContextInfoProvider';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, 
   Alert, TextInput, ActivityIndicator, PermissionsAndroid, Platform } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
-import SpacesModal from './SpacesModal.js';
-import AssetsModal from './AssetsModal.js'
+import SpacesModal from './components/SpacesModal.js';
+import AssetsModal from './components/AssetsModal.js'
 import {updateBuilding, DBcheckBuildingData, saveInspection, getInspections} from '../../storage/schema/dbSchema'
-import ChecklistModal from './ChecklistModal.js'
-import MaterialsType from './MaterialsType.js'
-import LabourType from './LabourType.js'
-import GeneralType from './GeneralType.js'
+import ChecklistModal from './components/ChecklistModal.js'
+import MaterialsType from './components/MaterialsType.js'
+import LabourType from './components/LabourType.js'
+import GeneralType from './components/GeneralType.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 import {getStartTime, calculateDurationInspection} from '../../functions/functions.js'
@@ -537,23 +537,23 @@ export class ExploreBuildingScreen extends Component {
       let issueQuestion = {
         "allowmultiplechoices": false,
         "checklistid": checklistId,
-        "checklisttitle": "Issue found",
+        "checklisttitle": checklistTitle,
         "colorformat": "#00cc66|#00a2e8|#ff0000|#FFD700",
         "displayproperty": false,
         "format": "Good|Reparied|Quote|Monitor",
-        "id": '',
+        "id": 0,
         "markupformat": "",
-        "measurementlabel": "Labour",
+        "measurementlabel": "",
         "measurementonly": false,
-        "measurementunit": "Hours",
+        "measurementunit": "",
         "number": "",
         "propertygroup": "",
         "propertyname": "",
-        "question": "Enter hours",
-        "questiontype": "Labour",
+        "question": "Issue found",
+        "questiontype": "",
         "remarks": "",
         "salestaxformat": "",
-        "showmeasurement": true,
+        "showmeasurement": false,
         "textonly": false,
         "updateproperty": false,
         "updatepropertyfromcurrent": false,
