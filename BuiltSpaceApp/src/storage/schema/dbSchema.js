@@ -5,7 +5,7 @@
 
 import Realm from 'realm';
 import {trigger_new_account, fetchOrgs} from '../fetchAPI'
-import { acc } from 'react-native-reanimated';
+
 // name variables
 export const DB_NAME = "BuiltSpaceDB"
 
@@ -74,7 +74,7 @@ export const buildingSchema = {
     lastUpdated: 'date?',
     assets: {type: 'list', objectType: 'asset'},
     spaces: {type: 'list', objectType: 'spaces'},
-    // qrcodes: {type: 'list', objecType: 'qrcodes'}
+    qrcodes: {type: 'list', objectType: 'qrcodes'}
   }
 }
 
@@ -175,7 +175,7 @@ export const questionsSchema = {
 export const qrCodeSchema = {
   name: 'qrcodes',
   properties: {
-    id: 'int',
+    id: 'int?',
     assetid: 'int?',
     buildingid: 'int?',
     spaceid: 'int?',
@@ -230,15 +230,15 @@ export const MyFieldsSchema = {
     WorkOrderNumber: 'string?',
     ChecklistCategory: 'string?',
     QRcodeURL: 'string?',
-    // AssetLocations: 'list?',
-    // NewSpaces: 'list?',
+    AssetLocations: {type: 'object', objectType: 'assetLocation'},
+    NewSpaces: {type: 'object', objectType: 'newSpacesContainerSchema'},
     Questions: {type: 'object', objectType: 'questionsContainer'},
     ParentTaskId: 'string?',  
     Task: 'string?', // Because there is no data in your app , leave it empty
     ChecklistId: 'string?',
     ChecklistTitle: 'string?',
     EmailReport: 'string?',
-    // DeviceGeolocation: {type: 'object', objectType: 'geoLocation'}
+    DeviceGeolocation: {type: 'object', objectType: 'geoLocation'}
   }
 }
 
@@ -274,47 +274,40 @@ export const inspectionQuestionSchema = {
   }
 }
 
-// export const newSpacesContainerSchema = {
-//   name: 'newSpacesContainerSchema',
-//   properties: {
-//     Spaces: {type: 'list', objectType: 'newSpaces'}
-//   }
-// }
+export const newSpacesContainerSchema = {
+  name: 'newSpacesContainerSchema',
+  properties: {
+    Spaces: {type: 'list', objectType: 'newSpaces'}
+  }
+}
 
-// export const newSpacesSchema = {
-//   name: 'newSpaces',
-//   properties: {
-//     name: 'string?' // placeholder property, change/add to specifications
-//   }
-// }
+export const newSpacesSchema = {
+  name: 'newSpaces',
+  properties: {
+    name: 'string?' // placeholder property, add to specifications of NewSpaces
+  }
+}
 
-// export const assetLocationContainerSchema = {
-//   name: 'assetLocationContainerSchema',
-//   properties: {
-//     Spaces: {type: 'list', objectType: 'newSpaces'}
-//   }
-// }
+export const assetLocationContainerSchema = {
+  name: 'assetLocation',
+  properties: {
+    AssetLocation: 'string?'
+  }
+}
 
-// export const assetLocationsSchema = {
-//   name: 'assetLocationsSchema',
-//   properties: {
-//     name: 'string?' // placeholder property, change/add to specifications
-//   }
-// }
-
-// export const geoLocationSchema = {
-//   name: 'geoLocation',
-//   properties: {
-//     Longitude: 'string?',
-//     Latitude: 'string?',
-//     Altitude: 'string?',
-//     Accuracy: 'string?',
-//     AltitudeAccuracy: 'string?',
-//     Heading: 'string?',
-//     Speed: 'string',
-//     Timestamp: 'date?'
-//   }
-// }
+export const geoLocationSchema = {
+  name: 'geoLocation',
+  properties: {
+    Longitude: 'string?',
+    Latitude: 'string?',
+    Altitude: 'string?',
+    Accuracy: 'string?',
+    AltitudeAccuracy: 'string?',
+    Heading: 'string?',
+    Speed: 'string',
+    Timestamp: 'date'
+  }
+}
 
 /**
  * Database Service/Functions
@@ -333,12 +326,16 @@ const databaseOptions = {
     questionsSchema,
     assetSchema,
     spaceSchema,
-    // qrCodeSchema,
+    qrCodeSchema,
     inspectionSchema,
     MyFieldsContainerSchema,
     MyFieldsSchema,
     questionsContainerSchema,
     inspectionQuestionSchema,
+    assetLocationContainerSchema,
+    newSpacesContainerSchema,
+    newSpacesSchema,
+    geoLocationSchema,
   ],
 }
 

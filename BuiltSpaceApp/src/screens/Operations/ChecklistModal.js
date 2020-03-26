@@ -99,7 +99,7 @@ export class ChecklistModal extends Component {
                 renderItem = {({ item }) =>
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.loadQuestions(item.questions, item.title)
+                      this.props.loadQuestions(item.questions, item.title, item.id)
                       this.props.onChecklistChange(true, item.title, 'checklist')
                       this.setModalVisible(!this.state.modalVisible)
                     }}>

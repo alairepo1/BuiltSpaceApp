@@ -44,7 +44,7 @@ export class HomePage extends Component {
     const {navigation} = this.props
     this._focusListener = navigation.addListener('didFocus', payload => {
       //adds a listener check for transitions to the HomeScreen then reloads inspection data
-      this.loadInspections() 
+      // this.loadInspections() 
     })
   };
 
@@ -110,7 +110,7 @@ export class HomePage extends Component {
               })
             })
           }
-          this.loadInspections()    
+          // this.loadInspections()    
         });
   }
 
@@ -129,7 +129,7 @@ export class HomePage extends Component {
   }
 
   updateAccountData = (currentDate) => {
-    console.log("Home Screen update data data")
+    console.log("Home Screen update data")
     var currentDate = new Date() // current datetime as object
     fetchOrgs(this.context.accountContext.account).then(result => {
       updateAccount(this.context.accountContext.account, result, currentDate)

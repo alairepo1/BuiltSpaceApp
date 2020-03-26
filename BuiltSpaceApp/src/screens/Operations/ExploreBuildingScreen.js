@@ -15,7 +15,7 @@ import { Button } from 'react-native-elements';
 import {getStartTime, calculateDurationInspection} from '../../functions/functions.js'
 import { CameraKitCameraScreen } from 'react-native-camera-kit'
 import { CameraKitGalleryView } from 'react-native-camera-kit'
-
+import FlatlistFooter from './components/ExploreBuildingFlatlistFooter'
 export class ExploreBuildingScreen extends Component { 
   static contextType = ContextInfo
     constructor(props) {
@@ -38,6 +38,7 @@ export class ExploreBuildingScreen extends Component {
           qrCodeValue: '',
           startScanner: false,
           setQuestions: [], // set of questions based on the selected checklist.
+          checklistId: ''
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
@@ -61,10 +62,11 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
-    loadQuestions = (questions, questionTitle) => {
+    loadQuestions = (questions, questionTitle, checklistId) => {
       this.setState({
         setQuestions: Array.from(questions),
-        checklistSelected: true
+        checklistSelected: true,
+        checklistId
       })
     }
 
@@ -287,7 +289,7 @@ export class ExploreBuildingScreen extends Component {
             Assetname: asset.name,
             Category: asset.categoryabbr,
             SpaceId:  null, // if space is selected, space.id
-            SpaceName:  "", //if space is selected, space.name
+            SpaceName:  "", //if space is selected, space.suitenumber
             Floor: "", // if space is selected, space.floor
             SpaceUsage: "", //if space selected, space.usage
             Description: asset.description,
@@ -298,30 +300,30 @@ export class ExploreBuildingScreen extends Component {
             WorkOrderNumber: 'WorkOrderNumber', // WorOrderNumber not implemented
             ChecklistCategory: 'ChecklistCategory',
             QRcodeURL: 'qrcodeMapping',
-            // AssetLocations: {
-            //   AssetLocation: 'allspaces',
-            // },
-            // NewSpaces: {
-            //   Spaces: [], 
-            // },
+            AssetLocations: {
+              AssetLocation: 'allspaces',
+            },
+            NewSpaces: {
+              Spaces: [], 
+            },
             Questions: {
-              Question: [], // an array of question
+              Question: [], // an array of questions
             },
             ParentTaskId: '', // Because there is no data in your app , leave it empty
             Task: '', // Because there is no data in your app , leave it empty
-            ChecklistId: '', //checklist.id
+            ChecklistId: this.state.checklistId, //checklist.id
             ChecklistTitle: this.state.checklistTitle,
             EmailReport: '', // email report not implemented
-            // DeviceGeolocation: { // Geolocation not implemented 
-            //   Longitude: '',
-            //   Latitude: '',
-            //   Altitude: '',
-            //   Accuracy: '',
-            //   AltitudeAccuracy: '',
-            //   Heading: '',
-            //   Speed: '',
-            //   Timestamp: dateString,
-            // },
+            DeviceGeolocation: { // Geolocation not implemented 
+              Longitude: '',
+              Latitude: '',
+              Altitude: '',
+              Accuracy: '',
+              AltitudeAccuracy: '',
+              Heading: '',
+              Speed: '',
+              Timestamp: dateString,
+            },
           }
         }
   
@@ -463,6 +465,101 @@ export class ExploreBuildingScreen extends Component {
         );
       }
     }
+    addQuestion = (type) => {
+      var questions = this.state.setQuestions
+      var checklistTitle = this.state.checklistTitle
+      var checklistId = this.state.checklistId
+      if (type == "labour"){
+        let labourQuestion = {
+          "allowmultiplechoices": false,
+          "checklistid": checklistId,
+          "checklisttitle": checklistTitle,
+          "colorformat": "#98d9ea|#00a2e8|#3366cc|#232b85",
+          "displayproperty": false,
+          "format": "Regular|Overtime|Double Time|Other",
+          "id": 0,
+          "markupformat": "",
+          "measurementlabel": "Labour",
+          "measurementonly": false,
+          "measurementunit": "Hours",
+          "number": "",
+          "propertygroup": "",
+          "propertyname": "",
+          "question": "Enter hours",
+          "questiontype": "Labour",
+          "remarks": "",
+          "salestaxformat": "",
+          "showmeasurement": true,
+          "textonly": false,
+          "updateproperty": false,
+          "updatepropertyfromcurrent": false,
+          "validationpattern": ""
+      }
+        questions.push(labourQuestion)
+      }
+    if (type == "materials"){
+
+      let materialQuestion = {
+          "allowmultiplechoices": false,
+          "checklistid": checklistId,
+          "checklisttitle": checklistTitle,
+          "colorformat": "#98d9ea|#00a2e8|#3366cc|#232b85|#151a51",
+          "displayproperty": false,
+          "format": "PO|Tools|Truck Stock|3rd Party|Other",
+          "id": 0,
+          "markupformat": "||||",
+          "measurementlabel": "Quantity",
+          "measurementonly": false,
+          "measurementunit": "",
+          "number": "",
+          "propertygroup": "",
+          "propertyname": "",
+          "question": "Enter Materials",
+          "questiontype": "Materials",
+          "remarks": "",
+          "salestaxformat": "||||",
+          "showmeasurement": true,
+          "textonly": false,
+          "updateproperty": false,
+          "updatepropertyfromcurrent": false,
+          "validationpattern": ""
+      }
+      questions.push(materialQuestion)
+    }
+    if (type == "issue"){
+      let issueQuestion = {
+        "allowmultiplechoices": false,
+        "checklistid": checklistId,
+        "checklisttitle": "Issue found",
+        "colorformat": "#00cc66|#00a2e8|#ff0000|#FFD700",
+        "displayproperty": false,
+        "format": "Good|Reparied|Quote|Monitor",
+        "id": '',
+        "markupformat": "",
+        "measurementlabel": "Labour",
+        "measurementonly": false,
+        "measurementunit": "Hours",
+        "number": "",
+        "propertygroup": "",
+        "propertyname": "",
+        "question": "Enter hours",
+        "questiontype": "Labour",
+        "remarks": "",
+        "salestaxformat": "",
+        "showmeasurement": true,
+        "textonly": false,
+        "updateproperty": false,
+        "updatepropertyfromcurrent": false,
+        "validationpattern": ""
+      }
+      questions.push(issueQuestion)
+    }
+    this.setState({setQuestions: questions})
+    }
+
+    renderFlatlistFooter = () => {
+      return <FlatlistFooter addQuestion={this.addQuestion} />
+    }
   render() {
     
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
@@ -523,6 +620,8 @@ export class ExploreBuildingScreen extends Component {
       <View>
         <FlatList style={styles.flatList}
           data={this.state.setQuestions}
+          extraData={this.state.setQuestions}
+          ListFooterComponent={this.renderFlatlistFooter}
           renderItem={({item, index}) => {
   
             if (item.questiontype === '') {
@@ -555,19 +654,7 @@ export class ExploreBuildingScreen extends Component {
           keyExtractor={item => this.state.setQuestions.indexOf(item)}
           />
          <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
-           <View style={{flex: 1}}>
-             <View style={{flex: 3, flexDirection: 'row'}}>
-               <View style={{flex: 1}}>
-                 <Text>Add labour</Text>
-               </View>
-               <View style={{flex: 1}}>
-                <Text>Add materials</Text>
-               </View>
-               <View style={{flex: 1}}>
-                <Text>Add issue</Text>
-               </View>
-             </View>
-           </View>
+
            <View style={{flex: 1}}>
             <Text>Additional Comments</Text>
             <TextInput 
@@ -597,7 +684,7 @@ export class ExploreBuildingScreen extends Component {
         title="Submit"
         buttonStyle={{backgroundColor: '#47d66d'}}
         titleStyle={{color: 'white'}}
-        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(result)})}}
+        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(JSON.stringify(result,null,1))})}}
         />
         </View>
 
