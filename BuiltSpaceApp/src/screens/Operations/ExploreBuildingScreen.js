@@ -12,7 +12,7 @@ import LabourType from './components/LabourType.js'
 import GeneralType from './components/GeneralType.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
-import {getStartTime, calculateDurationInspection} from '../../functions/functions.js'
+import {getStartTime, formatInspectionObject, formatAddQuestion} from '../../functions/functions.js'
 import { CameraKitCameraScreen } from 'react-native-camera-kit'
 import { CameraKitGalleryView } from 'react-native-camera-kit'
 import FlatlistFooter from './components/ExploreBuildingFlatlistFooter'
@@ -95,7 +95,27 @@ export class ExploreBuildingScreen extends Component {
         question[0]["TextOnlyForm"] = value;
       }
     }
-
+    resetState = () => {
+      this.setState({
+        spaces: [],
+        spacesFetched: false,
+        assets: [],
+        filteredAssets: [],
+        checklists: [],
+        filteredChecklist: [],
+        dataLoaded: false,
+        spaceSelected: false,
+        spaceName: '',
+        checklistSelected: false,
+        checklistTitle: '',
+        assetSelected: false,
+        assetTitle: '',
+        qrCodeValue: '',
+        startScanner: false,
+        setQuestions: [], // set of questions based on the selected checklist.
+        checklistId: ''
+      })
+    }
     onChange = (newState, text = '', type) => {
       if (type == 'checklist'){
         let StartTime = getStartTime()
@@ -268,116 +288,28 @@ export class ExploreBuildingScreen extends Component {
     }
 
     saveToDevice = () => {
-      const date = new Date()
-      const dateString = date.toISOString().split('T')[0];
-      const time = date.getTime()
-      const building = this.props.navigation.state.params.buildingData
-      const asset = this.state.assets.find(asset => asset.id == this.state.selectedAssetId)
-      const orgData =  this.props.navigation.state.params.orgData
-      const duration = calculateDurationInspection()
+      
+      if (this.state.spaceSelected){
+        var spaceSelected = this.state.spaceSelected
+        var spaceSelectedId = this.state.spaceSelectedId
+        var spaces = Array.from(this.state.spaces)
+      }
 
-      //inspection for a space
-      // _filename = isoDateString + "-" + buildingname + "-" + assetProperty.spacename;
-      //inspection for an asset
-      const _filename =  dateString + "-" + building.name.split(' ').join('-') + "-" + asset.name;
       try{
-        var checklist = {
-          MyFields: {
-            DemoUserName: 'demousername', // if the user comes fropm the button "try it out"
-            DemoUserEmail: 'demouseremail', // if the user comes fropm the button "try it out"
-            Date: dateString,
-            StartTime: this.state.StartTime,
-            Duration: duration, //convert to string?
-            Time: time,
-            FileName: _filename,
-            Address: building.address,
-            GeneralComments: this.state.GeneralComments || "",
-            flagedit: 'fl_edit', // flagedit not implemented
-            Assetname: asset.name,
-            Category: asset.categoryabbr,
-            SpaceId:  null, // if space is selected, space.id
-            SpaceName:  "", //if space is selected, space.suitenumber
-            Floor: "", // if space is selected, space.floor
-            SpaceUsage: "", //if space selected, space.usage
-            Description: asset.description,
-            Make: asset.make,
-            Model: asset.model,
-            Serial: asset.serial,
-            Building: asset.buildingId,
-            WorkOrderNumber: 'WorkOrderNumber', // WorOrderNumber not implemented
-            ChecklistCategory: 'ChecklistCategory',
-            QRcodeURL: 'qrcodeMapping',
-            AssetLocations: {
-              AssetLocation: 'allspaces',
-            },
-            NewSpaces: {
-              Spaces: [], 
-            },
-            Questions: {
-              Question: [], // an array of questions
-            },
-            ParentTaskId: '', // Because there is no data in your app , leave it empty
-            Task: '', // Because there is no data in your app , leave it empty
-            ChecklistId: this.state.checklistId, //checklist.id
-            ChecklistTitle: this.state.checklistTitle,
-            EmailReport: '', // email report not implemented
-            DeviceGeolocation: { // Geolocation not implemented 
-              Longitude: '',
-              Latitude: '',
-              Altitude: '',
-              Accuracy: '',
-              AltitudeAccuracy: '',
-              Heading: '',
-              Speed: '',
-              Timestamp: dateString,
-            },
-          }
-        }
-  
-        if (this.state.spaceSelected){
-          const spaces = Array.from(this.state.spaces)
-          const space = spaces.filter(space => space.id == this.state.selectedSpaceId)
-          checklist.MyFields.SpaceId = space[0].id
-          checklist.MyFields.SpaceName = space[0].suitenumber //if space is selected, space.name
-          checklist.MyFields.Floor = space[0].floor // if space is selected, space.floor
-          checklist.MyFields.SpaceUsage = space[0].usage  //if space selected, space.usage
-          
-        }
-  
-
-        this.state.setQuestions.forEach(question => {
-          var formatQuestion = {
-              QuestionId: question.id,
-              QuestionNumber: question.number,
-              TaskTitle: question.question,  
-              TaskDetails: question.TaskDetails || "",
-              QuestionFormat: question.format,
-              Photos: 'photos', // an array of photo
-              InspectionResult: question.InspectionResults || "",
-              MeasurementLabel: question.Measurementlabel || "",
-              Measurement: question.measurement || "",
-              MeasurementUnit: question.Measurementunit || "",
-              Tool: '',
-              Supplier:'',
-              UnitCost: question.UnitCost || "",
-              QuestionType: question.questiontype || "",
-              SalesTax: question.salexaxformat || "",
-              Markup: '',
-              AllowMultiple: question.allowmultiplechoices,
-              Choices: '',
-              TextOnly: question.TextOnlyForm || ""
-            }
-            checklist.MyFields.Questions.Question.push(formatQuestion)
-        })
-        
-        var checklistObject = {
-          Id: dateString,
-          Name: _filename,
-          Content: checklist,
-          buildingId: building.id,
-          orgId: orgData.id,
-          AssetId: asset.id,
-        };
+        //runs the function formatInspectionObject from functions.js
+        // const checklistObject = formatInspectionObject(building, asset, orgData, startDate, generalComments,checklistId,checklistTitle, questions, spaceSelected, spaceSelectedId, spaces)
+        const checklistObject = formatInspectionObject(
+          this.props.navigation.state.params.buildingData, 
+          this.state.assets.find(asset => asset.id == this.state.selectedAssetId), 
+          this.props.navigation.state.params.orgData, 
+          this.state.StartTime, 
+          this.state.GeneralComments,
+          this.state.checklistId,
+          this.state.checklistTitle, 
+          this.state.setQuestions, 
+          spaceSelected, 
+          spaceSelectedId, 
+          spaces)
         saveInspection(this.context.accountContext.account, checklistObject)
       }catch(e){console.log(e)}
       console.log("save to device")
@@ -476,92 +408,12 @@ export class ExploreBuildingScreen extends Component {
       var questions = this.state.setQuestions
       var checklistTitle = this.state.checklistTitle
       var checklistId = this.state.checklistId
-      if (type == "labour"){
-        let labourQuestion = {
-          "allowmultiplechoices": false,
-          "checklistid": checklistId,
-          "checklisttitle": checklistTitle,
-          "colorformat": "#98d9ea|#00a2e8|#3366cc|#232b85",
-          "displayproperty": false,
-          "format": "Regular|Overtime|Double Time|Other",
-          "id": 0,
-          "markupformat": "",
-          "measurementlabel": "Labour",
-          "measurementonly": false,
-          "measurementunit": "Hours",
-          "number": "",
-          "propertygroup": "",
-          "propertyname": "",
-          "question": "Enter hours",
-          "questiontype": "Labour",
-          "remarks": "",
-          "salestaxformat": "",
-          "showmeasurement": true,
-          "textonly": false,
-          "updateproperty": false,
-          "updatepropertyfromcurrent": false,
-          "validationpattern": ""
-      }
-        questions.push(labourQuestion)
-      }
-    if (type == "materials"){
 
-      let materialQuestion = {
-          "allowmultiplechoices": false,
-          "checklistid": checklistId,
-          "checklisttitle": checklistTitle,
-          "colorformat": "#98d9ea|#00a2e8|#3366cc|#232b85|#151a51",
-          "displayproperty": false,
-          "format": "PO|Tools|Truck Stock|3rd Party|Other",
-          "id": 0,
-          "markupformat": "||||",
-          "measurementlabel": "Quantity",
-          "measurementonly": false,
-          "measurementunit": "",
-          "number": "",
-          "propertygroup": "",
-          "propertyname": "",
-          "question": "Enter Materials",
-          "questiontype": "Materials",
-          "remarks": "",
-          "salestaxformat": "||||",
-          "showmeasurement": true,
-          "textonly": false,
-          "updateproperty": false,
-          "updatepropertyfromcurrent": false,
-          "validationpattern": ""
-      }
-      questions.push(materialQuestion)
-    }
-    if (type == "issue"){
-      let issueQuestion = {
-        "allowmultiplechoices": false,
-        "checklistid": checklistId,
-        "checklisttitle": checklistTitle,
-        "colorformat": "#00cc66|#00a2e8|#ff0000|#FFD700",
-        "displayproperty": false,
-        "format": "Good|Reparied|Quote|Monitor",
-        "id": 0,
-        "markupformat": "",
-        "measurementlabel": "",
-        "measurementonly": false,
-        "measurementunit": "",
-        "number": "",
-        "propertygroup": "",
-        "propertyname": "",
-        "question": "Issue found",
-        "questiontype": "",
-        "remarks": "",
-        "salestaxformat": "",
-        "showmeasurement": false,
-        "textonly": false,
-        "updateproperty": false,
-        "updatepropertyfromcurrent": false,
-        "validationpattern": ""
-      }
-      questions.push(issueQuestion)
-    }
-    this.setState({setQuestions: questions})
+      try {
+        const addedQuestions = formatAddQuestion(type,questions,checklistTitle,checklistId)
+        this.setState({setQuestions: addedQuestions})
+      }catch(e){console.log("addQuestion error: ", e)}
+
     }
 
     renderFlatlistFooter = () => {
@@ -612,7 +464,12 @@ export class ExploreBuildingScreen extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
-        <Icon onPress={() => this.updateBuildingData()} style={styles.listIcon} name="refresh" size={20} color="black" />
+        <Icon onPress={() => {
+          this.setState({dataLoaded: false})
+          this.resetState()
+          this.updateBuildingData() 
+        }} 
+        style={styles.listIcon} name="refresh" size={20} color="black" />
 
     <View>
         <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
