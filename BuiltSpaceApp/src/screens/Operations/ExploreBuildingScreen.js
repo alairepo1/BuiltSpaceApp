@@ -49,6 +49,11 @@ export class ExploreBuildingScreen extends Component {
       }
 
     spacesFilter = (space) => {
+      {/*
+        in spacesModal, this function will be called to update the state in this screen.
+        When a space is selected, this function will run and
+        sets the filters the assets state variable by comparing space.floor and asset.spaces properties
+      */}
       this.state.filteredAssets = this.state.assets.filter(item => item.spaces === space.floor)
       this.setState({
         selectedSpaceId: space.id,
@@ -56,13 +61,23 @@ export class ExploreBuildingScreen extends Component {
       })
     }
     assetsFilter = (asset) => {
+      {/*
+        in assetModal, this function will be called to update the state in this screen.
+        When an asset is selected, this function will run and
+        sets the filters the checklist state variable by comparing checklist.assetCategory and asset.categoryabbr properties
+      */}
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === asset.categoryabbr || item.assetCategory === "")
       this.setState({
         selectedAssetId: asset.id,
       })
     }
 
-    loadQuestions = (questions, questionTitle, checklistId) => {
+    loadQuestions = (questions, checklistId) => {
+      {/*
+        sets the questions for the flatlist to render 
+        in this Screen and assigns a state variable
+        for the selected checklist id.
+       */}
       this.setState({
         setQuestions: Array.from(questions),
         checklistSelected: true,
@@ -71,7 +86,14 @@ export class ExploreBuildingScreen extends Component {
     }
 
     updateQuestion = (index, value, type, measurement_label = '', measurement_unit = '') => {
-      // updates the question text input based on the type passed into the argument.
+      {/*
+        updates the question text input based on the type passed into the argument.
+        
+        This function will update the question based on the index loaded in the flatlist.
+
+        There are checkers for each input text from the question and updates the property
+        based on the type.
+       */}
       let question = this.state.setQuestions.slice(index, index + 1); // shallow copy the question from setQuestions
       if (type == "measurement"){
         console.log("measurement")
@@ -96,6 +118,9 @@ export class ExploreBuildingScreen extends Component {
       }
     }
     resetState = () => {
+      {/*
+        when refresh is pressed, this function will reset all assigned states.
+       */}
       this.setState({
         spaces: [],
         spacesFetched: false,
@@ -117,6 +142,11 @@ export class ExploreBuildingScreen extends Component {
       })
     }
     onChange = (newState, text = '', type) => {
+      {/*
+        when a space, asset or checklist type is selected, this function
+        will assign a states based on the type.
+        The modal components will change based on the states 
+       */}
       if (type == 'checklist'){
         let StartTime = getStartTime()
         this.setState({ 
@@ -149,6 +179,14 @@ export class ExploreBuildingScreen extends Component {
     }
 
     loadData = () => {
+      {/*
+        on component did mount, this function will check if their
+        is building data in realm db.
+        if none, it will run the updateBuildingData function
+        if it exists, the function will check the datetime if 1 hour has passed.
+        if the time exeeds 1 hour from the last update, it will run
+        the updateBulidingData function.
+      */}
       var currentDate = new Date() // current datetime as object
 
       var orgData =  this.props.navigation.state.params.orgData // realm object from props
@@ -203,6 +241,10 @@ export class ExploreBuildingScreen extends Component {
     }
 
     updateBuildingData = () => {
+      {/*
+        The function will call get_building_data from fetchAPI.js
+        and returns the building details as an array of objects
+       */}
       var orgData =  this.props.navigation.state.params.orgData
       var buildingData = this.props.navigation.state.params.buildingData //realm object from props
       var currentDate = new Date() // current datetime as object
@@ -222,6 +264,9 @@ export class ExploreBuildingScreen extends Component {
 
 
     saveAlert = () => {
+      {/**On button press to save inspection to device,
+        will trigger this alert
+       */}
       Alert.alert(
         'Confirmation',
         'Are all the questions answered? ' +
@@ -288,7 +333,11 @@ export class ExploreBuildingScreen extends Component {
     }
 
     saveToDevice = () => {
-      
+      {/*
+      Confirmation from saveAlert will trigger this function to format the checklistObject
+      and saves the object into realm db
+       */}
+
       if (this.state.spaceSelected){
         var spaceSelected = this.state.spaceSelected
         var spaceSelectedId = this.state.spaceSelectedId

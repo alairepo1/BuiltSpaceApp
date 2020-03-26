@@ -44,7 +44,7 @@ export class HomePage extends Component {
     const {navigation} = this.props
     this._focusListener = navigation.addListener('didFocus', payload => {
       //adds a listener check for transitions to the HomeScreen then reloads inspection data
-      // this.loadInspections() 
+      this.loadInspections() 
     })
   };
 
