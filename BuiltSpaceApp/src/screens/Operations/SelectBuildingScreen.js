@@ -16,6 +16,13 @@ export class SelectBuildingScreen extends Component {
   }
 
   componentDidMount = () => {
+    this.loadOrgs
+  };
+
+  loadOrgs = () => {
+    /**
+     * loads the orginaztion data
+     */
     var currentDate = new Date() // current datetime as object
 
     //API call to get org_data and update the database
@@ -68,9 +75,17 @@ export class SelectBuildingScreen extends Component {
       }
 
     }).catch(e => {console.log(e)})
-  };
+  }
 
   updateOrganizations = () => {
+      /*
+        on component did mount, this function will check if their
+        is organization data in realm db.
+        if none, it will run the updateOrgs function in dbSchema.js
+        if it exists, the function will check the datetime if 1 hour has passed.
+        if the time exeeds 1 hour from the last update, it will run
+        the updateOrgs function.
+      */
     var currentDate = new Date() // current datetime as objects
     get_org_data(this.props.navigation.state.params.orgName, this.context.accountContext.account.api_key).then(result =>{
       console.log("selectBuildingScreen fetch api and update", result.name)

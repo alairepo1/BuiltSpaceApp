@@ -4,7 +4,6 @@
  */
 
 import Realm from 'realm';
-import {trigger_new_account, fetchOrgs} from '../fetchAPI'
 
 // name variables
 export const DB_NAME = "BuiltSpaceDB"
@@ -350,7 +349,8 @@ export const insertNewAccount = async (accountDetails, accountOrganizations, cur
             email: accountDetails.email,
             api_key: accountDetails.api_key,
             lastUpdated: currentDate,
-            organizations: []
+            organizations: [],
+            savedInspections: [],
           }
           for (var org = 0; org < accountOrganizations.length; org++){
             account.organizations.push(accountOrganizations[org])
@@ -628,8 +628,8 @@ export const getInspections = async (accountDetails) => {
   // gets a list of saved inspections from an account if none returns an empty array
   try{
     var realm = await Realm.open(databaseOptions).catch(e => {console.log("realm cannot open")}) //open realm to query
-    var account = realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
-    var inspections = account.savedInspections
+    var account = await realm.objectForPrimaryKey('Accounts', accountDetails.id) //account query
+    var inspections = await account.savedInspections
 
     if (inspections != {}){ //checks if the object has any properties || returns emtpy array
       return Promise.resolve(inspections)

@@ -40,11 +40,11 @@ export class HomePage extends Component {
   }
 
   componentDidMount = () => {
-    this.loadData()
     const {navigation} = this.props
     this._focusListener = navigation.addListener('didFocus', payload => {
       //adds a listener check for transitions to the HomeScreen then reloads inspection data
-      this.loadInspections() 
+      // this.loadInspections() 
+      this.loadData()
     })
   };
 
@@ -54,7 +54,6 @@ export class HomePage extends Component {
 
   loadData = async() => {
         // fetch data from api/db or update db
-
         var currentDate = new Date() // current datetime as object.
 
         checkDBExists(); // check if database exists, if not creates one.
@@ -67,9 +66,9 @@ export class HomePage extends Component {
                 //and add 1 hour to last updated time
                 var addHour = result.lastUpdated
                 addHour.setHours(addHour.getHours() + 1 )
-    
+
                 if (this.context.networkContext.isConnected) {
-    
+
                   if (currentDate < addHour) {
                     console.log('Home load from database.')
                     var orgs = Array.from(result.organizations);
@@ -93,6 +92,7 @@ export class HomePage extends Component {
                     isLoading: false,
                   });
                 } 
+                this.loadInspections() 
                 // Check if org data last updated is past 1 hr
               } else {
                 this.updateAccountData()
@@ -106,15 +106,18 @@ export class HomePage extends Component {
               this.setState({
                 accountlastUpdated: currentDate.toLocaleString(),
                 organizations: orgs,
-                isLoading: false
+                isLoading: false,
+                inspectionList: []
               })
             })
           }
-          // this.loadInspections()    
         });
   }
 
   loadInspections = () => {
+    /**
+     * loads the inspections from the account
+     */
     getInspections(this.context.accountContext.account).then(inspectionsList => {
       const toArray = Array.from(inspectionsList)
       const mappedObj = []
@@ -129,6 +132,9 @@ export class HomePage extends Component {
   }
 
   updateAccountData = (currentDate) => {
+    /**
+     * updates the account's organization data
+     */
     console.log("Home Screen update data")
     var currentDate = new Date() // current datetime as object
     fetchOrgs(this.context.accountContext.account).then(result => {
@@ -143,21 +149,37 @@ export class HomePage extends Component {
   }
 
   setCheckBox = (index) => {
+    /**
+     * checkboxes for the inspectionlist
+     * changes the checkbox state based on the index of the flatlist item.
+     */
       let data = [...this.state.inspectionsList];
       data[index].checked = !data[index].checked;
       this.setState({ data });
   }
 
   submitInspection = (accountDetails, inspections) => {
-    this.deleteInspection(accountDetails, inspections) //delete submitted inspections
+    /**
+     * submits the inspection data that are selected
+     * and deletes the records from the database once successfull.
+     */
+
+    {/**SUBMIT INSPECTIONS IS NOT IMPLEMENTED YET */} 
+
+    /** Suedo code
+     * HTTP post request with the list of inspection objects to BuiltSpace server.
+     * On statusCode 200 in the callback, delete the inspections from the database.
+     */
   }
 
   deleteInspection = (accountDetails, inspections) => {
+    /**deletes the selected inspections from realm db and reloads the new inspection list*/
     delInspections(accountDetails, inspections)
     this.loadInspections()
   }
   
   confirmation = (buttonType) => {
+    // On submit/delete inspection, will alert the user for confirmation.
     Alert.alert(
       'Confirmation',
       `${buttonType} selected inspections?`,

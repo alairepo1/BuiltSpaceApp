@@ -20,8 +20,6 @@ export class SelectOrgScreen extends Component {
   };
 
   render() {
-    const { org_data } = this.state;
-    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>

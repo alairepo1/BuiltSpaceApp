@@ -19,7 +19,6 @@ function formatInspectionObject(building, asset, orgData, startDate, generalComm
   const dateString = date.toISOString().split('T')[0];
   const time = date.getTime();
   const duration = calculateDurationInspection(startDate, date);
-  console.log(duration)
   const _filename =
     dateString + '-' + building.name.split(' ').join('-') + '-' + asset.name;
   //inspection for a space
@@ -81,7 +80,6 @@ function formatInspectionObject(building, asset, orgData, startDate, generalComm
     };
 
     if (spaceSelected) {
-      const spaces = Array.from(spaces);
       const space = spaces.filter(
         space => space.id == selectedSpaceId,
       );
@@ -103,14 +101,14 @@ function formatInspectionObject(building, asset, orgData, startDate, generalComm
         MeasurementLabel: question.Measurementlabel || '',
         Measurement: question.measurement || '',
         MeasurementUnit: question.Measurementunit || '',
-        Tool: '',
-        Supplier: '',
+        Tool: '', // not implemented yet
+        Supplier: '', // not implemented yet
         UnitCost: question.UnitCost || '',
         QuestionType: question.questiontype || '',
         SalesTax: question.salexaxformat || '',
-        Markup: '',
+        Markup: '', // not implemented yet
         AllowMultiple: question.allowmultiplechoices,
-        Choices: '',
+        Choices: '', // not implemented yet
         TextOnly: question.TextOnlyForm || '',
       };
       checklist.MyFields.Questions.Question.push(formatQuestion);
