@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import {ContextInfo} from '../../ContextInfoProvider';
 import {get_org_data} from '../../storage/fetchAPI.js'
-import {insertOrgData, DBgetOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
+import {insertOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class SelectBuildingScreen extends Component { 
@@ -84,8 +84,6 @@ export class SelectBuildingScreen extends Component {
   }
 
   render() {
-    const {building_data} = this.state;
-    const {navigate} = this.props.navigation;
 
     return ( this.state.isLoading ? 
       <View>

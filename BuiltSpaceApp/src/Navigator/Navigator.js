@@ -5,7 +5,7 @@ import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 // import {createBottomTabNavigator} from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 
-import LoadingScreen from '../screens/LoadingScreen/loadingScreen.js';
+import LoadingScreen from '../screens/AuthLoadingScreen/AuthLoadingScreen.js';
 import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';

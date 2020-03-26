@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, FlatList, ShadowPropTypesIOS} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
-export class MaterialsType extends Component {
+
+export class GeneralType extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -31,15 +31,15 @@ export class MaterialsType extends Component {
         }
         
     }
-
+    
     updateIndex(selectedIndex) {
         if (selectedIndex == this.state.selectedIndex){
             this.setState({selectedIndex: null})
             this.props.question.updateQuestion(this.props.question.index, "", "InspectionResults")
-
         }else{
             this.setState({selectedIndex})
             this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
+
         }
     }
 
@@ -49,7 +49,7 @@ export class MaterialsType extends Component {
         const question = this.props.question.item
         return (
             <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
-                <Text style={{fontWeight: "bold"}}>{question.question}</Text>
+                <Text style={{fontWeight: "bold"}}>{question.number}. {question.question}</Text>
                 {question.remarks !== "" ?
                 <Text style={{fontStyle: "italic"}}>{question.remarks}</Text>
                 : 
@@ -63,53 +63,38 @@ export class MaterialsType extends Component {
                         buttons={buttonArray}
                         onPress={this.updateIndex}
                         selectedIndex={selectedIndex}
+                        underlayColor={'red'}
                         />
                         :
                         <TextInput 
                         style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
-                        onChangeText={text => this.props.question.updateQuestion(
-                            this.props.question.index, // index of the question
-                            text, // text input
-                            "TextOnly", // type 
-                            )}
-                        />
-                        )
+                        label="test"
+                        />)
                     :
                     null}
 
                 <View style={{flex: 2, flexDirection: "row"}}>
-                {question.showmeasurement 
-                || question.measurementonly
-                || question.questiontype === "Labour" ?
+                {question.showmeasurement || question.measurementonly ?
                 <View style={{flex:2}}>
-
                 {question.measurementlabel !== "" ?
                         <Text>{question.measurementlabel}</Text>
                         :
                         <Text>Measurement</Text>}
-                        <TextInput 
-                        style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                        onChangeText={text => this.props.question.updateQuestion(
-                            this.props.question.index, // index of the question
-                            text, // text input
-                            "measurement", // type 
-                            this.props.question.item.measurementlabel, // measurement label
-                            )}
-                        />
+                        <View style={{flex: 2, flexDirection: 'row'}}>
+                            <TextInput 
+                            style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                            onChangeText={text => this.props.question.updateQuestion(
+                                this.props.question.index, // index of the question
+                                text, // text input
+                                "TextOnly", // type 
+                                this.props.question.measurementunit
+                                )}
+                            />
+                            <Text style={{marginTop: 10, marginLeft: 4}}>{question.measurementunit}</Text>
+                        </View>
                 </View>
                 :
                 null}
-                <View style={{flex:2}}>
-                    <Text style={{leftmargin: 5}}>Unit Cost</Text>
-                    <TextInput 
-                    style={{ flex:1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
-                    onChangeText={text => this.props.question.updateQuestion(
-                        this.props.question.index, // index of the question
-                        text, // text input
-                        "UnitCost", // type 
-                        )}
-                    />
-                </View>
                 </View>
                 <View style={{flex:2}}>
                     <Text>Details: </Text>
@@ -121,23 +106,10 @@ export class MaterialsType extends Component {
                         "TaskDetails", // type 
                         )}
                     />
-
                 </View>
-                <TouchableOpacity disabled={true} style={{ margin: 5, backgroundColor: 'white', width: 100, height: 20}}> 
-                    <Text>Add picture</Text>
-                </TouchableOpacity>
             </View>
         )
     }
 }
 
-const styles = StyleSheet.create({
-    button: {
-        width: '100%', 
-        height: '100%', 
-        padding: 2, 
-        borderWidth: 1, 
-    }
-})
-
-export default MaterialsType
+export default GeneralType

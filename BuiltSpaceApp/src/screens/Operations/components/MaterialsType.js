@@ -1,23 +1,17 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Listquestion, ShadowPropTypesIOS} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
-
-export class LabourType extends Component {
+export class MaterialsType extends Component {
     constructor(props) {
         super(props);
         this.state={
-            selectedIndex: 0,
+            selectedIndex: null,
             format: this.props.question.item.format.split('|'),
             colors: this.props.question.item.colorformat.split('|'),
         }
     this.updateIndex = this.updateIndex.bind(this)
     this.buttonComponents = this.buttonComponents.bind(this)
-    }
-
-    componentDidMount = () => {
-        this.props.question.updateQuestion(this.props.question.index, 'Regular', "InspectionResults")
     }
 
     buttonComponents = () => {
@@ -36,10 +30,16 @@ export class LabourType extends Component {
         }
         
     }
-    
+
     updateIndex(selectedIndex) {
+        if (selectedIndex == this.state.selectedIndex){
+            this.setState({selectedIndex: null})
+            this.props.question.updateQuestion(this.props.question.index, "", "InspectionResults")
+
+        }else{
             this.setState({selectedIndex})
             this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
+        }
     }
 
     render() {
@@ -47,7 +47,6 @@ export class LabourType extends Component {
         const { selectedIndex } = this.state
         const question = this.props.question.item
         return (
-            
             <View style={{ backgroundColor: 'white', margin: 5, padding: 5 }}>
                 <Text style={{fontWeight: "bold"}}>{question.question}</Text>
                 {question.remarks !== "" ?
@@ -63,7 +62,6 @@ export class LabourType extends Component {
                         buttons={buttonArray}
                         onPress={this.updateIndex}
                         selectedIndex={selectedIndex}
-                        underlayColor={'red'}
                         />
                         :
                         <TextInput 
@@ -73,32 +71,44 @@ export class LabourType extends Component {
                             text, // text input
                             "TextOnly", // type 
                             )}
-                        />)
-                    :null}
+                        />
+                        )
+                    :
+                    null}
+
+                <View style={{flex: 2, flexDirection: "row"}}>
                 {question.showmeasurement 
                 || question.measurementonly
                 || question.questiontype === "Labour" ?
-                    <View style={{flex:2}}>
-                        {question.measurementlabel !== "" ?
-                            <Text>{question.measurementlabel}</Text>
-                            :
-                            <Text>Measurement</Text>}
+                <View style={{flex:2}}>
 
-                        <View style={{flex: 2, flexDirection: 'row'}}>
+                {question.measurementlabel !== "" ?
+                        <Text>{question.measurementlabel}</Text>
+                        :
+                        <Text>Measurement</Text>}
                         <TextInput 
                         style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
                         onChangeText={text => this.props.question.updateQuestion(
                             this.props.question.index, // index of the question
                             text, // text input
                             "measurement", // type 
-                            this.props.question.item.measurementlabel // measurement label
+                            this.props.question.item.measurementlabel, // measurement label
                             )}
                         />
-                            <Text style={{marginTop: 10, marginLeft: 4}}>{question.measurementunit}</Text>
-                        </View>
-                    </View>
-                    :null}
-                <View style={{flex: 2, flexDirection: "row"}}>
+                </View>
+                :
+                null}
+                <View style={{flex:2}}>
+                    <Text style={{leftmargin: 5}}>Unit Cost</Text>
+                    <TextInput 
+                    style={{ flex:1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
+                    onChangeText={text => this.props.question.updateQuestion(
+                        this.props.question.index, // index of the question
+                        text, // text input
+                        "UnitCost", // type 
+                        )}
+                    />
+                </View>
                 </View>
                 <View style={{flex:2}}>
                     <Text>Details: </Text>
@@ -110,26 +120,19 @@ export class LabourType extends Component {
                         "TaskDetails", // type 
                         )}
                     />
-
                 </View>
-                <TouchableOpacity disabled={true} style={{ margin: 5, backgroundColor: 'white', width: 100, height: 20}}> 
-                    <Text>Add picture</Text>
-                </TouchableOpacity>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-
     button: {
-        justifyContent: 'center',
-        width: '100%',
-        height: 40,
-        marginLeft: 1,
-        
+        width: '100%', 
+        height: '100%', 
+        padding: 2, 
+        borderWidth: 1, 
+    }
+})
 
-        }
-    })
-
-export default LabourType
+export default MaterialsType

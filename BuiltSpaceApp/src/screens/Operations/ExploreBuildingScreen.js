@@ -3,19 +3,19 @@ import {ContextInfo} from '../../ContextInfoProvider';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, 
   Alert, TextInput, ActivityIndicator, PermissionsAndroid, Platform } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
-import SpacesModal from './SpacesModal.js';
-import AssetsModal from './AssetsModal.js'
+import SpacesModal from './components/SpacesModal.js';
+import AssetsModal from './components/AssetsModal.js'
 import {updateBuilding, DBcheckBuildingData, saveInspection, getInspections} from '../../storage/schema/dbSchema'
-import ChecklistModal from './ChecklistModal.js'
-import MaterialsType from './MaterialsType.js'
-import LabourType from './LabourType.js'
-import GeneralType from './GeneralType.js'
+import ChecklistModal from './components/ChecklistModal.js'
+import MaterialsType from './components/MaterialsType.js'
+import LabourType from './components/LabourType.js'
+import GeneralType from './components/GeneralType.js'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 import {getStartTime, calculateDurationInspection} from '../../functions/functions.js'
 import { CameraKitCameraScreen } from 'react-native-camera-kit'
 import { CameraKitGalleryView } from 'react-native-camera-kit'
-
+import FlatlistFooter from './components/ExploreBuildingFlatlistFooter'
 export class ExploreBuildingScreen extends Component { 
   static contextType = ContextInfo
     constructor(props) {
@@ -38,6 +38,7 @@ export class ExploreBuildingScreen extends Component {
           qrCodeValue: '',
           startScanner: false,
           setQuestions: [], // set of questions based on the selected checklist.
+          checklistId: ''
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
@@ -61,10 +62,11 @@ export class ExploreBuildingScreen extends Component {
       })
     }
 
-    loadQuestions = (questions, questionTitle) => {
+    loadQuestions = (questions, questionTitle, checklistId) => {
       this.setState({
         setQuestions: Array.from(questions),
-        checklistSelected: true
+        checklistSelected: true,
+        checklistId
       })
     }
 
@@ -73,8 +75,8 @@ export class ExploreBuildingScreen extends Component {
       let question = this.state.setQuestions.slice(index, index + 1); // shallow copy the question from setQuestions
       if (type == "measurement"){
         console.log("measurement")
-        question[0][measurement_label] = value
-        question[0][measurement_unit] = measurement_unit
+        question[0]["measurement_label"] = value
+        question[0]["measurement_unit"] = measurement_unit
       }
       if (type == "TaskDetails"){
         console.log("TaskDetails")
@@ -82,7 +84,7 @@ export class ExploreBuildingScreen extends Component {
       }
       if (type == "UnitCost"){
         console.log("UnitCost")
-        question[0][type] = value
+        question[0]["type"] = value
       }
       if (type == "InspectionResults"){
         console.log("InspectionResults")
@@ -220,6 +222,13 @@ export class ExploreBuildingScreen extends Component {
     }
    
     onQRCodeScanDone = (qrCode) => {
+
+      Alert.alert(
+        "QR Code details",
+        `Details: ${qrCode}`,
+        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+        { cancelable: false }
+      );
    
       this.setState({ qrCodeValue: qrCode });
    
@@ -287,7 +296,7 @@ export class ExploreBuildingScreen extends Component {
             Assetname: asset.name,
             Category: asset.categoryabbr,
             SpaceId:  null, // if space is selected, space.id
-            SpaceName:  "", //if space is selected, space.name
+            SpaceName:  "", //if space is selected, space.suitenumber
             Floor: "", // if space is selected, space.floor
             SpaceUsage: "", //if space selected, space.usage
             Description: asset.description,
@@ -298,30 +307,30 @@ export class ExploreBuildingScreen extends Component {
             WorkOrderNumber: 'WorkOrderNumber', // WorOrderNumber not implemented
             ChecklistCategory: 'ChecklistCategory',
             QRcodeURL: 'qrcodeMapping',
-            // AssetLocations: {
-            //   AssetLocation: 'allspaces',
-            // },
-            // NewSpaces: {
-            //   Spaces: [], 
-            // },
+            AssetLocations: {
+              AssetLocation: 'allspaces',
+            },
+            NewSpaces: {
+              Spaces: [], 
+            },
             Questions: {
-              Question: [], // an array of question
+              Question: [], // an array of questions
             },
             ParentTaskId: '', // Because there is no data in your app , leave it empty
             Task: '', // Because there is no data in your app , leave it empty
-            ChecklistId: '', //checklist.id
+            ChecklistId: this.state.checklistId, //checklist.id
             ChecklistTitle: this.state.checklistTitle,
             EmailReport: '', // email report not implemented
-            // DeviceGeolocation: { // Geolocation not implemented 
-            //   Longitude: '',
-            //   Latitude: '',
-            //   Altitude: '',
-            //   Accuracy: '',
-            //   AltitudeAccuracy: '',
-            //   Heading: '',
-            //   Speed: '',
-            //   Timestamp: dateString,
-            // },
+            DeviceGeolocation: { // Geolocation not implemented 
+              Longitude: '',
+              Latitude: '',
+              Altitude: '',
+              Accuracy: '',
+              AltitudeAccuracy: '',
+              Heading: '',
+              Speed: '',
+              Timestamp: dateString,
+            },
           }
         }
   
@@ -463,6 +472,101 @@ export class ExploreBuildingScreen extends Component {
         );
       }
     }
+    addQuestion = (type) => {
+      var questions = this.state.setQuestions
+      var checklistTitle = this.state.checklistTitle
+      var checklistId = this.state.checklistId
+      if (type == "labour"){
+        let labourQuestion = {
+          "allowmultiplechoices": false,
+          "checklistid": checklistId,
+          "checklisttitle": checklistTitle,
+          "colorformat": "#98d9ea|#00a2e8|#3366cc|#232b85",
+          "displayproperty": false,
+          "format": "Regular|Overtime|Double Time|Other",
+          "id": 0,
+          "markupformat": "",
+          "measurementlabel": "Labour",
+          "measurementonly": false,
+          "measurementunit": "Hours",
+          "number": "",
+          "propertygroup": "",
+          "propertyname": "",
+          "question": "Enter hours",
+          "questiontype": "Labour",
+          "remarks": "",
+          "salestaxformat": "",
+          "showmeasurement": true,
+          "textonly": false,
+          "updateproperty": false,
+          "updatepropertyfromcurrent": false,
+          "validationpattern": ""
+      }
+        questions.push(labourQuestion)
+      }
+    if (type == "materials"){
+
+      let materialQuestion = {
+          "allowmultiplechoices": false,
+          "checklistid": checklistId,
+          "checklisttitle": checklistTitle,
+          "colorformat": "#98d9ea|#00a2e8|#3366cc|#232b85|#151a51",
+          "displayproperty": false,
+          "format": "PO|Tools|Truck Stock|3rd Party|Other",
+          "id": 0,
+          "markupformat": "||||",
+          "measurementlabel": "Quantity",
+          "measurementonly": false,
+          "measurementunit": "",
+          "number": "",
+          "propertygroup": "",
+          "propertyname": "",
+          "question": "Enter Materials",
+          "questiontype": "Materials",
+          "remarks": "",
+          "salestaxformat": "||||",
+          "showmeasurement": true,
+          "textonly": false,
+          "updateproperty": false,
+          "updatepropertyfromcurrent": false,
+          "validationpattern": ""
+      }
+      questions.push(materialQuestion)
+    }
+    if (type == "issue"){
+      let issueQuestion = {
+        "allowmultiplechoices": false,
+        "checklistid": checklistId,
+        "checklisttitle": checklistTitle,
+        "colorformat": "#00cc66|#00a2e8|#ff0000|#FFD700",
+        "displayproperty": false,
+        "format": "Good|Reparied|Quote|Monitor",
+        "id": 0,
+        "markupformat": "",
+        "measurementlabel": "",
+        "measurementonly": false,
+        "measurementunit": "",
+        "number": "",
+        "propertygroup": "",
+        "propertyname": "",
+        "question": "Issue found",
+        "questiontype": "",
+        "remarks": "",
+        "salestaxformat": "",
+        "showmeasurement": false,
+        "textonly": false,
+        "updateproperty": false,
+        "updatepropertyfromcurrent": false,
+        "validationpattern": ""
+      }
+      questions.push(issueQuestion)
+    }
+    this.setState({setQuestions: questions})
+    }
+
+    renderFlatlistFooter = () => {
+      return <FlatlistFooter addQuestion={this.addQuestion} />
+    }
   render() {
     
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
@@ -523,6 +627,8 @@ export class ExploreBuildingScreen extends Component {
       <View>
         <FlatList style={styles.flatList}
           data={this.state.setQuestions}
+          extraData={this.state.setQuestions}
+          ListFooterComponent={this.renderFlatlistFooter}
           renderItem={({item, index}) => {
   
             if (item.questiontype === '') {
@@ -556,19 +662,6 @@ export class ExploreBuildingScreen extends Component {
           />
          <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
            <View style={{flex: 1}}>
-             <View style={{flex: 3, flexDirection: 'row'}}>
-               <View style={{flex: 1}}>
-                 <Text>Add labour</Text>
-               </View>
-               <View style={{flex: 1}}>
-                <Text>Add materials</Text>
-               </View>
-               <View style={{flex: 1}}>
-                <Text>Add issue</Text>
-               </View>
-             </View>
-           </View>
-           <View style={{flex: 1}}>
             <Text>Additional Comments</Text>
             <TextInput 
               style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'lightgrey'}}
@@ -579,7 +672,7 @@ export class ExploreBuildingScreen extends Component {
             />
            </View>
          </View>
-        <View style={{flex:2, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
+        <View style={{flex:3, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
         <View style={{flex:1, margin: 5}}> 
         <Button style={{flex:1, margin: 5}}
         type="solid"
@@ -597,11 +690,11 @@ export class ExploreBuildingScreen extends Component {
         title="Submit"
         buttonStyle={{backgroundColor: '#47d66d'}}
         titleStyle={{color: 'white'}}
-        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(result)})}}
+        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(JSON.stringify(result,null,1))})}}
         />
         </View>
 
-        <View>
+        <View style={{flex:1, margin: 5}}>
           <Button
           title="Upload picture"
           onPress={this.cameraOnPress}
@@ -677,7 +770,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start'
   },
   questionsHeader: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 30,
     alignSelf: 'flex-start',
@@ -704,14 +797,18 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 25,
   },
   flatList: {
     backgroundColor: '#FAF9ED',
+  },
+  addQuestionButton: {
+    padding: 10, 
+    margin: 10, 
+    backgroundColor: '#47d66d',
   }
-
 
 })
 

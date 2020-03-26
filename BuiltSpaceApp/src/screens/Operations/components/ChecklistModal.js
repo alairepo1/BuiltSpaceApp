@@ -9,14 +9,12 @@ export class ChecklistModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checklists: [],
             modalVisible: false,
             checklistIsSelected: false,
             
         }
 		this.setModalVisible = this.setModalVisible.bind(this)
 		this.arrayholder = [];
-    this.setModalVisible = this.setModalVisible.bind(this)
     }
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
@@ -27,8 +25,8 @@ export class ChecklistModal extends Component {
       this.setState({
         value: text,
       });
-      const newData = this.arrayholder.filter(item => {
-        const itemData = `${this.floor.toUpperCase()}`;
+      const newData = this.props.checklists.filter(item => {
+        const itemData = `${item.title.toUpperCase()}`;
         const textData = text.toUpperCase();
   
         return itemData.indexOf(textData) > -1;
@@ -95,11 +93,11 @@ export class ChecklistModal extends Component {
                   <Text style={styles.headingTextBold}>Select a Checklist</Text>
                 </View>
                 <FlatList style={{ marginTop: 20, marginBottom: 75}}
-                data={this.props.checklists}
+                data={this.state.checklists || this.props.checklists} 
                 renderItem = {({ item }) =>
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.loadQuestions(item.questions, item.title)
+                      this.props.loadQuestions(item.questions, item.title, item.id)
                       this.props.onChecklistChange(true, item.title, 'checklist')
                       this.setModalVisible(!this.state.modalVisible)
                     }}>
