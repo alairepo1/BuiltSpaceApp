@@ -16,7 +16,7 @@ export class SelectBuildingScreen extends Component {
   }
 
   componentDidMount = () => {
-    this.loadOrgs
+    this.loadOrgs()
   };
 
   loadOrgs = () => {
@@ -109,7 +109,10 @@ export class SelectBuildingScreen extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
-        <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="black" />
+        <Icon onPress={() => {
+          this.setState({isLoading: true})
+          this.updateOrganizations()
+          }} style={styles.listIcon} name="refresh" size={20} color="black" />
 
         <FlatList 
         data={this.state.org_data.buildings}
