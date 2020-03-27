@@ -1,7 +1,20 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: '#FAF9ED'
+    },
+    logoContainer: {
+        alignItems: 'center',
+        flexGrow: 1,
+        justifyContent: 'center'
+    },
+    logo: {
+        width: 235,
+        height: 250
+    },
+    form_container: {
         padding: 20
     },
     input: {
@@ -22,4 +35,4 @@ export default StyleSheet.create({
         // color: '#FFFFFF',
         fontWeight: '700'
     }
-})
+});
