@@ -96,24 +96,19 @@ export class ExploreBuildingScreen extends Component {
        */
       let question = this.state.setQuestions.slice(index, index + 1); // shallow copy the question from setQuestions
       if (type == "measurement"){
-        console.log("measurement")
         question[0]["measurement_label"] = value
         question[0]["measurement_unit"] = measurement_unit
       }
       if (type == "TaskDetails"){
-        console.log("TaskDetails")
         question[0][type] = value
       }
       if (type == "UnitCost"){
-        console.log("UnitCost")
         question[0]["type"] = value
       }
       if (type == "InspectionResults"){
-        console.log("InspectionResults")
         question[0]["InspectionResults"] = value;
       }
       if (type == "TextOnly"){
-        console.log("TextOnly")
         question[0]["TextOnlyForm"] = value;
       }
     }
@@ -346,7 +341,6 @@ export class ExploreBuildingScreen extends Component {
 
       try{
         //runs the function formatInspectionObject from functions.js
-        // const checklistObject = formatInspectionObject(building, asset, orgData, startDate, generalComments,checklistId,checklistTitle, questions, spaceSelected, spaceSelectedId, spaces)
         const checklistObject = formatInspectionObject(
           this.props.navigation.state.params.buildingData, 
           this.state.assets.find(asset => asset.id == this.state.selectedAssetId), 
@@ -361,7 +355,6 @@ export class ExploreBuildingScreen extends Component {
           spaces)
         saveInspection(this.context.accountContext.account, checklistObject)
       }catch(e){console.log(e)}
-      console.log("save to device")
   }
     cameraOnPress = () => {
       var that = this;
@@ -468,6 +461,17 @@ export class ExploreBuildingScreen extends Component {
     renderFlatlistFooter = () => {
       return <FlatlistFooter addQuestion={this.addQuestion} />
     }
+
+    alertNotSelected = () => {
+      Alert.alert(
+        'Error',
+        'Asset is not selected',
+        [
+          {text: 'Ok', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
+        ],
+        { cancelable: true }
+      )
+    }
   render() {
     
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
@@ -481,7 +485,10 @@ export class ExploreBuildingScreen extends Component {
 
     if (!this.state.dataLoaded ) {
       return (
-        <Text>Loading</Text>
+      <View>
+        <ActivityIndicator />
+        <Text>Loading...</Text>
+      </View>
       )
     } else if (this.state.dataLoaded && !this.state.startScanner){
       const materialQ = this.state.setQuestions.filter(function(question)  {
@@ -513,12 +520,15 @@ export class ExploreBuildingScreen extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
+        <View style={{flexDirection: 'row'}}>
         <Icon onPress={() => {
           this.setState({dataLoaded: false})
           this.resetState()
           this.updateBuildingData() 
         }} 
         style={styles.listIcon} name="refresh" size={20} color="black" />
+        <Text>  Reload Data</Text>
+        </View>
 
     <View>
         <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
@@ -585,7 +595,12 @@ export class ExploreBuildingScreen extends Component {
         buttonStyle={{backgroundColor: '#47d66d'}}
         title="Save to device"
         titleStyle={{color: 'white'}}
-        onPress={() =>  { this.saveAlert() }
+        onPress={() =>  { 
+          if (this.state.assetSelected) {
+            this.saveAlert() 
+        } else {
+          this.alertNotSelected()
+        }}
         }
         />
         </View>  
@@ -610,6 +625,12 @@ export class ExploreBuildingScreen extends Component {
           
         </View>
         </View>
+        <View style={{flex:1, margin: 5}}>
+          <Button
+          title="Home"
+          onPress={() => this.props.navigation.navigate("Home")}
+          ></Button>
+          </View>
       </View>
          : null }
         <TouchableOpacity onPress={this.openQRCodeScanner}>

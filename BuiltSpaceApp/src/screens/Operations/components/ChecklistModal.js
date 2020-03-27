@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements';
-import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert } from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
@@ -59,8 +58,6 @@ export class ChecklistModal extends Component {
     };
 
     render() {
-        // const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        // const selected = <Text style={styles.detailsTextSelected}>{this.state.checklistSelection}</Text>
 
         const selected = <View style={styles.textContainerSelected}>
           <View>

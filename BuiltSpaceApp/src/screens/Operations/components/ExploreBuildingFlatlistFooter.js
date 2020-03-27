@@ -15,24 +15,34 @@ class ExploreBuildingFlatlistFooter extends Component {
           onPress={() => {
             this.props.addQuestion('labour');
           }}
-          style={{flex: 1}}>
+          style={sytles.button}>
           <Text>Add labour</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             this.props.addQuestion('materials');
           }}
-          style={{flex: 1}}>
+          style={sytles.button}>
           <Text>Add materials</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.props.addQuestion('issue')}
-          style={{flex: 1}}>
+          style={sytles.button}>
           <Text>Add issue</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
-
+const sytles =  StyleSheet.create ({
+  button: {
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 120,
+    height: 40,
+    margin: 2,
+    backgroundColor: 'lightgrey'
+  }
+})
 export default ExploreBuildingFlatlistFooter;

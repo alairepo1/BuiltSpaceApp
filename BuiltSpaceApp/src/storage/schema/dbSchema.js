@@ -651,6 +651,9 @@ export const delInspections = async(accountDetails, selectedInspections) => {
               // delete inspection's index from the bottom up
               realm.delete(inspections[index].Content.MyFields.Questions.Question)
               realm.delete(inspections[index].Content.MyFields.Questions)
+              realm.delete(inspections[index].Content.MyFields.DeviceGeolocation)
+              realm.delete(inspections[index].Content.MyFields.AssetLocations)
+              realm.delete(inspections[index].Content.MyFields.NewSpaces)
               realm.delete(inspections[index].Content.MyFields)
               realm.delete(inspections[index].Content)
               realm.delete(inspections[index])

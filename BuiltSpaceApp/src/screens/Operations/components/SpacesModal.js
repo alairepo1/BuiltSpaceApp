@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Location from 'react-native-vector-icons/SimpleLineIcons'
 import { SearchBar } from 'react-native-elements';
@@ -72,7 +71,6 @@ export class SpacesModal extends Component {
   );
 }
   render() {
-    const { navigation } = this.props;
   
     const selected = <View style={styles.textContainerSelected}>
       <View>
