@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, KeyboardAvoidingView, Keyboard, StatusBar, ScrollView } from 'react-native';
 import {ContextInfo} from '../../ContextInfoProvider';
+import styles from './Login.style.js';
 
 export default class LoginForm extends Component {
     static contextType = ContextInfo
@@ -11,12 +12,12 @@ export default class LoginForm extends Component {
                 api_key: 'GBBNUEFoR1lwQsg/lIyJ5lXcN+ELUowsarB0/HSUl+U=',
                 email: 'bcitbuiltspace@gmail.com',
                 id: 400,
-              },
+            },
         } 
     }
     render() {
         return (
-            <KeyboardAvoidingView behavior = "padding" style = {styles.container} >
+            <KeyboardAvoidingView behavior = "padding" style = {styles.form_container} >
             <StatusBar 
                 barStyle = "light-content" 
             />
@@ -49,27 +50,3 @@ export default class LoginForm extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 20
-    },
-    input: {
-        height: 50,
-        // backgroundColor: 'rgba(255,255,255,0.2)',
-        backgroundColor: '#ABA9A9',
-        marginBottom: 10,
-        color: 'white',
-        paddingHorizontal: 10
-    },
-    buttonContainer: {
-        backgroundColor: '#4CBB17',
-        paddingVertical: 10,
-        marginBottom: 10
-    },
-    buttonText: {
-        textAlign: 'center',
-        // color: '#FFFFFF',
-        fontWeight: '700'
-    }
-});

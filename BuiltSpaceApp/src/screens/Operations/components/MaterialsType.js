@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
+
 export class MaterialsType extends Component {
     constructor(props) {
         super(props);
