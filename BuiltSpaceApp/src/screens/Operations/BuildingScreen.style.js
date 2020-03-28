@@ -98,5 +98,9 @@ export default StyleSheet.create({
         borderBottomColor: 'black',
         borderBottomWidth: 2,
     },
-
+    loadingIndicator: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
 });

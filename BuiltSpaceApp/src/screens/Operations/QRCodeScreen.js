@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, Alert, PermissionsAndroid} from 'react-native';
 import {CameraKitCameraScreen} from 'react-native-camera-kit';
-import styles from '../BuildingScreen.style.js';
+import styles from './BuildingScreen.style.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 class QRCodeComponent extends Component {
   constructor(props){
     super(props)
     this.state = {
-      startScanner: false
+        isLoading: false
     }
+  }
+
+  componentDidMount = () => {
+      this.openQRCodeScanner
   }
 
   openQRCodeScanner = () => {
@@ -27,9 +31,7 @@ class QRCodeComponent extends Component {
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             // this.props.setQRState();
-            that.setState({qrCodeValue: ''});
-            // that.props.setScannerState(true)
-            that.setState({startScanner: true})
+            this.setState({qrCodeValue: ''});
           } else {
             alert('CAMERA permission denied');
           }
@@ -40,9 +42,7 @@ class QRCodeComponent extends Component {
       }
       requestCameraPermission();
     } else {
-      that.setState({qrCodeValue: ''});
-      // that.props.setScannerState(true)
-      that.setState({startScanner: true})
+      this.setState({qrCodeValue: ''});
     }
   };
 
@@ -54,43 +54,32 @@ class QRCodeComponent extends Component {
       {cancelable: false},
     );
 
-    that.setState({qrCodeValue: qrCode});
-    // that.props.setScannerState(false)
-    that.setState({startScanner: false})
+    this.setState({qrCodeValue: qrCode});
+    this.setState({isLoading: false})
   };
 
   render() {
     return (
-      <View>
-        {!this.state.startScanner ? 
-                <TouchableOpacity onPress={this.openQRCodeScanner}>
-                <View style={styles.row}>
-                  <Text style={styles.text}>Scan Qr</Text>
-                  <View>
-                    <Icon
-                      style={styles.listIcon}
-                      name="angle-right"
-                      size={30}
-                      color="black"
-                    />
-                  </View>
-                </View>
-              </TouchableOpacity>
-        :
         <View style={{flex: 1}}>
+            {/* {this.state.isLoading ? 
+            <View style={styles.loadingIndicator}>
+                <ActivityIndicator />
+                <Text>Wait while we fetch the qrcode URL ...</Text>
+            </View>    
+        : null } */}
           <CameraKitCameraScreen
             showFrame={true}
             scanBarcode={true}
             laserColor={'#FF3D00'}
             frameColor={'#00C853'}
             colorForScannerFrame={'black'}
-            onReadCode={event =>
-              this.onQRCodeScanDone(event.nativeEvent.codeStringValue)
+            onReadCode={event => {
+                this.setState({isloading: true})
+                this.onQRCodeScanDone(event.nativeEvent.codeStringValue)
+                }
             }
           />
         </View>
-        }
-      </View>
     );
   }
 }

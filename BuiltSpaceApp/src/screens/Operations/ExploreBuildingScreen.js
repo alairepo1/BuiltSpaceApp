@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {ContextInfo} from '../../ContextInfoProvider';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, 
+import {View, Text, FlatList, TouchableOpacity, ScrollView, 
   Alert, TextInput, ActivityIndicator, PermissionsAndroid, Platform } from 'react-native';
 import {get_building_data} from '../../storage/fetchAPI.js'
 import SpacesModal from './components/SpacesModal.js';
@@ -50,6 +50,7 @@ export class ExploreBuildingScreen extends Component {
         this.updateQuestion = this.updateQuestion.bind(this)
         this.cameraOnPress = this.cameraOnPress.bind(this)
         this.onBottomButtonPressed = this.onBottomButtonPressed.bind(this)
+        this.setScannerState = this.setScannerState.bind(this)
       }
 
     spacesFilter = (space) => {
@@ -476,6 +477,11 @@ export class ExploreBuildingScreen extends Component {
         { cancelable: true }
       )
     }
+
+    setScannerState = (bool) => {
+      console.log("Hello")
+      this.setState({startScanner: bool})
+    }
   render() {
     
     const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
@@ -637,15 +643,14 @@ export class ExploreBuildingScreen extends Component {
           </View>
       </View>
          : null }
-         <QRCodeComponent/>
-        {/* <TouchableOpacity onPress={this.openQRCodeScanner}>
+        <TouchableOpacity onPress={ () => this.props.navigation.navigate("QRCode")}>
                 <View style={styles.row}>
                   <Text style={styles.text}>Scan Qr</Text>
                   <View>
                     <Icon style={styles.listIcon} name="angle-right" size={30} color="black" />
                   </View>
                 </View>
-              </TouchableOpacity> */}
+              </TouchableOpacity>
       </View>
     
   </View>
