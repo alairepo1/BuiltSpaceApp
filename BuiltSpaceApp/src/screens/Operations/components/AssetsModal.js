@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SearchBar } from 'react-native-elements';
-import { Text, View, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
+import { Text, View, Modal, TouchableOpacity, FlatList, Alert, StyleSheet} from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export class AssetsModal extends Component {

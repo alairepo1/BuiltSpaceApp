@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, Modal, TouchableOpacity, FlatList} from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Location from 'react-native-vector-icons/SimpleLineIcons'
 import { SearchBar } from 'react-native-elements';

@@ -16,6 +16,7 @@ import {getStartTime, formatInspectionObject, formatAddQuestion} from '../../fun
 import { CameraKitCameraScreen } from 'react-native-camera-kit'
 import { CameraKitGalleryView } from 'react-native-camera-kit'
 import FlatlistFooter from './components/ExploreBuildingFlatlistFooter'
+import QRCodeComponent from './components/QRCodeComponent';
 export class ExploreBuildingScreen extends Component { 
   static contextType = ContextInfo
     constructor(props) {
@@ -633,14 +634,15 @@ export class ExploreBuildingScreen extends Component {
           </View>
       </View>
          : null }
-        <TouchableOpacity onPress={this.openQRCodeScanner}>
+         <QRCodeComponent/>
+        {/* <TouchableOpacity onPress={this.openQRCodeScanner}>
                 <View style={styles.row}>
                   <Text style={styles.text}>Scan Qr</Text>
                   <View>
                     <Icon style={styles.listIcon} name="angle-right" size={30} color="black" />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
       </View>
     
   </View>
@@ -649,22 +651,22 @@ export class ExploreBuildingScreen extends Component {
     }
 
   }
-    return (
-      <View style={{ flex: 1 }}>
+    // return (
+    //   <View style={{ flex: 1 }}>
  
-        <CameraKitCameraScreen
-          showFrame={true}
-          scanBarcode={true}
-          laserColor={'#FF3D00'}
-          frameColor={'#00C853'}
-          colorForScannerFrame={'black'}
-          onReadCode={event =>
-            this.onQRCodeScanDone(event.nativeEvent.codeStringValue)
-          }
-        />
+    //     <CameraKitCameraScreen
+    //       showFrame={true}
+    //       scanBarcode={true}
+    //       laserColor={'#FF3D00'}
+    //       frameColor={'#00C853'}
+    //       colorForScannerFrame={'black'}
+    //       onReadCode={event =>
+    //         this.onQRCodeScanDone(event.nativeEvent.codeStringValue)
+    //       }
+    //     />
  
-      </View>
-    );
+    //   </View>
+    // );
 
 }
 }

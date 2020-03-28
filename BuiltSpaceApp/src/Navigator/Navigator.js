@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-import LoadingScreen from '../screens/AuthLoadingScreen/AuthLoadingScreen.js';
+import LoadingScreen from '../screens/AuthLoadingScreen/AuthloadingScreen.js';
 import Login from '../screens/LoginScreen/Login.js';
 import HomeScreen from '../screens/HomeScreen/HomePage.js';
 import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
