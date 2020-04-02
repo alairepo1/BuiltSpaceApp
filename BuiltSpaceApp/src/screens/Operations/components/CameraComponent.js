@@ -100,15 +100,12 @@ export default class CameraComponent extends Component {
         this.props.navigation.goBack()
         }
         else {
-        console.log("Image URI: (event.captureImages is an array of the picture take")
         Alert.alert(
             "Picture Taken",
             "Use this picture?",
             [
                 { text: 'YES', onPress: () => {
-                    console.log("pushing to array")
                     this.state.picsArray.push(event.captureImages[0].uri)
-                    console.log(this.state.picsArray)
                     this.props.navigation.state.params.updatePictureArray(this.state.picsArray)
                     this.props.navigation.goBack()
                 } },
@@ -133,7 +130,7 @@ export default class CameraComponent extends Component {
                 auto: require('../../assets/flashauto.png'),
             }}
             cameraFlipImage={require('../../assets/flip.png')}
-            captureButtonImage={require('../../assets/capture.png')}
+            captureButtonImage={require('../../assets/capture2.png')}
             />
         );
         }
