@@ -103,4 +103,13 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    FlatListFooter: {
+        padding: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 120,
+        height: 40,
+        margin: 2,
+        backgroundColor: 'lightgrey'
+      }
 });

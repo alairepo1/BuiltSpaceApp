@@ -16,7 +16,6 @@ import {getStartTime, formatInspectionObject, formatAddQuestion} from '../../fun
 import { CameraKitCameraScreen } from 'react-native-camera-kit'
 import { CameraKitGalleryView } from 'react-native-camera-kit'
 import FlatlistFooter from './components/ExploreBuildingFlatlistFooter'
-import QRCodeComponent from './components/QRCodeComponent';
 import styles from './BuildingScreen.style.js';
 
 
@@ -40,9 +39,10 @@ export class ExploreBuildingScreen extends Component {
           assetSelected: false,
           assetTitle: '',
           qrCodeValue: '',
-          startScanner: false,
           setQuestions: [], // set of questions based on the selected checklist.
-          checklistId: ''
+          checklistId: '',
+          disableSpace: false,
+          disableChecklist: true
         };
         this.spacesFilter = this.spacesFilter.bind(this)
         this.assetsFilter = this.assetsFilter.bind(this)
@@ -50,7 +50,7 @@ export class ExploreBuildingScreen extends Component {
         this.updateQuestion = this.updateQuestion.bind(this)
         this.cameraOnPress = this.cameraOnPress.bind(this)
         this.onBottomButtonPressed = this.onBottomButtonPressed.bind(this)
-        this.setScannerState = this.setScannerState.bind(this)
+        this.loadQRCode = this.loadQRCode.bind(this)
       }
 
     spacesFilter = (space) => {
@@ -59,22 +59,45 @@ export class ExploreBuildingScreen extends Component {
         When a space is selected, this function will run and
         sets the filters the assets state variable by comparing space.floor and asset.spaces properties
       */
-      this.state.filteredAssets = this.state.assets.filter(item => item.spaces === space.floor)
+      var filteredAssets = this.state.assets.filter(item => item.spaces === space.floor)
+      var filteredChecklist = []
+      for (var checklist_index=0; checklist_index < this.state.checklists.length ; checklist_index ++){
+        if (this.state.checklists[checklist_index].assetCategory == ""){filteredChecklist.push(this.state.checklists[checklist_index])}
+        for (var asset_index=0; asset_index < filteredAssets.length; asset_index++){
+          if (filteredAssets[asset_index].categoryabbr == this.state.checklists[checklist_index].assetCategory){
+            filteredChecklist.push(this.state.checklists[checklist_index])
+          }
+        }
+      }
       this.setState({
         selectedSpaceId: space.id,
-        spaceSelected: true
+        spaceSelected: true,
+        filteredAssets,
+        filteredChecklist,
       })
     }
     assetsFilter = (asset) => {
       /*
         in assetModal, this function will be called to update the state in this screen.
         When an asset is selected, this function will run and
-        sets the filters the checklist state variable by comparing checklist.assetCategory and asset.categoryabbr properties
+        checks if a space is already selected to choose which checklist to filter.
+        filters the checklist/filteredChecklist state variable by comparing checklist.assetCategory and asset.categoryabbr properties
       */
+     if (this.state.spaceSelected){
+       console.log(this.state.filteredChecklist)
+       var filteredChecklist = this.state.filteredChecklist.filter(item => item.assetCategory === asset.categoryabbr || item.assetCategory === "")
+       this.setState({
+         selectedAssetId: asset.id,
+         filteredChecklist,
+         disableSpace: true,
+       })
+    }else{
       this.state.filteredChecklist = this.state.checklists.filter(item => item.assetCategory === asset.categoryabbr || item.assetCategory === "")
       this.setState({
         selectedAssetId: asset.id,
+        disableSpace: true,
       })
+     }
     }
 
     loadQuestions = (questions, checklistId) => {
@@ -136,12 +159,12 @@ export class ExploreBuildingScreen extends Component {
         assetSelected: false,
         assetTitle: '',
         qrCodeValue: '',
-        startScanner: false,
         setQuestions: [], // set of questions based on the selected checklist.
-        checklistId: ''
+        checklistId: '',
+        disableSpace: false,
       })
     }
-    onChange = (newState, text = '', type) => {
+    onChange = (newState, text = null, type) => {
       /*
         when a space, asset or checklist type is selected, this function
         will assign a states based on the type.
@@ -157,20 +180,38 @@ export class ExploreBuildingScreen extends Component {
       }
 
       if (type == 'asset') {
-        this.setState({
-          assetSelected: newState,
-          assetTitle: text,
-          checklistSelected: false,
-          StartTime: '',
-          setQuestions: []
-        })
+        if (newState == false){ 
+          this.setState({disableSpace: false})
+        }else {
+          this.setState({
+            assetSelected: newState,
+            assetTitle: text,
+            checklistSelected: false,
+            disableChecklist: false,
+            StartTime: '',
+            setQuestions: []
+          })
+        }
       }
 
       if (type == 'space'){
-        this.setState({
-          spaceSelected: newState,
-          spaceName: text
-        })
+        if (newState == false){ 
+          this.setState({
+            spaceSelected: newState,
+            StartTime: '',
+            disableChecklist: true,
+            checklistSelected: false,
+            assetSelected: newState,
+        })}else{
+          this.setState({
+            spaceSelected: newState,
+            spaceName: text,
+            StartTime: '',
+            disableChecklist: false,
+            assetSelected: false,
+            checklistSelected: false,
+          })
+        }
       }
     }
 
@@ -231,9 +272,6 @@ export class ExploreBuildingScreen extends Component {
                 dataLoaded: true
               })
             }
-
-          }else{
-            this.updateBuildingData()
           }
         }
 
@@ -278,58 +316,6 @@ export class ExploreBuildingScreen extends Component {
         ],
         { cancelable: true }
       )
-    }
-    
-    openLink = () => {
- 
-      Linking.openURL(this.state.qrCodeValue);
-   
-    }
-   
-    onQRCodeScanDone = (qrCode) => {
-
-      Alert.alert(
-        "QR Code details",
-        `Details: ${qrCode}`,
-        [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-        { cancelable: false }
-      );
-   
-      this.setState({ qrCodeValue: qrCode });
-   
-      this.setState({ startScanner: false });
-    }
-   
-    openQRCodeScanner = () => {
-   
-      var that = this;
-   
-      if (Platform.OS === 'android') {
-        async function requestCameraPermission() {
-          try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.CAMERA, {
-                'title': 'BuiltSpace App Permission',
-                'message': 'Builtspace needs access to your camera '
-              }
-            )
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-   
-              that.setState({ qrCodeValue: '' });
-              that.setState({ startScanner: true });
-            } else {
-              alert("CAMERA permission denied");
-            }
-          } catch (err) {
-            alert("Camera permission err", err);
-            console.warn(err);
-          }
-        }
-        requestCameraPermission();
-      } else {
-        that.setState({ qrCodeValue: '' });
-        that.setState({ startScanner: true });
-      }
     }
 
     saveToDevice = () => {
@@ -478,20 +464,72 @@ export class ExploreBuildingScreen extends Component {
       )
     }
 
-    setScannerState = (bool) => {
-      console.log("Hello")
-      this.setState({startScanner: bool})
+    loadQRCode = (qrMap) => {
+      if (qrMap.assetid == null) {
+        // filter space based on qrcode spaceid
+        var findSpace = this.state.spaces.find(space => space.id == qrMap.spaceid)
+
+        // filter assets based on space floor
+        var filteredAssets = this.state.assets.filter(item => item.spaces == findSpace.floor)
+
+        // filter checklist based on the assets available
+        var filteredChecklist = []
+
+        for (var checklist_index=0; checklist_index < this.state.checklists.length ; checklist_index ++){
+          if (this.state.checklists[checklist_index].assetCategory == ""){filteredChecklist.push(this.state.checklists[checklist_index])}
+          for (var asset_index=0; asset_index < filteredAssets.length; asset_index++){
+            if (filteredAssets[asset_index].categoryabbr == this.state.checklists[checklist_index].assetCategory){
+              filteredChecklist.push(this.state.checklists[checklist_index])
+            }
+          }
+        }
+        
+        this.onChange(true,findSpace.floor,"space")
+        this.setState({
+          selectedSpaceId: qrMap.spaceid,
+          spaceSelected: true,
+          disableSpace: true,
+          filteredAssets,
+          filteredChecklist
+        })
+      }else {
+        // filter assets based on qrcode assetid
+        var asset = this.state.assets.find(asset => asset.id === qrMap.assetid)
+
+        // filter checklist based on asset category
+        var filteredChecklist = this.state.checklists.filter(item => 
+          item.assetCategory == asset.categoryabbr || item.assetCategory === ""
+        )
+
+        // check if there are any checklists filtered
+        if (filteredChecklist.length > 0){
+          var findAsset = this.state.assets.find(asset => asset.id == qrMap.assetid)
+          this.onChange(true,findAsset.name,'asset')
+          this.setState({
+            spaceSelected: false,
+            disableSpace: true,
+            selectedAssetId: qrMap.assetid,
+            filteredChecklist
+          })
+        }
+      }
+      
     }
+
   render() {
+    const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} 
+                                          assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
+
+    const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter} onAssetChange={this.onChange} 
+                                           assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
     
-    const noFilteredAssets = <AssetsModal assets = {this.state.assets} assetsFilter={this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
-    const yesFilteredAssets = <AssetsModal assets = {this.state.filteredAssets} assetsFilter = {this.assetsFilter} onAssetChange={this.onChange} assetSelected={this.state.assetSelected} assetTitle={ this.state.assetTitle}/>
-    
-    const noItemSelected = styles.TextContainer
-    const yesItemSelected = styles.TextContainerSelected
-    
-    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle} ></ChecklistModal>
-    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} checklistTitle = {this.state.checklistTitle}></ChecklistModal>
+    const yesFilteredChecklist = <ChecklistModal checklists = {this.state.filteredChecklist} loadQuestions = {this.loadQuestions} 
+                                                 checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} 
+                                                 checklistTitle = {this.state.checklistTitle} disableChecklist={this.state.disableChecklist}></ChecklistModal>
+
+    const noFilteredChecklist = <ChecklistModal checklists = {this.state.checklists} loadQuestions = {this.loadQuestions} 
+                                                checklistSelected = {this.state.checklistSelected} onChecklistChange = {this.onChange} 
+                                                checklistTitle = {this.state.checklistTitle} disableChecklist={this.state.disableChecklist}></ChecklistModal>
 
     if (!this.state.dataLoaded ) {
       return (
@@ -500,7 +538,7 @@ export class ExploreBuildingScreen extends Component {
         <Text>Loading...</Text>
       </View>
       )
-    } else if (this.state.dataLoaded && !this.state.startScanner){
+    } else if (this.state.dataLoaded){
       const materialQ = this.state.setQuestions.filter(function(question)  {
         return question.questiontype === "Materials"
       })
@@ -541,16 +579,17 @@ export class ExploreBuildingScreen extends Component {
         </View>
 
     <View>
-        <SpacesModal spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
+        <SpacesModal disableSpace={this.state.disableSpace} spaces = {this.state.spaces} spacesFilter = {this.spacesFilter} onSpaceChange={this.onChange} 
+                     spaceSelected={this.state.spaceSelected} spaceName={this.state.spaceName} />
+
         {this.state.spaceSelected ? yesFilteredAssets : noFilteredAssets}
-        {this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist}  
+        {this.state.spaceSelected ? yesFilteredChecklist : (this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist)}
+
       <View>
-      {this.state.checklistSelected ?  
-      <View>
-          <Text style={styles.questionsHeader}>Questions</Text>
-      </View> : null }
       {this.state.checklistSelected ?
       <View>
+        <Text style={styles.questionsHeader}>Questions</Text>
+
         <FlatList style={styles.flatList}
           data={this.state.setQuestions}
           extraData={this.state.setQuestions}
@@ -643,7 +682,10 @@ export class ExploreBuildingScreen extends Component {
           </View>
       </View>
          : null }
-        <TouchableOpacity onPress={ () => this.props.navigation.navigate("QRCode")}>
+        <TouchableOpacity onPress={ () => this.props.navigation.navigate("QRCode", {
+          loadQRCode: this.loadQRCode,
+          qrcodes: this.props.navigation.state.params.buildingData.qrcodes,
+          })}>
                 <View style={styles.row}>
                   <Text style={styles.text}>Scan Qr</Text>
                   <View>
@@ -659,22 +701,6 @@ export class ExploreBuildingScreen extends Component {
     }
 
   }
-    // return (
-    //   <View style={{ flex: 1 }}>
- 
-    //     <CameraKitCameraScreen
-    //       showFrame={true}
-    //       scanBarcode={true}
-    //       laserColor={'#FF3D00'}
-    //       frameColor={'#00C853'}
-    //       colorForScannerFrame={'black'}
-    //       onReadCode={event =>
-    //         this.onQRCodeScanDone(event.nativeEvent.codeStringValue)
-    //       }
-    //     />
- 
-    //   </View>
-    // );
 
 }
 }

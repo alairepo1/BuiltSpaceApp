@@ -267,7 +267,7 @@ get_qrcode = async (org_name, buildinginfo, header) => {
   var qrcodemapping = [];
   try{
     await fetch(
-      `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/QRMappings?buildingid=${buildinginfo.id}`,
+      `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/QRMappings?buildingid=${buildingid}`,
       header
     )
     .then(response => response.json())

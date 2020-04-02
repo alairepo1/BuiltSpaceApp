@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text, View, Modal, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Location from 'react-native-vector-icons/SimpleLineIcons'
 import { SearchBar } from 'react-native-elements';
@@ -66,25 +66,26 @@ export class SpacesModal extends Component {
 
   resetModal = () => {
     this.setState({ 
-      value: '',
+      value: null,
+      spaces:this.props.spaces,
       modalIsOpen: false 
     }
   );
 }
   render() {
   
-    const selected = <View style={styles.textContainerSelected}>
-      <View>
+    const selected = <View>
+
         <Text style={styles.optionText}> Space</Text>
         <Text style={styles.detailsTextSelected}>{this.props.spaceName} </Text>
-      </View>
+
     </View>
 
-    const noneSelected = <View style={styles.textContainer}>
-      <View>
+    const noneSelected = <View>
+
         <Text style={styles.optionText}> Space</Text>
         <Text style={styles.detailsText}>None Selected </Text>
-      </View>
+
     </View>
 
     return (
@@ -141,7 +142,9 @@ export class SpacesModal extends Component {
           </View>
         </Modal>
 
-        <TouchableOpacity
+        <TouchableOpacity disabled={ this.props.disableChecklist ? true : false}
+        style={[this.props.checklistSelected ? styles.textContainerSelected : styles.textContainer,
+                this.props.disableChecklist ? styles.modalDisable : styles.modalEnable]}
           onPress={() => {
             this.setModalVisible(true);
           }}>

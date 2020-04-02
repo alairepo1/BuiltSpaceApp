@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, Alert, PermissionsAndroid} from 'react-native';
 import {CameraKitCameraScreen} from 'react-native-camera-kit';
-import styles from './BuildingScreen.style.js';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {loadQRMapping} from '../../functions/functions.js'
+import {ContextInfo} from '../../ContextInfoProvider';
 
 class QRCodeComponent extends Component {
+  static contextType = ContextInfo
+
   constructor(props){
     super(props)
     this.state = {
@@ -46,17 +48,50 @@ class QRCodeComponent extends Component {
     }
   };
 
-  onQRCodeScanDone = qrCode => {
-    Alert.alert(
-      'QR Code details',
-      `Details: ${qrCode}`,
-      [{text: 'OK', onPress: () => console.log('OK Pressed')}],
-      {cancelable: false},
-    );
+  onQRCodeScanDone = qrCodeResult => {
+    // var qrcodes = this.props.navigation.state.params.qrcodes
 
-    this.setState({qrCodeValue: qrCode});
+    var qrcodes = [{ // this is mock data, replace this with the commented qrcode above.
+      "assetid": null,  // we are using mock data because our test account does not contain any qrqode mappings
+      "buildingid": 3221,
+      "contactperson": null,
+      "id": 1,
+      "spaceid": 4,
+      "url": "01"
+    },
+    {
+      "assetid": 24044,
+      "buildingid": 3221,
+      "contactperson": null,
+      "id": 2,
+      "spaceid": null,
+      "url": "02"
+    },
+  ] 
+  var findQR = loadQRMapping(qrcodes, qrCodeResult)
+
+    if (!findQR){
+      this.alertQRcode()
+    }else{
+      this.alertQRcode(findQR)
+      
+    }
+    // this.setState({qrCodeValue: qrCode});
     this.setState({isLoading: false})
   };
+
+  alertQRcode = (findQR) => {
+    Alert.alert(
+      `QR Code Details ` ,
+      `QR code is mapped to , Do you want to start an inspection?, \n Details: ${findQR}`,
+      [{text: 'OK', onPress: () => {
+        this.props.navigation.state.params.loadQRCode(findQR)
+        this.props.navigation.goBack()
+      }
+    }],
+      {cancelable: false},
+    );
+  }
 
   render() {
     return (

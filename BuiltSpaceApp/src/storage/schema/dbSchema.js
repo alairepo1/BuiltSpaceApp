@@ -417,6 +417,7 @@ export const updateBuilding = async (accountDetails, organization_id, buildingAP
         // delete building data and pushes the new building into the organization
         realm.delete(building[0].assets)
         realm.delete(building[0].spaces)
+        realm.delete(building[0].qrcodes)
         // realm.delete(building[0].qrcodes)
         
         building[0]['assets'] = buildingAPI.assets
@@ -662,9 +663,4 @@ export const delInspections = async(accountDetails, selectedInspections) => {
       })
     })
   }catch(e){console.log("delInspections: ", e)}
-}
-
-
-export const closeRealm = async () => {
-
 }

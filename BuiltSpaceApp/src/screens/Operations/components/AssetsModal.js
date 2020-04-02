@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { SearchBar } from 'react-native-elements';
-import { Text, View, Modal, TouchableOpacity, FlatList, Alert, StyleSheet} from 'react-native';
+import { Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from './Modalstyle.js';
 
@@ -56,20 +56,25 @@ export class AssetsModal extends Component {
     );
   };
 
-  render() {
-    const selected = <View style={styles.textContainerSelected}>
-      <View>
-        <Text style={styles.optionText}> Assets</Text>
-        <Text style={styles.detailsTextSelected}>{this.props.assetTitle} </Text>
-      </View>
-    </View>
+  resetModal = () => {
+    this.setState({ 
+      value: null,
+      assets: null,
+      modalIsOpen: false 
+    }
+  );
+}
 
-    const noneSelected = <View style={styles.textContainer}>
-      <View>
-        <Text style={styles.optionText}> Assets</Text>
-        <Text style={styles.detailsText}>None Selected </Text>
-      </View>
-    </View>
+  render() {
+    const selected = <View>
+                        <Text style={styles.optionText}> Assets</Text>
+                        <Text style={styles.detailsTextSelected}>{this.props.assetTitle} </Text>
+                     </View>
+
+    const noneSelected = <View>
+                          <Text style={styles.optionText}> Assets</Text>
+                          <Text style={styles.detailsText}>None Selected </Text>
+                         </View>
 
     return (
       <View style={{ marginTop: 22 }}>
@@ -79,7 +84,8 @@ export class AssetsModal extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            this.resetModal()
+            this.setModalVisible(!this.state.modalVisible)
           }}>
             
           <View style={styles.listContainer}>
@@ -116,6 +122,7 @@ export class AssetsModal extends Component {
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => {
+                  this.resetModal()
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
@@ -125,7 +132,7 @@ export class AssetsModal extends Component {
           </View>
         </Modal>
 
-        <TouchableOpacity
+        <TouchableOpacity style={[this.props.assetSelected ? styles.textContainerSelected : styles.textContainer]}
           onPress={() => {
             this.setModalVisible(true);
           }}>

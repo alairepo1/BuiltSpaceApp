@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import styles from '../BuildingScreen.style.js';
 
 class ExploreBuildingFlatlistFooter extends Component {
     /**
@@ -15,34 +16,24 @@ class ExploreBuildingFlatlistFooter extends Component {
           onPress={() => {
             this.props.addQuestion('labour');
           }}
-          style={sytles.button}>
+          style={styles.FlatListFooter}>
           <Text>Add labour</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             this.props.addQuestion('materials');
           }}
-          style={sytles.button}>
+          style={styles.FlatListFooter}>
           <Text>Add materials</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.props.addQuestion('issue')}
-          style={sytles.button}>
+          style={styles.FlatListFooter}>
           <Text>Add issue</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
-const sytles =  StyleSheet.create ({
-  button: {
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 120,
-    height: 40,
-    margin: 2,
-    backgroundColor: 'lightgrey'
-  }
-})
+
 export default ExploreBuildingFlatlistFooter;

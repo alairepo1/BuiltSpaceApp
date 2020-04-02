@@ -12,6 +12,7 @@ import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js'
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 import QRCodeScreen from '../screens/Operations/QRCodeScreen.js'
+
 const AuthStack = createStackNavigator(
   {
     Login: {
@@ -55,7 +56,7 @@ const HomeStack = createStackNavigator(
     },
     QRCode:{
       screen: QRCodeScreen
-    }
+    },
   },
 
   {
