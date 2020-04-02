@@ -32,8 +32,6 @@ class QRCodeComponent extends Component {
             },
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            // this.props.setQRState();
-            this.setState({qrCodeValue: ''});
           } else {
             alert('CAMERA permission denied');
           }
@@ -43,8 +41,6 @@ class QRCodeComponent extends Component {
         }
       }
       requestCameraPermission();
-    } else {
-      this.setState({qrCodeValue: ''});
     }
   };
 
@@ -73,19 +69,72 @@ class QRCodeComponent extends Component {
     if (!findQR){
       this.alertQRcode()
     }else{
-      this.alertQRcode(findQR)
+      this.filterQR(findQR)
       
     }
-    // this.setState({qrCodeValue: qrCode});
     this.setState({isLoading: false})
   };
 
-  alertQRcode = (findQR) => {
+  filterQR = (qrMap) => {
+    var checklists = this.props.navigation.state.params.checklists
+
+    if (qrMap.assetid == null) {
+      // filter space based on qrcode spaceid
+      var findSpace = this.props.navigation.state.params.spaces.find(space => space.id == qrMap.spaceid)
+      
+      // filter assets based on space floor
+      var filteredAssets = this.props.navigation.state.params.assets.filter(item => item.spaces == findSpace.floor)
+
+      // filter checklist based on the assets available
+      var filteredChecklist = []
+
+      for (var checklist_index=0; checklist_index < checklists.length ; checklist_index ++){
+        if (checklists[checklist_index].assetCategory == ""){filteredChecklist.push(checklists[checklist_index])}
+        for (var asset_index=0; asset_index < filteredAssets.length; asset_index++){
+          if (filteredAssets[asset_index].categoryabbr == checklists[checklist_index].assetCategory){
+            filteredChecklist.push(checklists[checklist_index])
+          }
+        }
+      }
+      this.alertQRcode('space', 
+      findSpace.floor, 
+      qrMap.spaceid,
+      filteredAssets,
+      filteredChecklist)
+    }else {
+      // filter assets based on qrcode assetid
+      var asset = this.props.navigation.state.params.assets.find(asset => asset.id === qrMap.assetid)
+
+      // filter checklist based on asset category
+      var filteredChecklist = checklists.filter(item => 
+        item.assetCategory == asset.categoryabbr || item.assetCategory === ""
+      )
+
+      // check if there are any checklists filtered
+      if (filteredChecklist.length > 0){
+        var findAsset = this.props.navigation.state.params.assets.find(asset => asset.id == qrMap.assetid)
+        
+        this.alertQRcode('asset', 
+        findAsset.name, 
+        qrMap.assetid,
+        null,
+        filteredChecklist)
+      }
+    }
+    
+  }
+
+  alertQRcode = (type, type_name, typeid, filteredAssets = null, filteredChecklist) => {
     Alert.alert(
-      `QR Code Details ` ,
-      `QR code is mapped to , Do you want to start an inspection?, \n Details: ${findQR}`,
+      `QR Code Details `,
+      `QR code is mapped to ${type_name}, Do you want to start an inspection?`,
       [{text: 'OK', onPress: () => {
-        this.props.navigation.state.params.loadQRCode(findQR)
+        this.props.navigation.state.params.loadQRCode(type, 
+        type_name, 
+        typeid,
+        filteredAssets,
+        filteredChecklist
+        )
         this.props.navigation.goBack()
       }
     }],
@@ -96,12 +145,6 @@ class QRCodeComponent extends Component {
   render() {
     return (
         <View style={{flex: 1}}>
-            {/* {this.state.isLoading ? 
-            <View style={styles.loadingIndicator}>
-                <ActivityIndicator />
-                <Text>Wait while we fetch the qrcode URL ...</Text>
-            </View>    
-        : null } */}
           <CameraKitCameraScreen
             showFrame={true}
             scanBarcode={true}

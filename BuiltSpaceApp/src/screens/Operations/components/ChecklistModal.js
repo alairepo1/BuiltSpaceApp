@@ -100,7 +100,7 @@ export class ChecklistModal extends Component {
                   <TouchableOpacity
                     onPress={() => {
                       this.props.loadQuestions(item.questions, item.title, item.id)
-                      this.props.onChecklistChange(true, item.title, 'checklist')
+                      // this.props.onChecklistChange(true, item.title, 'checklist')
                       this.setModalVisible(!this.state.modalVisible)
                     }}>
                     <View style={styles.checklistItems}>

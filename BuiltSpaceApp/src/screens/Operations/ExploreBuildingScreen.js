@@ -26,11 +26,10 @@ export class ExploreBuildingScreen extends Component {
         this.state = {
           isPermitted: false,
           spaces: [],
-          spacesFetched: false,
           assets: [],
-          filteredAssets: [],
-          checklists: [],
-          filteredChecklist: [],
+          filteredAssets: [], // if space is selected, use this array to render the asset modal
+          checklists: [], 
+          filteredChecklist: [], // this array is loaded into the checklist.
           dataLoaded: false,
           spaceSelected: false,
           spaceName: '',
@@ -84,7 +83,6 @@ export class ExploreBuildingScreen extends Component {
         filters the checklist/filteredChecklist state variable by comparing checklist.assetCategory and asset.categoryabbr properties
       */
      if (this.state.spaceSelected){
-       console.log(this.state.filteredChecklist)
        var filteredChecklist = this.state.filteredChecklist.filter(item => item.assetCategory === asset.categoryabbr || item.assetCategory === "")
        this.setState({
          selectedAssetId: asset.id,
@@ -106,13 +104,30 @@ export class ExploreBuildingScreen extends Component {
         in this Screen and assigns a state variable
         for the selected checklist id.
        */
+      if (this.state.checklistSelected){
+        this.setState({
+          checklistSelected: false,
+          disableChecklist: false,
+          StartTime: '',
+          setQuestions: [],
+          questionsLoading: true
+        }, () => {this.setNewQuestions(questions, checklistId)})
+      }else {{this.setNewQuestions(questions, checklistId)}}
+      
+    }
+
+    setNewQuestions = (questions, checklistId) => {
+      // 
+      var StartTime = getStartTime()
       this.setState({
         setQuestions: Array.from(questions),
         checklistSelected: true,
-        checklistId
+        checklistTitle: checklistId,
+        StarTime: StartTime,
+        checklistId,
+        questionsLoading: false
       })
     }
-
     updateQuestion = (index, value, type, measurement_label = '', measurement_unit = '') => {
       /*
         updates the question text input based on the type passed into the argument.
@@ -146,7 +161,6 @@ export class ExploreBuildingScreen extends Component {
        */
       this.setState({
         spaces: [],
-        spacesFetched: false,
         assets: [],
         filteredAssets: [],
         checklists: [],
@@ -170,15 +184,6 @@ export class ExploreBuildingScreen extends Component {
         will assign a states based on the type.
         The modal components will change based on the states 
        */
-      if (type == 'checklist'){
-        let StartTime = getStartTime()
-        this.setState({ 
-          checklistSelected: newState,
-          checklistTitle: text,
-          StartTime: StartTime
-        })
-      }
-
       if (type == 'asset') {
         if (newState == false){ 
           this.setState({disableSpace: false})
@@ -464,56 +469,36 @@ export class ExploreBuildingScreen extends Component {
       )
     }
 
-    loadQRCode = (qrMap) => {
-      if (qrMap.assetid == null) {
-        // filter space based on qrcode spaceid
-        var findSpace = this.state.spaces.find(space => space.id == qrMap.spaceid)
-
-        // filter assets based on space floor
-        var filteredAssets = this.state.assets.filter(item => item.spaces == findSpace.floor)
-
-        // filter checklist based on the assets available
-        var filteredChecklist = []
-
-        for (var checklist_index=0; checklist_index < this.state.checklists.length ; checklist_index ++){
-          if (this.state.checklists[checklist_index].assetCategory == ""){filteredChecklist.push(this.state.checklists[checklist_index])}
-          for (var asset_index=0; asset_index < filteredAssets.length; asset_index++){
-            if (filteredAssets[asset_index].categoryabbr == this.state.checklists[checklist_index].assetCategory){
-              filteredChecklist.push(this.state.checklists[checklist_index])
-            }
-          }
-        }
-        
-        this.onChange(true,findSpace.floor,"space")
+    loadQRCode = (type, type_name, typeid, filteredAssets = null, filteredChecklist) => {
+      if (type == 'space'){
         this.setState({
-          selectedSpaceId: qrMap.spaceid,
+          selectedSpaceId: typeid,
           spaceSelected: true,
           disableSpace: true,
+          disableChecklist: false,
+          assetSelected: false,
+          checklistSelected: false,
+          StartTime: '',
           filteredAssets,
           filteredChecklist
         })
-      }else {
-        // filter assets based on qrcode assetid
-        var asset = this.state.assets.find(asset => asset.id === qrMap.assetid)
-
-        // filter checklist based on asset category
-        var filteredChecklist = this.state.checklists.filter(item => 
-          item.assetCategory == asset.categoryabbr || item.assetCategory === ""
-        )
-
-        // check if there are any checklists filtered
-        if (filteredChecklist.length > 0){
-          var findAsset = this.state.assets.find(asset => asset.id == qrMap.assetid)
-          this.onChange(true,findAsset.name,'asset')
-          this.setState({
-            spaceSelected: false,
-            disableSpace: true,
-            selectedAssetId: qrMap.assetid,
-            filteredChecklist
-          })
-        }
       }
-      
+
+      if (type == 'asset'){
+        this.onChange(true,type_name,'asset')
+        this.setState({
+          assetSelected: true,
+          assetTitle: type_name,
+          spaceSelected: false,
+          disableSpace: true,
+          checklistSelected: false,
+          disableChecklist: false,
+          StartTime: '',
+          selectedAssetId: typeid,
+          setQuestions: [],
+          filteredChecklist
+        })
+      }
     }
 
   render() {
@@ -586,104 +571,107 @@ export class ExploreBuildingScreen extends Component {
         {this.state.spaceSelected ? yesFilteredChecklist : (this.state.assetSelected ? yesFilteredChecklist : noFilteredChecklist)}
 
       <View>
-      {this.state.checklistSelected ?
-      <View>
-        <Text style={styles.questionsHeader}>Questions</Text>
-
-        <FlatList style={styles.flatList}
-          data={this.state.setQuestions}
-          extraData={this.state.setQuestions}
-          ListFooterComponent={this.renderFlatlistFooter}
-          renderItem={({item, index}) => {
-  
-            if (item.questiontype === '') {
-              return <GeneralType question={{
-                item,
-                index, 
-                updateInspection: this.updateInspectionResults,
-                updateQuestion: this.updateQuestion
-              }}/>
-            }
-      
-            if (item.questiontype === 'Labour') {
-              return <LabourType question={{
-                item,
-                index, 
-                updateInspection: this.updateInspectionResults,
-                updateQuestion: this.updateQuestion
-              }}/>
-            }
-      
-            if (item.questiontype === 'Materials') {
-            return <MaterialsType question={{item, 
-              index, 
-              updateInspection: this.updateInspectionResults,
-              updateQuestion: this.updateQuestion
-            }}/>
-            }
-          }
-          }
-          keyExtractor={item => this.state.setQuestions.indexOf(item)}
-          />
-         <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
-           <View style={{flex: 1}}>
-            <Text>Additional Comments</Text>
-            <TextInput 
-              style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'lightgrey'}}
-              multiline
-              numberOfLines={4}
-              textAlignVertical={"top"}
-              onChangeText={text => this.setState({GeneralComments: text})}
-            />
-           </View>
-         </View>
-        <View style={{flex:3, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
-        <View style={{flex:1, margin: 5}}> 
-        <Button style={{flex:1, margin: 5}}
-        type="solid"
-        buttonStyle={{backgroundColor: '#47d66d'}}
-        title="Save to device"
-        titleStyle={{color: 'white'}}
-        onPress={() =>  { 
-          if (this.state.assetSelected) {
-            this.saveAlert() 
-        } else {
-          this.alertNotSelected()
-        }}
-        }
-        />
-        </View>  
-
-        <View style={{flex:1, margin: 5}}>
-        <Button 
-        type="solid"
-        title="Submit"
-        buttonStyle={{backgroundColor: '#47d66d'}}
-        titleStyle={{color: 'white'}}
-        onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(JSON.stringify(result,null,1))})}}
-        />
-        </View>
-
-        <View style={{flex:1, margin: 5}}>
-          <Button
-          title="Upload picture"
-          onPress={this.cameraOnPress}
-          ></Button>
-        </View>
-        <View>
+        {this.state.questionsLoading ? null :
+              this.state.checklistSelected ?
+                <View>
+                  <Text style={styles.questionsHeader}>Questions</Text>
           
-        </View>
-        </View>
-        <View style={{flex:1, margin: 5}}>
-          <Button
-          title="Home"
-          onPress={() => this.props.navigation.navigate("Home")}
-          ></Button>
-          </View>
-      </View>
-         : null }
+                  <FlatList style={styles.flatList}
+                    data={this.state.setQuestions}
+                    extraData={this.state.setQuestions}
+                    ListFooterComponent={this.renderFlatlistFooter}
+                    renderItem={({item, index}) => {
+            
+                      if (item.questiontype === '') {
+                        return <GeneralType question={{
+                          item,
+                          index, 
+                          updateQuestion: this.updateQuestion
+                        }}/>
+                      }
+                
+                      if (item.questiontype === 'Labour') {
+                        return <LabourType question={{
+                          item,
+                          index, 
+                          updateQuestion: this.updateQuestion
+                        }}/>
+                      }
+                
+                      if (item.questiontype === 'Materials') {
+                      return <MaterialsType question={{item, 
+                        index, 
+                        updateQuestion: this.updateQuestion
+                      }}/>
+                      }
+                    }
+                    }
+                    keyExtractor={item => this.state.setQuestions.indexOf(item)}
+                    />
+                   <View style={{flex:2, flexDirection: 'column', margin: 15 }}>
+                     <View style={{flex: 1}}>
+                      <Text>Additional Comments</Text>
+                      <TextInput 
+                        style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'lightgrey'}}
+                        multiline
+                        numberOfLines={4}
+                        textAlignVertical={"top"}
+                        onChangeText={text => this.setState({GeneralComments: text})}
+                      />
+                     </View>
+                   </View>
+                  <View style={{flex:3, flexDirection: 'row', justifyContent: 'center', margin: 5}}>
+                  <View style={{flex:1, margin: 5}}> 
+                  <Button style={{flex:1, margin: 5}}
+                  type="solid"
+                  buttonStyle={{backgroundColor: '#47d66d'}}
+                  title="Save to device"
+                  titleStyle={{color: 'white'}}
+                  onPress={() =>  { 
+                    if (this.state.assetSelected) {
+                      this.saveAlert() 
+                  } else {
+                    this.alertNotSelected()
+                  }}
+                  }
+                  />
+                  </View>  
+          
+                  <View style={{flex:1, margin: 5}}>
+                  <Button 
+                  type="solid"
+                  title="Submit"
+                  buttonStyle={{backgroundColor: '#47d66d'}}
+                  titleStyle={{color: 'white'}}
+                  onPress={()=> {getInspections(this.context.accountContext.account).then(result => {console.log(JSON.stringify(result,null,1))})}}
+                  />
+                  </View>
+          
+                  <View style={{flex:1, margin: 5}}>
+                    <Button
+                    title="Upload picture"
+                    onPress={this.cameraOnPress}
+                    ></Button>
+                  </View>
+                  <View>
+                    
+                  </View>
+                  </View>
+                  <View style={{flex:1, margin: 5}}>
+                    <Button
+                    title="Home"
+                    onPress={() => this.props.navigation.navigate("Home")}
+                    ></Button>
+                    </View>
+                </View>
+                   : null 
+        }
+
         <TouchableOpacity onPress={ () => this.props.navigation.navigate("QRCode", {
           loadQRCode: this.loadQRCode,
+          checklists:this.state.checklists,
+          spaces:this.state.spaces,
+          assets:this.state.assets,
           qrcodes: this.props.navigation.state.params.buildingData.qrcodes,
           })}>
                 <View style={styles.row}>
