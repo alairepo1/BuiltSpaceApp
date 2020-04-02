@@ -12,6 +12,8 @@ import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
+import CameraComponent from '../screens/Operations/components/CameraComponent.js'
+import GeneralType from '../screens/Operations/components/GeneralType.js'
 
 const AuthStack = createStackNavigator(
   {
@@ -53,6 +55,13 @@ const HomeStack = createStackNavigator(
     },
     ExploreBuilding: {
       screen: ExploreBuildingScreen
+    },
+    GeneralType: {
+      screen: GeneralType
+    },
+    CameraComponent: {
+      screen: CameraComponent,
+      headerShown: false
     }
   },
 

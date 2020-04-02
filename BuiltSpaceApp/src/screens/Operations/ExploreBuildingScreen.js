@@ -632,11 +632,12 @@ export class ExploreBuildingScreen extends Component {
           renderItem={({item, index}) => {
   
             if (item.questiontype === '') {
-              return <GeneralType question={{
+              return <GeneralType navigation = {this.props.navigation} question={{
                 item,
                 index, 
                 updateInspection: this.updateInspectionResults,
-                updateQuestion: this.updateQuestion
+                updateQuestion: this.updateQuestion,
+                
               }}/>
             }
       

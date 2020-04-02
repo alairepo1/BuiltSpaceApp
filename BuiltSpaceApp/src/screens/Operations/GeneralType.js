@@ -1,28 +1,19 @@
 import React, {Component} from 'react';
-import {View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Button} from 'react-native';
+import PropTypes from 'prop-types';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Listquestion, ShadowPropTypesIOS} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
-import CameraComponent from './CameraComponent.js'
 
 
 export class GeneralType extends Component {
     constructor(props) {
         super(props);
         this.state={
-            selectedIndex: null,
+            selectedIndex: 0,
             format: this.props.question.item.format.split('|'),
             colors: this.props.question.item.colorformat.split('|'),
-            pictureArray: [],
-            flatlistTest: [
-                {key: 'Devin'},
-            {key: 'Dan'},
-            {key: 'Dominic'},
-            {key: 'Jackson'},
-            ],
-            renderList: false
         }
     this.updateIndex = this.updateIndex.bind(this)
     this.buttonComponents = this.buttonComponents.bind(this)
-    this.updatePictureArray = this.updatePictureArray.bind(this)
     }
 
     buttonComponents = () => {
@@ -43,24 +34,8 @@ export class GeneralType extends Component {
     }
     
     updateIndex(selectedIndex) {
-        if (selectedIndex == this.state.selectedIndex){
-            this.setState({selectedIndex: null})
-            this.props.question.updateQuestion(this.props.question.index, "", "InspectionResults")
-        }else{
-            this.setState({selectedIndex})
-            this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
-
-        }
-    }
-
-    updatePictureArray(uri) {
-        const obj = {uri: `file://${uri[0]}`} 
-       this.state.pictureArray.push(obj)
-        console.log("Picture array:",this.state.pictureArray)
-        console.log("URI: ", this.state.pictureArray[0].uri)
-        this.setState({
-            renderList: true
-        })
+        this.setState({selectedIndex})
+        this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
     }
 
     render() {
@@ -79,7 +54,7 @@ export class GeneralType extends Component {
                         <ButtonGroup
                         selectedButtonStyle={{backgroundColor: this.state.colors[this.state.selectedIndex]}}
                         buttonStyle={{padding: 10}}
-                        selectMultiple={question.allowmultiplechoices ? true : false}
+                        selectMultiple={false}
                         buttons={buttonArray}
                         onPress={this.updateIndex}
                         selectedIndex={selectedIndex}
@@ -117,7 +92,7 @@ export class GeneralType extends Component {
                 null}
                 </View>
                 <View style={{flex:2}}>
-                    <Text>Details: </Text>
+                    <Text>Detailss:</Text>
                     <TextInput 
                     style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
                     onChangeText={text => this.props.question.updateQuestion(
@@ -126,33 +101,11 @@ export class GeneralType extends Component {
                         "TaskDetails", // type 
                         )}
                     />
+
                 </View>
-                <View style={{flex:1, margin: 5}}>
-                        <Button
-                            title="Upload picture"
-                           onPress={() => this.props.navigation.navigate('CameraComponent', {
-                                updatePictureArray: this.updatePictureArray
-                            })}
-                        ></Button>
-                    
-                    <FlatList style={{flex: 1}}
-                    horizontal
-                    style={{backgroundColor: 'white'}}
-                    extraData={this.state.pictureArray}
-                    data={this.state.pictureArray}
-                    renderItem={({item}) =>
-                    <View>
-                    
-                    <Image 
-                    style={{width: 100, height: 100, marginRight: 5, marginTop: 5, overflow: 'hidden'}}
-                    source={{ uri: item.uri}}></Image>
-                    </View>
-                    }
-                    keyExtractor={item => this.state.pictureArray.indexOf(item)}
-                    /> 
-                    
-                   </View>
-                   
+                <TouchableOpacity disabled={true} style={{ margin: 5, backgroundColor: 'white', width: 100, height: 20}}> 
+                    <Text>Add picture</Text>
+                </TouchableOpacity>
             </View>
         )
     }
