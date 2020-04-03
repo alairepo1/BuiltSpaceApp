@@ -1,3 +1,5 @@
+import {findQR} from '../storage/schema/dbSchema'
+
 function getStartTime() {
   console.log('start');
   var date = new Date();
@@ -222,9 +224,23 @@ function formatAddQuestion(type,questions,checklistTitle,checklistId) {
     }catch(e){console.log(e)}
 }
 
+function loadQRMapping(qrcodes, _qrcodeurl) { 
+  var index = _qrcodeurl.lastIndexOf("/");
+  var qrcodeurl = _qrcodeurl.substring(index + 1);  
+  for (var i = 0; i < qrcodes.length; i += 1) {
+    const qr = qrcodes[i];
+    if (qr.url == qrcodeurl) {
+      return qr
+    }else{
+      return false
+    }
+  }
+}
+
 export {
     getStartTime, 
     calculateDurationInspection, 
     formatInspectionObject, 
-    formatAddQuestion
+    formatAddQuestion,
+    loadQRMapping
 };

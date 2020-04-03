@@ -110,11 +110,13 @@ export class SelectBuildingScreen extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
+        <View style={{flexDirection: 'row'}}>
         <Icon onPress={() => {
           this.setState({isLoading: true})
           this.updateOrganizations()
           }} style={styles.listIcon} name="refresh" size={20} color="black" />
-
+        <Text>  Reload Data</Text>
+        </View>
         <FlatList 
         data={this.state.org_data.buildings}
         renderItem={({item}) => 

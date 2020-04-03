@@ -210,10 +210,13 @@ export class HomePage extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
+        <View style={{flexDirection: 'row'}}>
         <Icon  onPress={() => {
           this.setState({isLoading: true})
           this.updateAccountData()
         }} style={styles.listIcon} name="refresh" size={20} color="black" />
+        <Text>  Reload Data</Text>
+        </View>
 
         <Text style={styles.homePageText}>
           To Start please select an organization
