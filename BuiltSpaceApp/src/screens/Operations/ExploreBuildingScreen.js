@@ -472,17 +472,16 @@ export class ExploreBuildingScreen extends Component {
                     extraData={this.state.setQuestions}
                     ListFooterComponent={this.renderFlatlistFooter}
                     renderItem={({item, index}) => {
-            
                       if (item.questiontype === '') {
-                        return <GeneralType question={{
+                        return <GeneralType navigation = {this.props.navigation} question={{
                           item,
                           index, 
-                          updateQuestion: this.updateQuestion
+                          updateQuestion: this.updateQuestion,
                         }}/>
                       }
                 
                       if (item.questiontype === 'Labour') {
-                        return <LabourType question={{
+                        return <LabourType navigation = {this.props.navigation} question={{
                           item,
                           index, 
                           updateQuestion: this.updateQuestion
@@ -490,7 +489,8 @@ export class ExploreBuildingScreen extends Component {
                       }
                 
                       if (item.questiontype === 'Materials') {
-                      return <MaterialsType question={{item, 
+                      return <MaterialsType navigation = {this.props.navigation} question={{
+                        item, 
                         index, 
                         updateQuestion: this.updateQuestion
                       }}/>
