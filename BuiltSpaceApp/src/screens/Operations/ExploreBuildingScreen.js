@@ -147,10 +147,22 @@ export class ExploreBuildingScreen extends Component {
         question[0]["type"] = value
       }
       if (type == "InspectionResults"){
-        question[0]["InspectionResults"] = value;
+        question[0]["InspectionResults"] = value
       }
       if (type == "TextOnly"){
-        question[0]["TextOnlyForm"] = value;
+        question[0]["TextOnlyForm"] = value
+      }
+      if (type == "Photos"){
+        if (question[0]["Photos"] == undefined){
+          question[0]["Photos"] = []
+        }
+        question[0]["Photos"].push(value)
+      }
+      if (type == "delete Photo"){
+        question[0]["Photos"].splice(value, 1)
+      }
+      if (type == "crop Photos"){
+        question[0]["Photos"] = value
       }
     }
     resetState = () => {

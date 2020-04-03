@@ -21,6 +21,8 @@ function formatInspectionObject(building, asset, orgData, startDate, generalComm
   const dateString = date.toISOString().split('T')[0];
   const time = date.getTime();
   const duration = calculateDurationInspection(startDate, date);
+  console.log(typeof(startDate))
+  console.log(typeof(duration))
   const _filename =
     dateString + '-' + building.name.split(' ').join('-') + '-' + asset.name;
   //inspection for a space
@@ -98,7 +100,7 @@ function formatInspectionObject(building, asset, orgData, startDate, generalComm
         TaskTitle: question.question,
         TaskDetails: question.TaskDetails || '',
         QuestionFormat: question.format,
-        Photos: 'photos', // an array of photo
+        Photos: question.Photos, // an array of photo
         InspectionResult: question.InspectionResults || '',
         MeasurementLabel: question.Measurementlabel || '',
         Measurement: question.measurement || '',

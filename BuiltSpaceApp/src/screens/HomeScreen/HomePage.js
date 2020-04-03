@@ -265,7 +265,7 @@ export class HomePage extends Component {
                 }
                 keyExtractor={item => item.Id}
                 />
-                              <View style={styles.inspectionButtonContainer}>
+            <View style={styles.inspectionButtonContainer}>
               <TouchableOpacity 
               onPress={() => { this.confirmation("Submit") }}
               style={styles.submit}>

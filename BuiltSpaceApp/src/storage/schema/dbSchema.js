@@ -186,7 +186,7 @@ export const qrCodeSchema = {
 export const inspectionSchema = {
   name: 'inspections',
   properties: {
-    Id: 'date?',
+    Id: 'string?',
     Name: 'string?',
     Content: {type: 'object', objectType: 'MyFieldsContainer'},
     buildingId: 'int?',
@@ -208,7 +208,7 @@ export const MyFieldsSchema = {
     DemoUsername: 'string?',
     DemoUserEmail: 'string?',
     Date: 'string?',
-    StartTime: 'date?',
+    StartTime: 'string?',
     Duration: 'string?',
     Time: 'int?',
     FileName: 'string?',
@@ -230,7 +230,7 @@ export const MyFieldsSchema = {
     ChecklistCategory: 'string?',
     QRcodeURL: 'string?',
     AssetLocations: {type: 'object', objectType: 'assetLocation'},
-    NewSpaces: {type: 'object', objectType: 'newSpacesContainerSchema'},
+    NewSpaces: {type: 'object', objectType: 'newSpacesContainer'},
     Questions: {type: 'object', objectType: 'questionsContainer'},
     ParentTaskId: 'string?',  
     Task: 'string?', // Because there is no data in your app , leave it empty
@@ -256,7 +256,7 @@ export const inspectionQuestionSchema = {
     TaskTitle: 'string?',  
     TaskDetails: 'string?',
     QuestionFormat: 'string?',
-    Photos: 'string?', // an array of photo
+    Photos: {type: 'list', objectType: 'photos'}, // an array of photo
     InspectionResult: 'string?',
     MeasurementLabel: 'string?',
     Measurement: 'string?',
@@ -273,8 +273,15 @@ export const inspectionQuestionSchema = {
   }
 }
 
+export const photoSchema = {
+  name: 'photos',
+  properties: {
+    uri: 'string?'
+  }
+}
+
 export const newSpacesContainerSchema = {
-  name: 'newSpacesContainerSchema',
+  name: 'newSpacesContainer',
   properties: {
     Spaces: {type: 'list', objectType: 'newSpaces'}
   }
@@ -304,7 +311,7 @@ export const geoLocationSchema = {
     AltitudeAccuracy: 'string?',
     Heading: 'string?',
     Speed: 'string',
-    Timestamp: 'date'
+    Timestamp: 'string?'
   }
 }
 
@@ -331,6 +338,7 @@ const databaseOptions = {
     MyFieldsSchema,
     questionsContainerSchema,
     inspectionQuestionSchema,
+    photoSchema,
     assetLocationContainerSchema,
     newSpacesContainerSchema,
     newSpacesSchema,
