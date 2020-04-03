@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements';
-import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert } from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import styles from './Modalstyle.js';
 
@@ -58,23 +57,25 @@ export class ChecklistModal extends Component {
       );
     };
 
+    resetModal = () => {
+      this.setState({ 
+        value: null,
+        checklists: null,
+        modalIsOpen: false 
+      }
+    );
+  }
     render() {
-        // const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        // const selected = <Text style={styles.detailsTextSelected}>{this.state.checklistSelection}</Text>
 
-        const selected = <View style={styles.textContainerSelected}>
-          <View>
-            <Text style={styles.optionText}> Checklist</Text>
-            <Text style={styles.detailsTextSelected}>{this.props.checklistTitle} </Text>
-          </View>
-        </View>
-    
-        const noneSelected = <View style={styles.textContainer}>
-          <View>
-            <Text style={styles.optionText}> Checklist</Text>
-            <Text style={styles.detailsText}>None Selected </Text>
-          </View>
-        </View>
+        const selected = <View>
+                            <Text style={styles.optionText}> Checklist</Text>
+                            <Text style={styles.detailsTextSelected}>{this.props.checklistTitle} </Text>
+                        </View>
+                    
+        const noneSelected = <View>
+                                <Text style={styles.optionText}> Checklist</Text>
+                                <Text style={styles.detailsText}>None Selected </Text>
+                            </View>
 
         return(
             <View style={{marginTop: 22}}>
@@ -84,6 +85,7 @@ export class ChecklistModal extends Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
+                this.resetModal()
                 this.setModalVisible(!this.state.modalVisible)
               }}>
 
@@ -98,7 +100,7 @@ export class ChecklistModal extends Component {
                   <TouchableOpacity
                     onPress={() => {
                       this.props.loadQuestions(item.questions, item.title, item.id)
-                      this.props.onChecklistChange(true, item.title, 'checklist')
+                      // this.props.onChecklistChange(true, item.title, 'checklist')
                       this.setModalVisible(!this.state.modalVisible)
                     }}>
                     <View style={styles.checklistItems}>
@@ -125,8 +127,11 @@ export class ChecklistModal extends Component {
               </View>
             </Modal>
     
-            <TouchableOpacity
+            <TouchableOpacity disabled={this.props.disableChecklist ? true : false}
+            style={[this.props.checklistSelected ? styles.textContainerSelected : styles.textContainer,
+              this.props.disableChecklist ? styles.modalDisable : styles.modalEnable]}
               onPress={() => {
+                this.resetModal()
                 this.setModalVisible(true);
               }}>
             <View>

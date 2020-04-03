@@ -132,5 +132,10 @@ export default StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#43BC4F',
+    },
+    modalEnable: {
+    },
+    modalDisable: {
+        backgroundColor: 'lightgrey'
     }
 });
