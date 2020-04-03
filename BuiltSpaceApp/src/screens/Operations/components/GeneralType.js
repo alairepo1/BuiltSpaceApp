@@ -193,10 +193,10 @@ export class GeneralType extends Component {
                     <TouchableOpacity onPress={() => {
                         Alert.alert(
                             'Edit Picture',
-                            'Do you want to delete or crop this Picture?',
+                            'Do you want to delete or edit this Picture?',
                             [
                               {text: 'Cancel', onPress: () => console.log('Cancel pressed'), style: 'cancel'},
-                              {text: 'Crop Image', onPress: () => this.cropPicture(item.uri, index)},
+                              {text: 'Edit Image', onPress: () => this.cropPicture(item.uri, index)},
                               {text: 'Delete Image', onPress: () => this.deletePicture(item.uri, index)},
                             ],
                             { cancelable: false }
