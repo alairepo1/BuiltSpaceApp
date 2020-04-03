@@ -12,6 +12,9 @@ import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js'
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
 import QRCodeScreen from '../screens/Operations/QRCodeScreen.js'
+import CameraComponent from '../screens/Operations/components/CameraComponent.js'
+import GeneralType from '../screens/Operations/components/GeneralType.js'
+
 
 const AuthStack = createStackNavigator(
   {
@@ -57,6 +60,14 @@ const HomeStack = createStackNavigator(
     QRCode:{
       screen: QRCodeScreen
     },
+
+    GeneralType: {
+      screen: GeneralType
+    },
+    CameraComponent: {
+      screen: CameraComponent,
+      headerShown: false
+    }
   },
 
   {

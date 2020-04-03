@@ -47,7 +47,7 @@ export class ExploreBuildingScreen extends Component {
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
         this.updateQuestion = this.updateQuestion.bind(this)
-        this.cameraOnPress = this.cameraOnPress.bind(this)
+xxxxxxxxxxx        this.cameraOnPress = this.cameraOnPress.bind(this)
         this.onBottomButtonPressed = this.onBottomButtonPressed.bind(this)
         this.loadQRCode = this.loadQRCode.bind(this)
       }
@@ -352,96 +352,7 @@ export class ExploreBuildingScreen extends Component {
         saveInspection(this.context.accountContext.account, checklistObject)
       }catch(e){console.log(e)}
   }
-    cameraOnPress = () => {
-      var that = this;
-      if (Platform.OS === 'android') {
-        async function requestCameraPermission() {
-          try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.CAMERA,
-              {
-                title: 'CameraExample App Camera Permission',
-                message: 'CameraExample App needs access to your camera ',
-              }
-            ); 
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              //If CAMERA Permission is granted
-              //Calling the WRITE_EXTERNAL_STORAGE permission function
-              requestExternalWritePermission();
-            } else {
-              alert('CAMERA permission denied');
-            }
-          } catch (err) {
-            alert('Camera permission err', err);
-            console.warn(err);
-          }
-        }
-        async function requestExternalWritePermission() {
-          try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-              {
-                title: 'CameraExample App External Storage Write Permission',
-                message:
-                  'CameraExample App needs access to Storage data in your SD Card ',
-              }
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              //If WRITE_EXTERNAL_STORAGE Permission is granted
-              //Calling the READ_EXTERNAL_STORAGE permission function
-              requestExternalReadPermission();
-            } else {
-              alert('WRITE_EXTERNAL_STORAGE permission denied');
-            }
-          } catch (err) {
-            alert('Write permission err', err);
-            console.warn(err);
-          }
-        }
-        async function requestExternalReadPermission() {
-          try {
-            const granted = await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-              {
-                title: 'CameraExample App Read Storage Read Permission',
-                message: 'CameraExample App needs access to your SD Card ',
-              }
-            );
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              //If READ_EXTERNAL_STORAGE Permission is granted
-              //changing the state to re-render and open the camera
-              //in place of activity indicator
-              that.setState({ isPermitted: true });
-            } else {
-              alert('READ_EXTERNAL_STORAGE permission denied');
-            }
-          } catch (err) {
-            alert('Read permission err', err);
-            console.warn(err);
-          }
-        }
-        //Calling the camera permission function
-        requestCameraPermission();
-      } else {
-        this.setState({ isPermitted: true });
-      }
-    }
-    onBottomButtonPressed(event) {
-      const captureImages = JSON.stringify(event.captureImages);
-      if (event.type === 'left') {
-        this.setState({ isPermitted: false });
-      } else {
-        
-        console.log(
-  "Image URI: (event.captureImages is an array of the picture taken, and if you click the bottom camera button really fast it takes a whole bunch for some reason",event.captureImages[0].uri)
-        Alert.alert(
-          event.type,
-          captureImages,
-          [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-          { cancelable: false }
-        );
-      }
-    }
+    
     addQuestion = (type) => {
       var questions = this.state.setQuestions
       var checklistTitle = this.state.checklistTitle
@@ -528,27 +439,7 @@ export class ExploreBuildingScreen extends Component {
         return question.questiontype === "Materials"
       })
   
-      if (this.state.isPermitted) {
-        return (
-          <CameraKitCameraScreen
-            // Buttons to perform action done and cancel
-            actions={{ rightButtonText: 'Done', leftButtonText: 'Cancel' }}
-            onBottomButtonPressed={event => this.onBottomButtonPressed(event)}
-            flashImages={{
-              // Flash button images
-              on: require('../assets/flashon.png'),
-              off: require('../assets/flashoff.png'),
-              auto: require('../assets/flashauto.png'),
-            }}
-            cameraFlipImage={require('../assets/flip.png')}
-            captureButtonImage={require('../assets/capture.png')}
-          />
-        );
-      }
-      else {
-      
-    return (
-      
+   return (
       <ScrollView>
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
