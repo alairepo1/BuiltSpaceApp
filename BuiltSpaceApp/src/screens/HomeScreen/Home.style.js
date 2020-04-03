@@ -3,12 +3,15 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create ({
     container: {
         // flex: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50,
+        marginTop: 20,
+        marginLeft:15,
+        marginRight:15
+    },
+    selectText:{
+        margin:2,
     },
     homePageText: {
-        fontSize: 15,
+        fontSize: 18,
         textAlign: 'center',
         fontWeight: 'bold',
         color: 'black',
@@ -26,21 +29,27 @@ export default StyleSheet.create ({
         margin: 10,
     },
     buttons: {
-        backgroundColor: '#ABA9A9',
+        backgroundColor: '#43BC4F',
         margin: 5,
-        color: 'black',
         height: 50,
     },
     button_text: {
-        fontSize: 16,
+        fontSize: 17,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: 'white',
         marginTop: 13,
     },
     inspectionContainer: {
         alignSelf: 'center',
         width: '100%',
-        margin: 5
+        margin: 5,
+    },
+    inspectTitle:{
+        marginTop: 10,
+        marginBottom: 20,
+        fontSize:18,
+        fontWeight: 'bold',
     },
     inspectionRow: {
         flex: 2,
@@ -59,16 +68,30 @@ export default StyleSheet.create ({
     },
     submit:{
         width: 100,
-        height: 40,
+        height: 45,
         padding: 10,
         margin: 5,
         backgroundColor: '#43BC4F',
     },
     delete:{
         width: 100,
-        height: 40,
+        height: 45,
         padding: 10,
         margin: 5,
         backgroundColor: 'red',
+    },
+    submitText:{
+        color:'white',
+        fontSize:17,
+        textAlign:'center',
+        fontWeight: 'bold',
+    },
+    refreshBtn:{
+        backgroundColor:'#43BC4F',
+        width: 36,
+        height: 36,
+        borderRadius: 36/2,
+        alignItems:'center',
+        justifyContent:'center',
     }
 });

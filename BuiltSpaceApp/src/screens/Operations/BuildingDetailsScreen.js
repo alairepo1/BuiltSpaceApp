@@ -27,8 +27,10 @@ export class BuildingDetailsScreen extends Component {
     return (
 
     <View style={styles.container}>
-        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
+      <View style={styles.buildingTopcontainer}>
+        <Text style={styles.selectText}>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text style={styles.selectText}>Logged in as: {this.context.accountContext.account.email}</Text>
+      </View>
         <Text style={styles.detailsTextContainer}>
           <Text style={styles.detailsTextBold}>City: <Text style={styles.detailsText}>{buildingCity} {'\n\n'}</Text></Text>
           <Text style={styles.detailsTextBold}>Address: <Text style={styles.detailsText}>{buildingAddress}, {buildingCity}, {buildingProvince} {'\n\n'}</Text></Text>

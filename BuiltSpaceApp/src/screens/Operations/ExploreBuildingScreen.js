@@ -453,17 +453,20 @@ export class ExploreBuildingScreen extends Component {
   
    return (
       <ScrollView>
-        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
-        <Text>Building last updated on: {this.state.buildingLastUpdated}</Text>
-        <View style={{flexDirection: 'row'}}>
-        <Icon onPress={() => {
-          this.setState({dataLoaded: false})
-          this.resetState()
-          this.updateBuildingData() 
-        }} 
-        style={styles.listIcon} name="refresh" size={20} color="black" />
-        <Text>  Reload Data</Text>
+        <View style={styles.select_container}>
+          <Text style={styles.selectText}>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+          <Text style={styles.selectText}>Logged in as: {this.context.accountContext.account.email}</Text>
+          <Text style={styles.selectText}>Building last updated on: {this.state.buildingLastUpdated}</Text>
+          <View style={{flexDirection: 'row'}}>
+          <View style={styles.refreshBtn}>
+            <Icon onPress={() => {
+            this.setState({dataLoaded: false})
+            this.resetState()
+            this.updateBuildingData() 
+            }} name="refresh" size={26} color="white" />
+          </View>
+          <Text>  Reload Data</Text>
+        </View>
         </View>
 
     <View>
