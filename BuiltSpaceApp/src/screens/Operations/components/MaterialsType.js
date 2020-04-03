@@ -48,8 +48,6 @@ export class MaterialsType extends Component {
         const obj = {uri: `file://${uri[0]}`} 
         this.props.question.updateQuestion(this.props.question.index, obj, "Photos")
        this.state.pictureArray.push(obj)
-        console.log("Picture array:",this.state.pictureArray)
-        console.log("URI: ", this.state.pictureArray[0].uri)
         this.setState({
             renderList: true
         })
@@ -61,11 +59,9 @@ export class MaterialsType extends Component {
             width: 300,
             height: 400
           }).then(image => {
-            console.log(image.path);
-            console.log("Index:",index)
             const editedPics = [...this.state.pictureArray]
             editedPics[index] = {uri: image.path}
-            console.log("New array", editedPics)
+            this.props.question.updateQuestion(this.props.question.index, editedPics, "crop Photos")
             this.setState({ pictureArray: editedPics })
           });
           this.setState({
@@ -76,12 +72,10 @@ export class MaterialsType extends Component {
     deletePicture(uri, index) {
 
         this.state.pictureArray.splice(index, 1)
-
+        this.props.question.updateQuestion(this.props.question.index, index, "delete Photos")
         const filepath = `${uri}`
-        console.log('filepath:', filepath)
         RNFS.exists(filepath)
         .then((result)=> {
-            console.log('file exists:', result)
             if (result) {
                 return RNFS.unlink(filepath)
                 .then(() => {

@@ -62,11 +62,8 @@ export class LabourType extends Component {
             width: 300,
             height: 400
           }).then(image => {
-            console.log(image.path);
-            console.log("Index:",index)
             const editedPics = [...this.state.pictureArray]
             editedPics[index] = {uri: image.path}
-            console.log("New array", editedPics)
             this.setState({ pictureArray: editedPics })
           });
           this.setState({
@@ -79,10 +76,8 @@ export class LabourType extends Component {
         this.state.pictureArray.splice(index, 1)
 
         const filepath = `${uri}`
-        console.log('filepath:', filepath)
         RNFS.exists(filepath)
         .then((result)=> {
-            console.log('file exists:', result)
             if (result) {
                 return RNFS.unlink(filepath)
                 .then(() => {
