@@ -194,6 +194,14 @@ export class ExploreBuildingScreen extends Component {
         will assign a states based on the type.
         The modal components will change based on the states 
        */
+      if (type == "checklist"){
+        this.setState({
+          checklistSelected: newState,
+          checklistTitle: text,
+          StartTime: '',
+          setQuestions: []
+        })
+      }
       if (type == 'asset') {
         if (newState == false){ 
           this.setState({
