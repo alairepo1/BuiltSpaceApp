@@ -57,6 +57,7 @@ export class GeneralType extends Component {
 
     updatePictureArray(uri) {
         const obj = {uri: `file://${uri[0]}`} 
+        this.props.question.updateQuestion(this.props.question.index, obj, "Photos")
        this.state.pictureArray.push(obj)
        this.setState({
             renderList: true
@@ -73,6 +74,7 @@ export class GeneralType extends Component {
             console.log("Index:",index)
             const editedPics = [...this.state.pictureArray]
             editedPics[index] = {uri: image.path}
+            this.props.question.updateQuestion(this.props.question.index, editedPics, "crop Photos")
             console.log("New array", editedPics)
             this.setState({ pictureArray: editedPics })
           });
@@ -84,7 +86,7 @@ export class GeneralType extends Component {
     deletePicture(uri, index) {
 
         this.state.pictureArray.splice(index, 1)
-
+        this.props.question.updateQuestion(this.props.question.index, index, "delete Photos")
         const filepath = `${uri}`
         console.log('filepath:', filepath)
         RNFS.exists(filepath)

@@ -46,6 +46,7 @@ export class LabourType extends Component {
     // This function has a setState in it with nothing to reset/refresh the state for the array of pitures
     updatePictureArray(uri) {
         const obj = {uri: `file://${uri[0]}`} 
+        this.props.question.updateQuestion(this.props.question.index, obj, "Photos")
        this.state.pictureArray.push(obj)
        this.setState({
             renderList: true

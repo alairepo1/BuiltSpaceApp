@@ -42,6 +42,7 @@ export class MaterialsType extends Component {
 
     updatePictureArray(uri) {
         const obj = {uri: `file://${uri[0]}`} 
+        this.props.question.updateQuestion(this.props.question.index, obj, "Photos")
        this.state.pictureArray.push(obj)
         console.log("Picture array:",this.state.pictureArray)
         console.log("URI: ", this.state.pictureArray[0].uri)

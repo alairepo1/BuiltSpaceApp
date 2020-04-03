@@ -98,7 +98,7 @@ function formatInspectionObject(building, asset, orgData, startDate, generalComm
         TaskTitle: question.question,
         TaskDetails: question.TaskDetails || '',
         QuestionFormat: question.format,
-        Photos: 'photos', // an array of photo
+        Photos: [], // an array of photo
         InspectionResult: question.InspectionResults || '',
         MeasurementLabel: question.Measurementlabel || '',
         Measurement: question.measurement || '',
