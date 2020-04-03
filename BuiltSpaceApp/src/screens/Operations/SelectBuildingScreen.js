@@ -107,14 +107,17 @@ export class SelectBuildingScreen extends Component {
       </View>
       :
       <View style={styles.select_container}>
-        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
-        <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
+        <Text style={styles.selectText}>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text style={styles.selectText}>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text style={styles.selectText}>Organization last updated on: {this.state.orglastUpdated}</Text>
+        
         <View style={{flexDirection: 'row'}}>
-        <Icon onPress={() => {
-          this.setState({isLoading: true})
-          this.updateOrganizations()
-          }} style={styles.listIcon} name="refresh" size={20} color="black" />
+          <View style={styles.refreshBtn}>
+            <Icon onPress={() => {
+            this.setState({isLoading: true})
+            this.updateOrganizations()
+            }} name="refresh" size={26} color="white" />
+          </View>
         <Text>  Reload Data</Text>
         </View>
         <FlatList 

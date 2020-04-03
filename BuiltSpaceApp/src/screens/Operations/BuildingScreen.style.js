@@ -6,6 +6,10 @@ export default StyleSheet.create({
         marginTop: 20,
         backgroundColor: 'white',
     },
+    buildingTopcontainer:{
+        marginLeft:10,
+        marginRight:10
+    },
     row: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
@@ -23,19 +27,28 @@ export default StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 25,
     },
+    selectText:{
+        margin: 2,
+    },
     detailsTextContainer: {
-        padding: 15
+        padding: 15,
+        marginTop:20,
+        marginLeft: 10,
+        marginRight: 10,
+        borderColor: '#000',
+        borderRadius: 2,
+        borderWidth: 2,
     },
     detailsTextBold: {
         flex: 1,
         color: 'black',
         fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 17,
     },
     detailsText: {
         color: 'black',
         fontWeight: 'normal',
-        fontSize: 14,
+        fontSize: 16,
     },
     flatList: {
         backgroundColor: 'white',
@@ -77,7 +90,7 @@ export default StyleSheet.create({
     addQuestionButton: {
         padding: 10, 
         margin: 10, 
-        backgroundColor: '#47d66d',
+        backgroundColor: '#43BC4F',
     },
     listIcon: {
         justifyContent: 'flex-end',
@@ -85,7 +98,7 @@ export default StyleSheet.create({
     },
     select_container: {
         flex: 1,
-        marginTop: 40,
+        marginTop: 15,
         marginLeft: 15,
         marginRight: 15,
         backgroundColor: 'white',
@@ -111,5 +124,13 @@ export default StyleSheet.create({
         height: 40,
         margin: 2,
         backgroundColor: 'lightgrey'
-      }
+    },
+    refreshBtn:{
+        backgroundColor:'#43BC4F',
+        width: 36,
+        height: 36,
+        borderRadius: 36/2,
+        alignItems:'center',
+        justifyContent:'center',
+    }
 });

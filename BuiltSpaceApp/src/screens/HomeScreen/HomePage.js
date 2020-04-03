@@ -207,15 +207,17 @@ export class HomePage extends Component {
       </View>
     ) : (
       <View style={styles.container}>
-        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
-        <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
+        <Text style={styles.selectText}>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text style={styles.selectText}>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text style={styles.selectText}>Account last updated on: {this.state.accountlastUpdated}</Text>           
         <View style={{flexDirection: 'row'}}>
-        <Icon  onPress={() => {
-          this.setState({isLoading: true})
-          this.updateAccountData()
-        }} style={styles.listIcon} name="refresh" size={20} color="black" />
-        <Text>  Reload Data</Text>
+          <View style={styles.refreshBtn}>
+            <Icon  onPress={() => {
+            this.setState({isLoading: true})
+            this.updateAccountData()
+            }} name="refresh" size={26} color="white" />
+          </View>
+        <Text> Reload Data</Text>
         </View>
 
         <Text style={styles.homePageText}>
@@ -248,7 +250,7 @@ export class HomePage extends Component {
           </View>
           <View>
             <View style={styles.inspectionContainer}>
-              <Text>Saved inspections</Text>
+              <Text style={styles.inspectTitle}>Saved inspections</Text>
               {this.state.inspectionsList.length > 0 ? 
               <ScrollView>
                 <FlatList 
@@ -269,13 +271,13 @@ export class HomePage extends Component {
               <TouchableOpacity 
               onPress={() => { this.confirmation("Submit") }}
               style={styles.submit}>
-                <Text>Submit</Text>
+                <Text style={styles.submitText}>Submit</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
               onPress={() => { this.confirmation("Delete") }}
               style={styles.delete}>
-                <Text>Delete</Text>
+                <Text style={styles.submitText}>Delete</Text>
               </TouchableOpacity>
               </View>
               </ScrollView>

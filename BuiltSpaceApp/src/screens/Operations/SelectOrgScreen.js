@@ -24,8 +24,8 @@ export class SelectOrgScreen extends Component {
   render() {
     return (
       <View style={styles.select_container}>
-        <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
-        <Text>Logged in as: {this.context.accountContext.account.email}</Text>
+        <Text style={styles.selectText}>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
+        <Text style={styles.selectText}>Logged in as: {this.context.accountContext.account.email}</Text>
       <FlatList 
         data={this.state.org_data}
         renderItem={({ item }) =>
