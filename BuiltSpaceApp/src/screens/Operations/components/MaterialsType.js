@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Button} from 'react-native';
+import {Alert, View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Button} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
+import ImagePicker from 'react-native-image-crop-picker'
+import * as RNFS from 'react-native-fs'
 
 export class MaterialsType extends Component {
     constructor(props) {
@@ -16,6 +18,8 @@ export class MaterialsType extends Component {
     this.updateIndex = this.updateIndex.bind(this)
     this.buttonComponents = this.buttonComponents.bind(this)
     this.updatePictureArray = this.updatePictureArray.bind(this)
+    this.cropPicture = this.cropPicture.bind(this)
+    this.deletePicture = this.deletePicture.bind(this)
     }
 
     buttonComponents = () => {
@@ -28,9 +32,9 @@ export class MaterialsType extends Component {
 
     changeColor = (index) => {
         if (this.state.selectedIndex == index) {
-            return { borderColor: this.state.colors[index], color : 'white'}
+            return { textAlign: "center", borderColor: this.state.colors[index], color : 'white'}
         } else {
-            return { borderColor: this.state.colors[index], color : this.state.colors[index]}
+            return { textAlign: "center", borderColor: this.state.colors[index], color : this.state.colors[index]}
         }
         
     }
@@ -45,6 +49,52 @@ export class MaterialsType extends Component {
        this.state.pictureArray.push(obj)
         console.log("Picture array:",this.state.pictureArray)
         console.log("URI: ", this.state.pictureArray[0].uri)
+        this.setState({
+            renderList: true
+        })
+    }
+
+    cropPicture(uri, index) {
+        ImagePicker.openCropper({
+            path: uri,
+            width: 300,
+            height: 400
+          }).then(image => {
+            console.log(image.path);
+            console.log("Index:",index)
+            const editedPics = [...this.state.pictureArray]
+            editedPics[index] = {uri: image.path}
+            console.log("New array", editedPics)
+            this.setState({ pictureArray: editedPics })
+          });
+          this.setState({
+              renderList: true
+          })
+    }
+
+    deletePicture(uri, index) {
+
+        this.state.pictureArray.splice(index, 1)
+
+        const filepath = `${uri}`
+        console.log('filepath:', filepath)
+        RNFS.exists(filepath)
+        .then((result)=> {
+            console.log('file exists:', result)
+            if (result) {
+                return RNFS.unlink(filepath)
+                .then(() => {
+                    console.log('File deleted')
+                })
+                // unlink will throw an error if the picture doesn't exist
+                .catch((err) => {
+                    console.log(err.message)
+                })
+            }
+        })
+        .catch((err) => {
+            console.log(err.message)
+        })
         this.setState({
             renderList: true
         })
@@ -65,7 +115,7 @@ export class MaterialsType extends Component {
                     (!question.textonly ? 
                         <ButtonGroup
                         selectedButtonStyle={{backgroundColor: this.state.colors[this.state.selectedIndex]}}
-                        buttonStyle={{padding: 10}}
+                        buttonStyle={{padding: 5}}
                         selectMultiple={false}
                         buttons={buttonArray}
                         onPress={this.updateIndex}
@@ -143,13 +193,26 @@ export class MaterialsType extends Component {
                     style={{backgroundColor: 'white'}}
                     extraData={this.state.pictureArray}
                     data={this.state.pictureArray}
-                    renderItem={({item}) =>
+                    renderItem={({item, index}) =>
+                    <TouchableOpacity onPress={() => {
+                        Alert.alert(
+                            'Edit Picture',
+                            'Do you want to delete or edit this Picture?',
+                            [
+                              {text: 'Cancel', onPress: () => console.log('Cancel pressed'), style: 'cancel'},
+                              {text: 'Edit Image', onPress: () => this.cropPicture(item.uri, index)},
+                              {text: 'Delete Image', onPress: () => this.deletePicture(item.uri, index)},
+                            ],
+                            { cancelable: false }
+                          )
+                            }}>
                     <View>
                     
                     <Image 
                     style={{width: 100, height: 100, marginRight: 5, marginTop: 5, overflow: 'hidden'}}
                     source={{ uri: item.uri}}></Image>
                     </View>
+                    </TouchableOpacity>
                     }
                     keyExtractor={item => this.state.pictureArray.indexOf(item)}
                     /> 
@@ -159,14 +222,5 @@ export class MaterialsType extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    button: {
-        width: '100%', 
-        height: '100%', 
-        padding: 2, 
-        borderWidth: 1, 
-    }
-})
 
 export default MaterialsType
