@@ -526,7 +526,7 @@ export class ExploreBuildingScreen extends Component {
                      <View style={{flex: 1}}>
                       <Text>Additional Comments</Text>
                       <TextInput 
-                        style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'lightgrey'}}
+                        style={{borderWidth: 1, borderColor: 'black', backgroundColor: 'white'}}
                         multiline
                         numberOfLines={4}
                         textAlignVertical={"top"}

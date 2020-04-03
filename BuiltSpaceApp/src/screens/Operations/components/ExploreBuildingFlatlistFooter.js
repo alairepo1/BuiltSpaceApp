@@ -11,25 +11,25 @@ class ExploreBuildingFlatlistFooter extends Component {
   }
   render() {
     return (
-      <View style={{flex: 3, flexDirection: 'row'}}>
+      <View style={{flex: 3, flexDirection: 'row', justifyContent:'center'}}>
         <TouchableOpacity
           onPress={() => {
             this.props.addQuestion('labour');
           }}
           style={styles.FlatListFooter}>
-          <Text>Add labour</Text>
+          <Text style={{color: 'white'}}>Add labour</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             this.props.addQuestion('materials');
           }}
           style={styles.FlatListFooter}>
-          <Text>Add materials</Text>
+          <Text style={{color: 'white'}}>Add materials</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => this.props.addQuestion('issue')}
           style={styles.FlatListFooter}>
-          <Text>Add issue</Text>
+          <Text style={{color: 'white'}}>Add issue</Text>
         </TouchableOpacity>
       </View>
     );
