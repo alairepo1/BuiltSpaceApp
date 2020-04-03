@@ -97,7 +97,7 @@ export class MaterialsType extends Component {
                 :
                 null}
                 <View style={{flex:2}}>
-                    <Text style={{leftmargin: 5}}>Unit Cost</Text>
+                    <Text style={{marginLeft: 5}}>Unit Cost</Text>
                     <TextInput 
                     style={{ flex:1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
                     onChangeText={text => this.props.question.updateQuestion(
