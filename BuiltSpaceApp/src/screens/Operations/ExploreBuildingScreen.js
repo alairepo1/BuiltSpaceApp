@@ -184,8 +184,10 @@ export class ExploreBuildingScreen extends Component {
        */
       if (type == 'asset') {
         if (newState == false){ 
-          this.setState({disableSpace: false})
-        }else {
+          this.setState({
+            disableSpace: false
+          })
+        }
           this.setState({
             assetSelected: newState,
             assetTitle: text,
@@ -194,7 +196,6 @@ export class ExploreBuildingScreen extends Component {
             StartTime: '',
             setQuestions: []
           })
-        }
       }
 
       if (type == 'space'){
