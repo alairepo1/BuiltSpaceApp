@@ -17,7 +17,7 @@ export default StyleSheet.create ({
         // flex: 2,
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: '#FAF9ED',
+        backgroundColor: 'white',
         marginTop: 15,
     },
     button_container: {
@@ -62,7 +62,7 @@ export default StyleSheet.create ({
         height: 40,
         padding: 10,
         margin: 5,
-        backgroundColor: '#6CD938',
+        backgroundColor: '#43BC4F',
     },
     delete:{
         width: 100,
