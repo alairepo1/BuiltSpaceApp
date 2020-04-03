@@ -58,7 +58,8 @@ const HomeStack = createStackNavigator(
       screen: ExploreBuildingScreen
     },
     QRCode:{
-      screen: QRCodeScreen
+      screen: QRCodeScreen,
+      headerShown: false
     },
 
     GeneralType: {
