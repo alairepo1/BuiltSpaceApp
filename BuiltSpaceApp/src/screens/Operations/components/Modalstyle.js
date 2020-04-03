@@ -9,7 +9,16 @@ export default StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center',
         borderRightColor: 'red',
-        borderRightWidth: 50
+        borderRightWidth: 50,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
+
+        elevation: 7,
     },
     textContainerSelected: {
         padding: 15,
@@ -18,8 +27,17 @@ export default StyleSheet.create({
         marginTop: 15,
         backgroundColor: 'white',
         justifyContent: 'center',
-        borderRightColor: 'green',
-        borderRightWidth: 50
+        borderRightColor: '#43BC4F',
+        borderRightWidth: 50,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
+
+        elevation: 7,
     },
     optionText: {
         color: 'black',
@@ -27,13 +45,13 @@ export default StyleSheet.create({
         fontSize: 30
     },
     titleTop: {
-        backgroundColor: '#FAF9ED',
+        backgroundColor: '#43BC4F',
         width: '100%',
-        height: 50
+        height: 65,
     },
     headingTextBold: {
-        color: 'black',
-        fontWeight: 'bold',
+        color: 'white',
+        marginTop:10,
         fontSize: 30,
         alignSelf: 'center',
     
@@ -45,7 +63,7 @@ export default StyleSheet.create({
         alignSelf: 'center'
     },
     detailsTextSelected: {
-        color: 'green',
+        color: '#43BC4F',
         fontWeight: 'normal',
         fontSize: 16,
         alignSelf: 'center'
@@ -73,16 +91,15 @@ export default StyleSheet.create({
     assetListItems: {
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#FAF9ED',
+        borderBottomColor: '#43BC4F',
     },
     listContainer: {
-        marginTop: 10,
         flex: 1,
     },
     bottomContainer: {
         width: '100%',
         height: 50,
-        backgroundColor: '#FAF9ED',
+        backgroundColor: '#43BC4F',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
@@ -99,7 +116,7 @@ export default StyleSheet.create({
     },
     closeButton: {
         textAlign: "center",
-        color: 'black',
+        color: 'white',
         fontSize: 25,
     },
     listIcon: {
@@ -114,7 +131,7 @@ export default StyleSheet.create({
     checklistItems: {
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#ABA9A9',
+        borderBottomColor: '#43BC4F',
     },
     modalEnable: {
     },

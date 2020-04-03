@@ -4,7 +4,7 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 20,
-        backgroundColor: '#FAF9ED',
+        backgroundColor: 'white',
     },
     row: {
         flexDirection: 'row',
@@ -38,7 +38,7 @@ export default StyleSheet.create({
         fontSize: 14,
     },
     flatList: {
-        backgroundColor: '#FAF9ED',
+        backgroundColor: 'white',
     },
     TextContainer: {
         padding: 15,
@@ -88,7 +88,7 @@ export default StyleSheet.create({
         marginTop: 40,
         marginLeft: 15,
         marginRight: 15,
-        backgroundColor: '#FAF9ED',
+        backgroundColor: 'white',
     },
     select_row: {
         flexDirection: 'row',
