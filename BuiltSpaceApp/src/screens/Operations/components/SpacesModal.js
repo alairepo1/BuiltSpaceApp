@@ -143,9 +143,10 @@ export class SpacesModal extends Component {
         </Modal>
 
         <TouchableOpacity disabled={ this.props.disableSpace ? true : false}
-        style={[this.props.checklistSelected ? styles.textContainerSelected : styles.textContainer,
+        style={[this.props.spaceSelected ? styles.textContainerSelected : styles.textContainer,
                 this.props.disableSpace ? styles.modalDisable : styles.modalEnable]}
           onPress={() => {
+            this.resetModal()
             this.setModalVisible(true);
           }}>
           {this.props.spaceSelected ? selected : noneSelected}
