@@ -131,7 +131,7 @@ export class GeneralType extends Component {
                         />
                         :
                         <TextInput 
-                        style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                        style={{ height: 40, margin: 4,  backgroundColor: 'white', borderWidth: 1 }}
                         label="test"
                         />)
                     :
@@ -146,7 +146,7 @@ export class GeneralType extends Component {
                         <Text>Measurement</Text>}
                         <View style={{flex: 2, flexDirection: 'row'}}>
                             <TextInput 
-                            style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                            style={{ height: 40, margin: 4,  backgroundColor: 'white', borderWidth: 1 }}
                             onChangeText={text => this.props.question.updateQuestion(
                                 this.props.question.index, // index of the question
                                 text, // text input
@@ -163,7 +163,7 @@ export class GeneralType extends Component {
                 <View style={{flex:2}}>
                     <Text>Details: </Text>
                     <TextInput 
-                    style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                    style={{ height: 40, margin: 4,  backgroundColor: 'white', borderWidth: 1, borderColor: 'grey' }}
                     onChangeText={text => this.props.question.updateQuestion(
                         this.props.question.index, // index of the question
                         text, // text input
@@ -173,6 +173,8 @@ export class GeneralType extends Component {
                 </View>
                 <View style={{flex:1, margin: 5}}>
                         <Button
+                        buttonStyle={{backgroundColor: '#47d66d'}}
+                        titleStyle={{color: 'white'}}
                             title="Upload picture"
                            onPress={() => this.props.navigation.navigate('CameraComponent', {
                                 updatePictureArray: this.updatePictureArray

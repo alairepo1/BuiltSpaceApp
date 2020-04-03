@@ -122,7 +122,7 @@ export class LabourType extends Component {
                         />
                         :
                         <TextInput 
-                        style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                        style={{ height: 40, margin: 4,  backgroundColor: 'white', borderWidth: 1 }}
                         onChangeText={text => this.props.question.updateQuestion(
                             this.props.question.index, // index of the question
                             text, // text input
@@ -141,7 +141,7 @@ export class LabourType extends Component {
 
                         <View style={{flex: 2, flexDirection: 'row'}}>
                         <TextInput 
-                        style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'lightgray', borderWidth: 1 }}
+                        style={{ flex: 1, margin: 4, height: 40, backgroundColor: 'white', borderWidth: 1 }}
                         onChangeText={text => this.props.question.updateQuestion(
                             this.props.question.index, // index of the question
                             text, // text input
@@ -158,7 +158,7 @@ export class LabourType extends Component {
                 <View style={{flex:2}}>
                     <Text>Details: </Text>
                     <TextInput 
-                    style={{ height: 40, margin: 4,  backgroundColor: 'lightgray', borderWidth: 1 }}
+                    style={{ height: 40, margin: 4,  backgroundColor: 'white', borderWidth: 1 }}
                     onChangeText={text => this.props.question.updateQuestion(
                         this.props.question.index, // index of the question
                         text, // text input
@@ -168,7 +168,10 @@ export class LabourType extends Component {
                 </View>
                 <View style={{flex:1, margin: 5}}>
                         <Button
+                        type='solid'
                             title="Upload picture"
+                            buttonStyle={{backgroundColor: '#47d66d'}}
+                            titleStyle={{color: 'white'}}
                            onPress={() => this.props.navigation.navigate('CameraComponent', {
                                 updatePictureArray: this.updatePictureArray
                             })}

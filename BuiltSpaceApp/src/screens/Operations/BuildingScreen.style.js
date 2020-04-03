@@ -123,7 +123,8 @@ export default StyleSheet.create({
         width: 120,
         height: 40,
         margin: 2,
-        backgroundColor: 'lightgrey'
+        backgroundColor: '#47d66d',
+        
     },
     refreshBtn:{
         backgroundColor:'#43BC4F',
