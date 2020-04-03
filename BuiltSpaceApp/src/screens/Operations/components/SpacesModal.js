@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Location from 'react-native-vector-icons/SimpleLineIcons'
 import { SearchBar } from 'react-native-elements';
 import { set } from 'react-native-reanimated';
+import styles from './Modalstyle.js';
 
 
 
@@ -66,26 +66,26 @@ export class SpacesModal extends Component {
 
   resetModal = () => {
     this.setState({ 
-      value: '',
+      value: null,
+      spaces:this.props.spaces,
       modalIsOpen: false 
     }
   );
 }
   render() {
-    const { navigation } = this.props;
   
-    const selected = <View style={styles.textContainerSelected}>
-      <View>
+    const selected = <View>
+
         <Text style={styles.optionText}> Space</Text>
         <Text style={styles.detailsTextSelected}>{this.props.spaceName} </Text>
-      </View>
+
     </View>
 
-    const noneSelected = <View style={styles.textContainer}>
-      <View>
+    const noneSelected = <View>
+
         <Text style={styles.optionText}> Space</Text>
         <Text style={styles.detailsText}>None Selected </Text>
-      </View>
+
     </View>
 
     return (
@@ -142,7 +142,9 @@ export class SpacesModal extends Component {
           </View>
         </Modal>
 
-        <TouchableOpacity
+        <TouchableOpacity disabled={ this.props.disableChecklist ? true : false}
+        style={[this.props.checklistSelected ? styles.textContainerSelected : styles.textContainer,
+                this.props.disableChecklist ? styles.modalDisable : styles.modalEnable]}
           onPress={() => {
             this.setModalVisible(true);
           }}>
@@ -153,106 +155,5 @@ export class SpacesModal extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-
-
-  textContainer: {
-    padding: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    borderRightColor: 'red',
-    borderRightWidth: 50
-  },
-  textContainerSelected: {
-    padding: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    borderRightColor: 'green',
-    borderRightWidth: 50
-  },
-  optionText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  titleTop: {
-    backgroundColor: '#FAF9ED',
-    width: '100%',
-    height: 50
-  },
-  headingTextBold: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 30,
-    alignSelf: 'center',
-
-  },
-  detailsText: {
-    color: 'red',
-    fontWeight: 'normal',
-    fontSize: 16,
-    alignSelf: 'center'
-  },
-  detailsTextSelected: {
-    color: 'green',
-    fontWeight: 'normal',
-    fontSize: 16,
-    alignSelf: 'center'
-  },
-  text: {
-    flex: 1,
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 25,
-  },
-  flatList: {
-    backgroundColor: '#FAF9ED',
-  },
-  assetListItems: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FAF9ED',
-  },
-  listContainer: {
-    marginTop: 10,
-    flex: 1,
-
-  },
-  bottomContainer: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#FAF9ED',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-  },
-  listText: {
-    fontSize: 15,
-    paddingLeft: 5
-  },
-  numAssets: {
-    justifyContent: 'center',
-    textAlign: 'center'
-  },
-  closeButton: {
-    textAlign: "center",
-    color: 'black',
-    fontSize: 25,
-  },
-  listIconContainer: {
-    paddingVertical: 15,
-    flexDirection: "row",
-    alignItems: "center"
-  }
-
-
-})
 
 export default SpacesModal;

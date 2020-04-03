@@ -9,6 +9,9 @@ import {
 import {NavigationScreenProps} from 'react-navigation';
 
 export class LoadingScreen extends Component {
+  /**
+   * auth token checker
+   */
   constructor(props) {
     super(props);
     this.state = {};
@@ -19,7 +22,6 @@ export class LoadingScreen extends Component {
     try {
       // Check if there is an existing user
       let user = false; // let user = false is temporary until we get a auth listener working
-      console.log('Not implemented yet, automatically connecting');
       this.props.navigation.navigate(user ? 'HomeStack' : 'Auth');
     } catch (e) {
       console.log(e);

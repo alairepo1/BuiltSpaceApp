@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { SearchBar } from 'react-native-elements';
-import { Image, StyleSheet, Text, View, Button, Modal, TouchableOpacity, FlatList, Alert } from 'react-native';
+import {Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-
+import styles from './Modalstyle.js';
 
 export class ChecklistModal extends Component {
     constructor(props) {
@@ -58,23 +57,25 @@ export class ChecklistModal extends Component {
       );
     };
 
+    resetModal = () => {
+      this.setState({ 
+        value: null,
+        checklists: null,
+        modalIsOpen: false 
+      }
+    );
+  }
     render() {
-        // const noneSelected = <Text style={styles.detailsText}>None Selected </Text>
-        // const selected = <Text style={styles.detailsTextSelected}>{this.state.checklistSelection}</Text>
 
-        const selected = <View style={styles.textContainerSelected}>
-          <View>
-            <Text style={styles.optionText}> Checklist</Text>
-            <Text style={styles.detailsTextSelected}>{this.props.checklistTitle} </Text>
-          </View>
-        </View>
-    
-        const noneSelected = <View style={styles.textContainer}>
-          <View>
-            <Text style={styles.optionText}> Checklist</Text>
-            <Text style={styles.detailsText}>None Selected </Text>
-          </View>
-        </View>
+        const selected = <View>
+                            <Text style={styles.optionText}> Checklist</Text>
+                            <Text style={styles.detailsTextSelected}>{this.props.checklistTitle} </Text>
+                        </View>
+                    
+        const noneSelected = <View>
+                                <Text style={styles.optionText}> Checklist</Text>
+                                <Text style={styles.detailsText}>None Selected </Text>
+                            </View>
 
         return(
             <View style={{marginTop: 22}}>
@@ -84,6 +85,7 @@ export class ChecklistModal extends Component {
               transparent={false}
               visible={this.state.modalVisible}
               onRequestClose={() => {
+                this.resetModal()
                 this.setModalVisible(!this.state.modalVisible)
               }}>
 
@@ -98,7 +100,7 @@ export class ChecklistModal extends Component {
                   <TouchableOpacity
                     onPress={() => {
                       this.props.loadQuestions(item.questions, item.title, item.id)
-                      this.props.onChecklistChange(true, item.title, 'checklist')
+                      // this.props.onChecklistChange(true, item.title, 'checklist')
                       this.setModalVisible(!this.state.modalVisible)
                     }}>
                     <View style={styles.checklistItems}>
@@ -125,8 +127,11 @@ export class ChecklistModal extends Component {
               </View>
             </Modal>
     
-            <TouchableOpacity
+            <TouchableOpacity disabled={this.props.disableChecklist ? true : false}
+            style={[this.props.checklistSelected ? styles.textContainerSelected : styles.textContainer,
+              this.props.disableChecklist ? styles.modalDisable : styles.modalEnable]}
               onPress={() => {
+                this.resetModal()
                 this.setModalVisible(true);
               }}>
             <View>
@@ -137,119 +142,5 @@ export class ChecklistModal extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-
-
-	textContainer: {
-		padding: 15,
-		marginLeft: 15,
-		marginRight: 15,
-		marginTop: 15,
-		backgroundColor: 'white',
-		justifyContent: 'center',
-		borderRightColor: 'red',
-		borderRightWidth: 50
-	},
-	textContainerSelected: {
-		padding: 15,
-		marginLeft: 15,
-		marginRight: 15,
-		marginTop: 15,
-		backgroundColor: 'white',
-		justifyContent: 'center',
-		borderRightColor: 'green',
-		borderRightWidth: 50
-	},
-	optionText: {
-		color: 'black',
-		fontWeight: 'bold',
-		fontSize: 30
-  },
-  titleTop: {
-    backgroundColor: '#FAF9ED',
-    width: '100%',
-    height: 50
-  },
-  headingTextBold: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 30,
-    alignSelf: 'center'
-
-  },
-	detailsText: {
-		color: 'red',
-		fontWeight: 'normal',
-		fontSize: 16,
-		alignSelf: 'center'
-	},
-	detailsTextSelected: {
-		color: 'green',
-		fontWeight: 'normal',
-		fontSize: 16,
-		alignSelf: 'center'
-	},
-	row: {
-		flexDirection: 'row',
-		justifyContent: 'flex-start',
-		padding: 16,
-		marginBottom: 3,
-		marginLeft: 15,
-		marginTop: 170,
-		marginRight: 15,
-		borderBottomColor: 'white',
-		borderBottomWidth: 2,
-	},
-	text: {
-		flex: 1,
-		color: 'white',
-		fontWeight: 'bold',
-		fontSize: 25,
-	},
-	flatList: {
-		backgroundColor: '#FAF9ED',
-  },
-  checklistItems: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ABA9A9',
-  },
-  listContainer: {
-    marginTop: 10,
-    flex: 1,
-  },
-  listText: {
-    justifyContent: 'flex-start',
-    fontSize: 15,
-    padding: 2
-  },
-  bottomContainer: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#FAF9ED',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-  },
-  closeButton: {
-    textAlign: "center",
-    color: 'black',
-    fontSize: 25,
-  },
-  listIcon: {
-    paddingRight: 15,
-    paddingLeft: 10
-  },
-  listIconContainer: {
-    paddingVertical: 10,
-    paddingRight: 10,
-    flexDirection: "row",
-    alignItems: "center"
-  }
-
-
-})
 
 export default ChecklistModal

@@ -24,6 +24,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { CheckBox } from 'react-native-elements'
 import { useFocusEffect } from 'react-navigation';
+import styles from './Home.style.js';
 
 export class HomePage extends Component {
   static contextType = ContextInfo
@@ -40,11 +41,11 @@ export class HomePage extends Component {
   }
 
   componentDidMount = () => {
-    this.loadData()
     const {navigation} = this.props
     this._focusListener = navigation.addListener('didFocus', payload => {
       //adds a listener check for transitions to the HomeScreen then reloads inspection data
       // this.loadInspections() 
+      this.loadData()
     })
   };
 
@@ -54,7 +55,6 @@ export class HomePage extends Component {
 
   loadData = async() => {
         // fetch data from api/db or update db
-
         var currentDate = new Date() // current datetime as object.
 
         checkDBExists(); // check if database exists, if not creates one.
@@ -67,9 +67,9 @@ export class HomePage extends Component {
                 //and add 1 hour to last updated time
                 var addHour = result.lastUpdated
                 addHour.setHours(addHour.getHours() + 1 )
-    
+
                 if (this.context.networkContext.isConnected) {
-    
+
                   if (currentDate < addHour) {
                     console.log('Home load from database.')
                     var orgs = Array.from(result.organizations);
@@ -93,6 +93,7 @@ export class HomePage extends Component {
                     isLoading: false,
                   });
                 } 
+                this.loadInspections() 
                 // Check if org data last updated is past 1 hr
               } else {
                 this.updateAccountData()
@@ -106,15 +107,18 @@ export class HomePage extends Component {
               this.setState({
                 accountlastUpdated: currentDate.toLocaleString(),
                 organizations: orgs,
-                isLoading: false
+                isLoading: false,
+                inspectionList: []
               })
             })
           }
-          // this.loadInspections()    
         });
   }
 
   loadInspections = () => {
+    /**
+     * loads the inspections from the account
+     */
     getInspections(this.context.accountContext.account).then(inspectionsList => {
       const toArray = Array.from(inspectionsList)
       const mappedObj = []
@@ -129,6 +133,9 @@ export class HomePage extends Component {
   }
 
   updateAccountData = (currentDate) => {
+    /**
+     * updates the account's organization data
+     */
     console.log("Home Screen update data")
     var currentDate = new Date() // current datetime as object
     fetchOrgs(this.context.accountContext.account).then(result => {
@@ -143,21 +150,37 @@ export class HomePage extends Component {
   }
 
   setCheckBox = (index) => {
+    /**
+     * checkboxes for the inspectionlist
+     * changes the checkbox state based on the index of the flatlist item.
+     */
       let data = [...this.state.inspectionsList];
       data[index].checked = !data[index].checked;
       this.setState({ data });
   }
 
   submitInspection = (accountDetails, inspections) => {
-    this.deleteInspection(accountDetails, inspections) //delete submitted inspections
+    /**
+     * submits the inspection data that are selected
+     * and deletes the records from the database once successfull.
+     */
+
+    {/**SUBMIT INSPECTIONS IS NOT IMPLEMENTED YET */} 
+
+    /** Suedo code
+     * HTTP post request with the list of inspection objects to BuiltSpace server.
+     * On statusCode 200 in the callback, delete the inspections from the database.
+     */
   }
 
   deleteInspection = (accountDetails, inspections) => {
+    /**deletes the selected inspections from realm db and reloads the new inspection list*/
     delInspections(accountDetails, inspections)
     this.loadInspections()
   }
   
   confirmation = (buttonType) => {
+    // On submit/delete inspection, will alert the user for confirmation.
     Alert.alert(
       'Confirmation',
       `${buttonType} selected inspections?`,
@@ -187,7 +210,13 @@ export class HomePage extends Component {
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Account last updated on: {this.state.accountlastUpdated}</Text>           
-        <Icon  onPress={() => this.updateAccountData()} style={styles.listIcon} name="refresh" size={20} color="black" />
+        <View style={{flexDirection: 'row'}}>
+        <Icon  onPress={() => {
+          this.setState({isLoading: true})
+          this.updateAccountData()
+        }} style={styles.listIcon} name="refresh" size={20} color="black" />
+        <Text>  Reload Data</Text>
+        </View>
 
         <Text style={styles.homePageText}>
           To Start please select an organization
@@ -262,79 +291,5 @@ export class HomePage extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    // flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 50,
-  },
-  homePageText: {
-    fontSize: 15,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  button_view: {
-    // flex: 2,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: '#FAF9ED',
-    marginTop: 15,
-  },
-  button_container: {
-    width: 240,
-    alignSelf: 'center',
-    margin: 10,
-  },
-  buttons: {
-    backgroundColor: '#ABA9A9',
-    margin: 5,
-    color: 'black',
-    height: 50,
-  },
-  button_text: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 13,
-  },
-  inspectionContainer: {
-    alignSelf: 'center',
-    width: '100%',
-    margin: 5
-  },
-  inspectionRow: {
-    flex: 2,
-    flexDirection: 'row',
-  },
-  checkbox: {
-    flex: 1
-  },
-  inspectionButtonContainer: {
-    flexDirection: 'row',
-    marginLeft: 15
-  },
-  inspectionName: {
-    flex: 1,
-    fontSize: 15
-  },
-  submit:{
-    width: 100,
-    height: 40,
-    padding: 10,
-    margin: 5,
-    backgroundColor: '#6CD938',
-  },
-  delete:{
-    width: 100,
-    height: 40,
-    padding: 10,
-    margin: 5,
-    backgroundColor: 'red',
-  },
-
-});
 
 export default HomePage;

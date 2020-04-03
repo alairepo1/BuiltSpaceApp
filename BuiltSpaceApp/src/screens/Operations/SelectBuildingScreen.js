@@ -4,6 +4,7 @@ import {ContextInfo} from '../../ContextInfoProvider';
 import {get_org_data} from '../../storage/fetchAPI.js'
 import {insertOrgData,DBcheckOrgData,updateOrgs} from '../../storage/schema/dbSchema'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from './BuildingScreen.style.js';
 
 export class SelectBuildingScreen extends Component { 
   static contextType = ContextInfo
@@ -16,6 +17,13 @@ export class SelectBuildingScreen extends Component {
   }
 
   componentDidMount = () => {
+    this.loadOrgs()
+  };
+
+  loadOrgs = () => {
+    /**
+     * loads the orginaztion data
+     */
     var currentDate = new Date() // current datetime as object
 
     //API call to get org_data and update the database
@@ -68,9 +76,17 @@ export class SelectBuildingScreen extends Component {
       }
 
     }).catch(e => {console.log(e)})
-  };
+  }
 
   updateOrganizations = () => {
+      /*
+        on component did mount, this function will check if their
+        is organization data in realm db.
+        if none, it will run the updateOrgs function in dbSchema.js
+        if it exists, the function will check the datetime if 1 hour has passed.
+        if the time exeeds 1 hour from the last update, it will run
+        the updateOrgs function.
+      */
     var currentDate = new Date() // current datetime as objects
     get_org_data(this.props.navigation.state.params.orgName, this.context.accountContext.account.api_key).then(result =>{
       console.log("selectBuildingScreen fetch api and update", result.name)
@@ -90,12 +106,17 @@ export class SelectBuildingScreen extends Component {
         <Text>Loading</Text> 
       </View>
       :
-      <View style={styles.container}>
+      <View style={styles.select_container}>
         <Text>Connection status: {this.context.networkContext.isConnected ? 'online' : 'offline'}</Text>
         <Text>Logged in as: {this.context.accountContext.account.email}</Text>
         <Text>Organization last updated on: {this.state.orglastUpdated}</Text>
-        <Icon onPress={() => this.updateOrganizations()} style={styles.listIcon} name="refresh" size={20} color="black" />
-
+        <View style={{flexDirection: 'row'}}>
+        <Icon onPress={() => {
+          this.setState({isLoading: true})
+          this.updateOrganizations()
+          }} style={styles.listIcon} name="refresh" size={20} color="black" />
+        <Text>  Reload Data</Text>
+        </View>
         <FlatList 
         data={this.state.org_data.buildings}
         renderItem={({item}) => 
@@ -109,7 +130,7 @@ export class SelectBuildingScreen extends Component {
           orgData: this.state.org_data,
           buildingData: item
         })}>
-        <View style={styles.row}>
+        <View style={styles.select_row}>
           <Text style={styles.text}>{item.name}</Text>
           <View>
           <Icon style={styles.listIcon}name="angle-right" size={30} color="black" />
@@ -124,34 +145,5 @@ export class SelectBuildingScreen extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 40,
-    marginLeft: 15,
-    marginRight: 15,
-    backgroundColor: '#FAF9ED',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    padding: 16,
-    marginBottom: 3,
-    borderBottomColor: 'black',
-    borderBottomWidth: 2,
-  },
-  text: {
-    flex: 1,
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 25
-  },
-  listIcon: {
-    justifyContent: 'flex-end',
-    textAlign: "right"
-  },
-
-})
 
 export default SelectBuildingScreen;

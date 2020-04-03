@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { SearchBar } from 'react-native-elements';
-import {StyleSheet, Text, View, Modal, TouchableOpacity, FlatList, Alert} from 'react-native';
+import { Text, View, Modal, TouchableOpacity, FlatList } from 'react-native';
 import ChecklistIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import styles from './Modalstyle.js';
 
 export class AssetsModal extends Component {
   constructor(props) {
@@ -55,20 +56,25 @@ export class AssetsModal extends Component {
     );
   };
 
-  render() {
-    const selected = <View style={styles.textContainerSelected}>
-      <View>
-        <Text style={styles.optionText}> Assets</Text>
-        <Text style={styles.detailsTextSelected}>{this.props.assetTitle} </Text>
-      </View>
-    </View>
+  resetModal = () => {
+    this.setState({ 
+      value: null,
+      assets: null,
+      modalIsOpen: false 
+    }
+  );
+}
 
-    const noneSelected = <View style={styles.textContainer}>
-      <View>
-        <Text style={styles.optionText}> Assets</Text>
-        <Text style={styles.detailsText}>None Selected </Text>
-      </View>
-    </View>
+  render() {
+    const selected = <View>
+                        <Text style={styles.optionText}> Assets</Text>
+                        <Text style={styles.detailsTextSelected}>{this.props.assetTitle} </Text>
+                     </View>
+
+    const noneSelected = <View>
+                          <Text style={styles.optionText}> Assets</Text>
+                          <Text style={styles.detailsText}>None Selected </Text>
+                         </View>
 
     return (
       <View style={{ marginTop: 22 }}>
@@ -78,7 +84,8 @@ export class AssetsModal extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            this.resetModal()
+            this.setModalVisible(!this.state.modalVisible)
           }}>
             
           <View style={styles.listContainer}>
@@ -115,6 +122,7 @@ export class AssetsModal extends Component {
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => {
+                  this.resetModal()
                   this.setModalVisible(!this.state.modalVisible);
                 }}>
                 <Text style={styles.closeButton}>Close</Text>
@@ -124,7 +132,7 @@ export class AssetsModal extends Component {
           </View>
         </Modal>
 
-        <TouchableOpacity
+        <TouchableOpacity style={[this.props.assetSelected ? styles.textContainerSelected : styles.textContainer]}
           onPress={() => {
             this.setModalVisible(true);
           }}>
@@ -136,120 +144,5 @@ export class AssetsModal extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-
-
-  textContainer: {
-    padding: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    borderRightColor: 'red',
-    borderRightWidth: 50
-  },
-  textContainerSelected: {
-    padding: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 15,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    borderRightColor: 'green',
-    borderRightWidth: 50
-  },
-  optionText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 30
-  },
-  titleTop: {
-    backgroundColor: '#FAF9ED',
-    width: '100%',
-    height: 50
-  },
-  headingTextBold: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 30,
-    alignSelf: 'center'
-
-  },
-  detailsText: {
-    color: 'red',
-    fontWeight: 'normal',
-    fontSize: 16,
-    alignSelf: 'center'
-  },
-  detailsTextSelected: {
-    color: 'green',
-    fontWeight: 'normal',
-    fontSize: 16,
-    alignSelf: 'center'
-  },
-  row: {
-		flexDirection: 'row',
-		justifyContent: 'flex-start',
-		padding: 16,
-		marginBottom: 3,
-		marginLeft: 15,
-		marginTop: 170,
-		marginRight: 15,
-		borderBottomColor: 'white',
-		borderBottomWidth: 2,
-	},
-
-  text: {
-    flex: 1,
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 25,
-  },
-  flatList: {
-    backgroundColor: '#FAF9ED',
-  },
-  assetListItems: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ABA9A9',
-  },
-  listContainer: {
-    marginTop: 10,
-    flex: 1,
-  },
-  bottomContainer: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#FAF9ED',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-  },
-  listText: {
-    justifyContent: 'flex-start',
-    fontSize: 15,
-    padding: 2
-  },
-  closeButton: {
-    textAlign: "center",
-    color: 'black',
-    fontSize: 25,
-  },
-  listIcon: {
-    paddingRight: 15,
-    paddingLeft: 10
-  },
-  listIconContainer: {
-    paddingVertical: 10,
-    paddingRight: 10,
-    flexDirection: "row",
-    alignItems: "center"
-  }
-
-
-})
 
 export default AssetsModal;

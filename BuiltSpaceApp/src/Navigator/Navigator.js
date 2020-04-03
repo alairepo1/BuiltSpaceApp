@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Platform } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
-// import {createBottomTabNavigator} from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import LoadingScreen from '../screens/AuthLoadingScreen/AuthloadingScreen.js';
@@ -12,8 +11,10 @@ import SelectOrgScreen from '../screens/Operations/SelectOrgScreen.js';
 import SelectBuildingScreen from '../screens/Operations/SelectBuildingScreen.js';
 import BuildingDetailsScreen from '../screens/Operations/BuildingDetailsScreen.js';
 import ExploreBuildingScreen from '../screens/Operations/ExploreBuildingScreen.js'
+import QRCodeScreen from '../screens/Operations/QRCodeScreen.js'
 import CameraComponent from '../screens/Operations/components/CameraComponent.js'
 import GeneralType from '../screens/Operations/components/GeneralType.js'
+
 
 const AuthStack = createStackNavigator(
   {
@@ -56,6 +57,10 @@ const HomeStack = createStackNavigator(
     ExploreBuilding: {
       screen: ExploreBuildingScreen
     },
+    QRCode:{
+      screen: QRCodeScreen
+    },
+
     GeneralType: {
       screen: GeneralType
     },
@@ -78,39 +83,6 @@ const HomeStack = createStackNavigator(
   
 
 );
-
-
-// const SelectBuildingStack = createStackNavigator({
-//   SelectBuilding: {
-//     screen: SelectBuilding,
-//   },
-// });
-
-// const Feature3Stack = createStackNavigator({
-//   Feature3: {
-//     screen: Feature3Page,
-//   },
-// });
-
-// const AppStack = createBottomTabNavigator(
-//   {
-//     Home: {
-//       screen: HomeStack,
-//     },
-//     SelectOrgScreen: {
-//       screen: SelectOrgScreenStack,
-//     },
-//     SelectBuilding: {
-//       screen: SelectBuildingStack,
-//     },
-//     Feature3: {
-//       screen: Feature3Stack,
-//     },
-//   },
-//   {
-//     initialRouteName: 'Home',
-//   },
-// );
 
 export default createAppContainer(
   createSwitchNavigator(

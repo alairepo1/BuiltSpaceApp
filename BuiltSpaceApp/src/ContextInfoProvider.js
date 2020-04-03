@@ -7,6 +7,10 @@ export const AccountContext = React.createContext({});
 export const ContextInfo = React.createContext();
 
 class ContextInfoProvider extends Component {
+  /**
+   * Creates a context variable for network status and account info.
+   * The context info can be accessed by any screen that it wraps around. (see Navigator.js)
+   */
   state = {
       isConnected: true,
       account: {

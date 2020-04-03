@@ -1,24 +1,9 @@
-import {
-  insertNewAccount,
-  updateAccount,
-  devare_db,
-  get_account,
-} from './schema/dbSchema';
-
 /**
  * Fetches all organization from api
  * Fetches organizations,assetGroups,checklists and questions
  */
 
 const url = 'https://beta.builtspace.com';
-const api_organization = [];
-
-export const trigger_new_account = async accountData => {
-  account = accountData;
-  header.headers = {Authorization: accountData.key};
-  await fetchAPI();
-  return api_organization;
-};
 
 export const fetchOrgs = async accountInfo => {
   /**
@@ -61,6 +46,11 @@ export const fetchOrgs = async accountInfo => {
 };
 
 export const get_org_data = async (org_info, key) => {
+  // Calls all the endpoints to get organization's data. 
+  // organization id, name
+  // bulidings associated with building,
+  // assetGroups,
+  // checklists 
   var header = {
     method: 'get',
     headers: {
@@ -277,7 +267,7 @@ get_qrcode = async (org_name, buildinginfo, header) => {
   var qrcodemapping = [];
   try{
     await fetch(
-      `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/QRMappings?buildingid=${buildinginfo.id}`,
+      `${url}/sites/${org_name}/_vti_bin/wcf/orgdata.svc/QRMappings?buildingid=${buildingid}`,
       header
     )
     .then(response => response.json())
