@@ -47,7 +47,7 @@ export class ExploreBuildingScreen extends Component {
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
         this.updateQuestion = this.updateQuestion.bind(this)
-xxxxxxxxxxx        this.cameraOnPress = this.cameraOnPress.bind(this)
+        this.cameraOnPress = this.cameraOnPress.bind(this)
         this.onBottomButtonPressed = this.onBottomButtonPressed.bind(this)
         this.loadQRCode = this.loadQRCode.bind(this)
       }
