@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Alert, ActivityIndicator, PermissionsAndroid, Platform, TouchableOpacity} from 'react-native';
+import {StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
 import { CameraKitCameraScreen } from 'react-native-camera-kit';
 
 export default class CameraComponent extends Component {

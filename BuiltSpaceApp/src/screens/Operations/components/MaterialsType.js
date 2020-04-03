@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {View, Text, TextInput, StyleSheet, FlatList, Image, TouchableOpacity, Button} from 'react-native';
 import { ButtonGroup } from 'react-native-elements';
 
-
 export class MaterialsType extends Component {
     constructor(props) {
         super(props);
@@ -20,10 +19,6 @@ export class MaterialsType extends Component {
     }
 
     buttonComponents = () => {
-        /**
-         * takes the array of format and creates an array of text components
-         * usable by the buttonGroup component
-         */
         var buttons = []
         this.state.format.forEach((button,index) => {
             buttons.push({element:  () => <Text style={this.changeColor(index)}>{button}</Text>})
@@ -32,10 +27,6 @@ export class MaterialsType extends Component {
     }
 
     changeColor = (index) => {
-        /**
-         * sets the color for each button in the buttonGroup and changes depending on 
-         * the button index selected
-         */
         if (this.state.selectedIndex == index) {
             return { borderColor: this.state.colors[index], color : 'white'}
         } else {
@@ -45,12 +36,9 @@ export class MaterialsType extends Component {
     }
 
     updateIndex(selectedIndex) {
-        /**
-         * on buttonGroup select, it will set button that is pressed.
-         */
-        if (selectedIndex == this.state.selectedIndex){
-            this.setState({selectedIndex: null})
-            this.props.question.updateQuestion(this.props.question.index, "", "InspectionResults")
+        this.setState({selectedIndex})
+        this.props.question.updateQuestion(this.props.question.index, this.state.format[selectedIndex], "InspectionResults")
+    }
 
     updatePictureArray(uri) {
         const obj = {uri: `file://${uri[0]}`} 
@@ -79,7 +67,7 @@ export class MaterialsType extends Component {
                         selectedButtonStyle={{backgroundColor: this.state.colors[this.state.selectedIndex]}}
                         buttonStyle={{padding: 10}}
                         selectMultiple={false}
-                        buttons={buttonArray}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                        buttons={buttonArray}
                         onPress={this.updateIndex}
                         selectedIndex={selectedIndex}
                         />

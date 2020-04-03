@@ -47,8 +47,6 @@ export class ExploreBuildingScreen extends Component {
         this.assetsFilter = this.assetsFilter.bind(this)
         this.loadQuestions = this.loadQuestions.bind(this)
         this.updateQuestion = this.updateQuestion.bind(this)
-        this.cameraOnPress = this.cameraOnPress.bind(this)
-        this.onBottomButtonPressed = this.onBottomButtonPressed.bind(this)
         this.loadQRCode = this.loadQRCode.bind(this)
       }
 
@@ -385,6 +383,7 @@ export class ExploreBuildingScreen extends Component {
         this.setState({
           selectedSpaceId: typeid,
           spaceSelected: true,
+          spaceName: type_name,
           disableSpace: true,
           disableChecklist: false,
           assetSelected: false,
@@ -538,12 +537,6 @@ export class ExploreBuildingScreen extends Component {
                   />
                   </View>
           
-                  <View style={{flex:1, margin: 5}}>
-                    <Button
-                    title="Upload picture"
-                    onPress={this.cameraOnPress}
-                    ></Button>
-                  </View>
                   <View>
                     
                   </View>
@@ -580,8 +573,6 @@ export class ExploreBuildingScreen extends Component {
     }
 
   }
-
-}
 }
 
 export default ExploreBuildingScreen;

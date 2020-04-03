@@ -142,9 +142,9 @@ export class SpacesModal extends Component {
           </View>
         </Modal>
 
-        <TouchableOpacity disabled={ this.props.disableChecklist ? true : false}
+        <TouchableOpacity disabled={ this.props.disableSpace ? true : false}
         style={[this.props.checklistSelected ? styles.textContainerSelected : styles.textContainer,
-                this.props.disableChecklist ? styles.modalDisable : styles.modalEnable]}
+                this.props.disableSpace ? styles.modalDisable : styles.modalEnable]}
           onPress={() => {
             this.setModalVisible(true);
           }}>
